@@ -1,10 +1,10 @@
 package repositories;
 
-import entities.Mail;
+import entities.Folder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MailRepository extends JpaRepository<Mail, Long> {
+public interface FolderRepository extends JpaRepository<Folder, Long> {
 }

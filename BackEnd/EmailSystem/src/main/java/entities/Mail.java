@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="Email")
 public class Mail {
 
     @Id
@@ -28,7 +27,7 @@ public class Mail {
     @JoinColumn(name= "sender_id")
     private User sender;
 
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     private LocalDateTime creationDate;
 
     private String subject;
@@ -44,6 +43,9 @@ public class Mail {
     private List<Attachment> attachments = new ArrayList<>();
 
 
+    @ManyToMany(mappedBy = "emails", cascade = CascadeType.ALL)
+    private List<Folder> folders = new ArrayList<>();
+
     @PrePersist
     protected void onCreate() {
         this.creationDate = LocalDateTime.now();
@@ -51,5 +53,5 @@ public class Mail {
             this.importance = Importance.NORMAL;
     }
 
-    //folders
+
 }

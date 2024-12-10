@@ -13,7 +13,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="Attachment")
 public class Attachment implements Serializable {
 
     @Id
@@ -28,6 +27,7 @@ public class Attachment implements Serializable {
 
     private String fileType;
 
+    @JoinColumn(nullable = false)
     @Lob
     private byte[] file;
 }
