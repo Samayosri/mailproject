@@ -1,13 +1,13 @@
-package com.DesignPatterns.EmailSystem;
+package com.csed.Mail;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class EmailSystemApplication {
+public class MailApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(EmailSystemApplication.class, args);
+		SpringApplication.run(MailApplication.class, args);
 	}
 
 }

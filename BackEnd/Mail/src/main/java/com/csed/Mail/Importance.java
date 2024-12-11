@@ -1,4 +1,4 @@
-package entities;
+package com.csed.Mail;
 
 public enum Importance {
     LOW_PRIORITY

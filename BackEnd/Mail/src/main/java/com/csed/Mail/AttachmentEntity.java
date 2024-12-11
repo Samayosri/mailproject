@@ -1,6 +1,9 @@
-package entities;
+package com.csed.Mail;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,21 +16,20 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Attachment implements Serializable {
+public class AttachmentEntity implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "attachment_sequencer")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "mail_id", nullable = false)
-    private Mail mail;
+
+    private MailEntity mail;
 
     private String fileName;
 
     private String fileType;
 
-    @JoinColumn(nullable = false)
+
     @Lob
     private byte[] file;
 }

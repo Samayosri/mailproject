@@ -1,10 +1,10 @@
-package com.DesignPatterns.EmailSystem;
+package com.csed.Mail;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class EmailSystemApplicationTests {
+class MailApplicationTests {
 
 	@Test
 	void contextLoads() {

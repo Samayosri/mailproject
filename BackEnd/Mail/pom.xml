@@ -8,11 +8,11 @@
 		<version>3.4.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.DesignPatterns</groupId>
-	<artifactId>EmailSystem</artifactId>
+	<groupId>com.csed</groupId>
+	<artifactId>Mail</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>EmailSystem</name>
-	<description>The aim of the project is to implement the basic functionalities of a mail server, including the manipulation of mails, attachments, and contacts.</description>
+	<name>Mail</name>
+	<description>Mail Server Application</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -34,12 +34,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>

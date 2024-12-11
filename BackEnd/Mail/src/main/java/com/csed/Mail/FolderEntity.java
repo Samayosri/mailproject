@@ -1,4 +1,4 @@
-package entities;
+package com.csed.Mail;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -14,19 +14,19 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-public class Folder {
+public class FolderEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "email_id_sequencer")
+
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name= "sender_id")
-    private User ownerId;
+
+    private UserEntity ownerId;
 
     private String name;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name= "mail_id")
-    private Set<Mail> emails = new HashSet<>();
+
+    private Set<MailEntity> emails = new HashSet<>();
 }
