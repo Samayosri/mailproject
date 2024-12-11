@@ -1,0 +1,90 @@
+
+.body{
+    width:100vw ;
+    height: 100vh;
+    background: white;
+    margin: 0;
+    padding: 0;
+}
+.header {
+    height: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+   align-items:flex-start;
+    padding: 0 10px; 
+   
+}
+
+.signup-page-body {
+    margin: 0;
+    padding: 0;
+    border: blue 4px solid;
+    background:linear-gradient(white);
+}
+
+
+.login {
+    margin: 10px;
+    width: 10%;
+    height: 40px;
+    background: #aee7fe;
+    border-radius: 10px;
+    color: black;
+    font-weight: 800;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.regist {
+  
+ position: absolute;
+   top: 50%;
+ left: 50%;
+  transform: translate(-50%, -50%);
+   
+    width: 32%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    height: 90%;
+    background-color: #ffffff;
+    box-shadow: 4px 5px 3px rgba(23, 10, 82, 0.486);
+    
+}
+
+.signUp-options {
+   margin: 8px;
+    background-color: #FFFFFF;
+    width: 60%;
+    height: 50px;
+    padding: 6px;
+    padding-left: 8px;
+    border-radius: 20px;
+    color: black;
+}
+.signUp-options:hover{
+    background:linear-gradient(rgba(128, 128, 128, 0.247),white);
+}
+
+
+.signUp{
+    margin: 8px;
+    background-color: #FFFFFF;
+    width: 60%;
+    height: 50px;
+    padding: 6px;
+    padding-left: 8px;
+    border-radius: 20px;
+    color: black;
+    background: #aee7fe;
+      text-align: center;
+    color: "black";
+    font-weight: 800;
+}
+.signUp:hover, .login:hover{
+    background: rgba(0, 174, 255, 0.568);
+}
