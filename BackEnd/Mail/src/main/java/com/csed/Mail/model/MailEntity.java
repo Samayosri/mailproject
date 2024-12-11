@@ -54,6 +54,7 @@ public class MailEntity {
     )
     private Set<UserEntity> ccReceivers = new HashSet<>();
 
+    @ManyToMany
     @JoinTable(
             name = "mail_bcc_receivers",
             joinColumns = @JoinColumn(name = "mail_id"),
