@@ -1,35 +1,20 @@
-package com.csed.Mail;
+package com.csed.Mail.model.Dtos;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
+import com.csed.Mail.model.MailEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-public class AttachmentEntity implements Serializable {
+public class AttachmentDto {
 
-    @Id
     private Long id;
-
-    @ManyToOne
-
     private MailEntity mail;
-
     private String fileName;
-
     private String fileType;
-
-
-    @Lob
     private byte[] file;
 }
