@@ -4,6 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import Registration from './Registration/Registration'
 import {Container} from "@mui/material" 
+import ComposeEmail from './Mail/ComposeEmail'
 
 function App() {
 
@@ -23,8 +24,7 @@ function App() {
 
   return (
     <>
-     
-     {["sign in", "sign up"].includes(window) && (
+      {["sign in", "sign up"].includes(window) && (
         <Registration
           window={window}
           setWindow={setWindow}
@@ -34,10 +34,15 @@ function App() {
           setSigned={setSigned}
         />
       )}
-      <Container>Hello</Container>
+      <Container>Hello</Container> 
+  </>
+   )
+
      
-    </>
-  )
+   
+     
+  
+  
 }
 
 export default App
