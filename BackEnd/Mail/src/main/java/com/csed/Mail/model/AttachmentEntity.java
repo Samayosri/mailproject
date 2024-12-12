@@ -22,7 +22,7 @@ public class AttachmentEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "mail_id", nullable = false)
     private MailEntity mail;
 

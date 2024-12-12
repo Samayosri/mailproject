@@ -24,7 +24,7 @@ public class MailEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "sender_id", nullable = false)
     private UserEntity sender;
 
@@ -48,10 +48,10 @@ public class MailEntity {
 
     private Integer importance;
 
-    @OneToMany(mappedBy = "mail", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "mail", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<AttachmentEntity> attachments = new HashSet<>();
 
-    @ManyToMany(mappedBy = "emails", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "emails", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<FolderEntity> folders = new HashSet<>();
 
     @PrePersist

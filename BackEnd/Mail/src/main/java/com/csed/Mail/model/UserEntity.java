@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -26,14 +28,14 @@ public class UserEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String emailAddress;
 
     @Column(nullable = false)
     private String password;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<FolderEntity> folders = new HashSet<>();
+    private List<FolderEntity> folders = new ArrayList<>();
     @JsonIgnore
     public UserDto getuserdto(){
         return UserDto.builder().id(id).name(name).emailAddress(emailAddress).build();

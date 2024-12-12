@@ -9,9 +9,7 @@ import com.csed.Mail.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional
@@ -60,7 +58,7 @@ public class FolderServiceImpl implements FolderService {
         FolderEntity folder = folderRepository.findByOwnerAndName(user, folderName)
                 .orElseGet(() -> createFolder(user, folderName));
 
-        Set<MailEntity> emails = new HashSet<>(folder.getEmails());
+        List<MailEntity> emails = new ArrayList<>(folder.getEmails());
 
         if (add) {
             emails.add(mailEntity);
@@ -78,7 +76,7 @@ public class FolderServiceImpl implements FolderService {
                 FolderEntity.builder()
                         .owner(user)
                         .name(folderName)
-                        .emails(new HashSet<>())
+                        .emails(new ArrayList<>())
                         .build()
         );
     }

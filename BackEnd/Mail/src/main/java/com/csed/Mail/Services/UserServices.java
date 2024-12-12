@@ -49,18 +49,16 @@ private  final FolderRepository folderRepository;
         UserEntity newCustomer = userDto.getuser();
         newCustomer = userRepository.save(newCustomer);
         createDefaultFolders(newCustomer);
-
-
         return newCustomer.getuserdto();
     }
 
     private void createDefaultFolders(UserEntity user) {
-        FolderEntity newfolder = FolderEntity.builder().id(null).name("Inbox").owner(user).build();
+        FolderEntity newfolder = FolderEntity.builder().id(null).name("Inbox").owner(user).userId(user.getId()).build();
         folderRepository.save(newfolder);
-        newfolder= FolderEntity.builder().id(null).name("Sent").owner(user).build();
+        newfolder= FolderEntity.builder().userId(user.getId()).id(null).name("Sent").owner(user).build();
         folderRepository.save(newfolder);
-        newfolder= FolderEntity.builder().id(null).name("Draft").owner(user).build();
+        newfolder= FolderEntity.builder().userId(user.getId()).id(null).name("Drafts").owner(user).build();
         folderRepository.save(newfolder);
-        newfolder= FolderEntity.builder().id(null).name("Trash").owner(user).build();
+        newfolder= FolderEntity.builder().userId(user.getId()).id(null).name("Trash").owner(user).build();
         folderRepository.save(newfolder);
     }}

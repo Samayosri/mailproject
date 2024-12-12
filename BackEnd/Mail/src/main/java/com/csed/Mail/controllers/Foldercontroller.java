@@ -21,8 +21,8 @@ public class Foldercontroller {
    }
 
     @GetMapping("/show/{id}")
-    public ResponseEntity<List<FolderEntity>> showFolders(@PathVariable Long id) {
-        List<FolderEntity> folders = folderServices.showfolders(id);
+    public ResponseEntity<List<FolderDto>> showFolders(@PathVariable Long id) {
+        List<FolderDto> folders = folderServices.showfolders(id);
         return new ResponseEntity<>(folders, HttpStatus.OK);
     }
 

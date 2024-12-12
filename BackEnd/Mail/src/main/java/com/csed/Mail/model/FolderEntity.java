@@ -9,7 +9,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -38,7 +40,7 @@ public class FolderEntity {
             joinColumns = @JoinColumn(name = "folder_id"),
             inverseJoinColumns = @JoinColumn(name = "mail_id")
     )
-    private Set<MailEntity> emails = new HashSet<>();
+    private List<MailEntity> emails = new ArrayList<>();
     @JsonIgnore
     public FolderDto getDto(){
         return FolderDto.builder().id(id).userId(owner.getId()).name(name).build();
