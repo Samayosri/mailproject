@@ -4,8 +4,18 @@ import Folder from '../Folder/Folder';
 import { useState } from 'react';
 import SearchBar from '../SearchBar/SearchBar';
 import Contacts from '../Contacts/Contacts';
+import ComposeEmail from '../Mail/ComposeEmail';
 function SideBar({selectedFolder,setSelectedFolder, setContent={setContent}}) {
    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+   const [isOpen, setIsOpen] = useState(false);
+
+   const handleOpen = () => {
+     setIsOpen(true);
+   };
+ 
+   const handleClose = () => {
+     setIsOpen(false);
+   };
 
    return (
      
@@ -58,12 +68,13 @@ function SideBar({selectedFolder,setSelectedFolder, setContent={setContent}}) {
                   padding: 2,
                }}
             >
-               <Button variant="contained" style={{
+               <Button variant="contained" onClick={handleOpen} style={{
                   width:"90%",backgroundColor:" #b89696"
                }}>New mail</Button >
                <Folder name="sent" setContent={setContent} selectedFolder={selectedFolder} setSelectedFolder={setSelectedFolder}/>
                <Folder name="inbox"  setContent={setContent} selectedFolder={selectedFolder} setSelectedFolder={setSelectedFolder}/>
-               <Folder name="trash"  setContent={setContent} selectedFolder={selectedFolder} setSelectedFolder={setSelectedFolder}/>
+               <Folder name="trash"  setContent={setContent} selectedFolder={selectedFolder} setSelectedFolder={setSelectedFolder}/>   
+               <ComposeEmail open={isOpen} onClose={handleClose} />
             </Stack>
          </Drawer>
       </Box>

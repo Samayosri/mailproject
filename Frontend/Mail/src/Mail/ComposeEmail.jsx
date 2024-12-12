@@ -6,10 +6,19 @@ import {
   TextField,
   DialogActions,
   Button,
+  IconButton,
+  Typography,
 } from '@mui/material';
+import InputFileUpload from './InputFileUpload'; // Assuming InputFileUpload is in a separate file
 
 const ComposeEmail = ({ open, onClose }) => {
-  const [email, setEmail] = useState({ subject: '', body: '' });
+  const [email, setEmail] = useState({
+    subject: '',
+    to: '',
+    body: '',
+    attachments: [],
+  });
+
 
   const handleChange = (e) => {
     setEmail({ ...email, [e.target.name]: e.target.value });
@@ -17,9 +26,18 @@ const ComposeEmail = ({ open, onClose }) => {
 
   const handleSend = () => {
     console.log('Email sent:', email);
-    onClose();
+    handleClose();
   };
+  
+  const handleClose = () => { setEmail({ subject: '', to: '', body: '', attachments: [], }); onClose(); };
 
+
+  const handleFileChange = (event) => {
+    setEmail({
+      ...email,
+      attachments: [...email.attachments, ...event.target.files],
+    });
+  };
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Compose Email</DialogTitle>
@@ -32,6 +50,16 @@ const ComposeEmail = ({ open, onClose }) => {
           value={email.subject}
           onChange={handleChange}
         />
+   
+        <TextField
+            fullWidth
+            margin="normal"
+            label="To"
+            name="to"
+            value={email.to}
+            onChange={handleChange}
+          />
+
         <TextField
           fullWidth
           margin="normal"
@@ -42,9 +70,19 @@ const ComposeEmail = ({ open, onClose }) => {
           value={email.body}
           onChange={handleChange}
         />
+        <InputFileUpload onChange={handleFileChange} multiple />
+        {email.attachments.length > 0 && (
+          <div style={{padding:5}}>
+          <ul style={{ paddingLeft: 0, margin: 2,padding : 2 , color: 'grey',textAlign : 'left'}}> {/* Remove default styling */}
+            {email.attachments.map((file) => (
+              <li key={file.name}>{file.name}</li>
+            ))}
+          </ul>
+        </div>
+        )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={handleClose}>Cancel</Button>
         <Button onClick={handleSend} color="primary">
           Send
         </Button>
