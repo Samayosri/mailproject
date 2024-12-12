@@ -1,6 +1,5 @@
 package com.csed.Mail.model.Dtos;
 
-import com.csed.Mail.model.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class FolderDto {
-    private UserEntity ownerId;
+    private Long id; //used to fetch emails
+    private Long userId;
     private String name;
-    private Long id;
-
 }

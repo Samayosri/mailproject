@@ -34,5 +34,6 @@ public class FolderEntity {
             joinColumns = @JoinColumn(name = "folder_id"),
             inverseJoinColumns = @JoinColumn(name = "mail_id")
     )
-    private Set<MailEntity> emails = new HashSet<>();}
+    private Set<MailEntity> emails = new HashSet<>();
+}
 

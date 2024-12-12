@@ -30,7 +30,8 @@ public class AttachmentEntity implements Serializable {
     @Column(nullable = false)
     private String fileType;
 
-    @Column(name = "file_data", columnDefinition = "BYTEA")
+    @Column(name = "file_data")
+    @Lob
+    @Basic(fetch = FetchType.EAGER)
     private byte[] fileData;
-
 }

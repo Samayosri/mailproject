@@ -33,6 +33,13 @@ public class MailController {
         return mails.map(mailMapper::mapToDto);
     }
 
+    // id   name    userId
+    // 1    inbox   nourId
+    // 2    sent    nourId
+    // 3    inbox   ahmedId
+    // 4    sent    ahmedId
+    // 5    work    ahmedId
+
     @PostMapping("/send")
     public ResponseEntity<MailDto> sendMail(@RequestBody MailDto mailDto) {
         MailEntity sentMail = mailMapper.mapFromDto(mailDto);

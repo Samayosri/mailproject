@@ -1,6 +1,5 @@
 package com.csed.Mail.model;
 
-import com.csed.Mail.enums.Importance;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +22,7 @@ public class MailEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer threadId;
+//    private Integer threadId;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "sender_id", nullable = false)
@@ -48,7 +47,7 @@ public class MailEntity {
     private Set<String> bccReceivers = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
-    private Importance importance;
+    private Integer importance;
 
     @OneToMany(mappedBy = "mail", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<AttachmentEntity> attachments = new HashSet<>();
@@ -62,7 +61,11 @@ public class MailEntity {
             this.creationDate = LocalDateTime.now();
         }
         if (this.importance == null) {
-            this.importance = Importance.NORMAL;
+            this.importance = 3;
         }
+        // low 4
+        // medium 3
+        // high 2
+        // urgent 1
     }
 }
