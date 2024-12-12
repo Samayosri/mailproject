@@ -3,25 +3,41 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Folder from '../Folder/Folder';
 import { useState } from 'react';
 import SearchBar from '../SearchBar/SearchBar';
-function SideBar() {
+import Contacts from '../Contacts/Contacts';
+function SideBar({selectedFolder,setSelectedFolder, setContent={setContent}}) {
    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
    return (
-      <Box sx={{ position: 'relative', width: '50%' }}>
-         <Box sx={{ textAlign: 'left', mb: 4 }}>
+     
+      <Box sx={{ position: 'relative', width: '100%' ,display:"flex" } } >
+            <div style={{
+               display:"flex",
+               justifyContent:"space-between",
+               alignItems:"center",
+               width:"100%"
+            }}
+            >
+            <Box sx={{ textAlign: 'left', mb: 4 ,marginTop:"10px"}}>
             <IconButton
                size="large"
                edge="start"
              
                aria-label="open drawer"
-               sx={{ mr: 4 ,color:"white"}}
+               sx={{ mr: 4 ,color:"black"}}
                onClick={() => setIsDrawerOpen(true)}
             >
                <MenuIcon />
             </IconButton>
-       <SearchBar/>
-         </Box>
-
+            </Box>
+        
+           <SearchBar>
+            </SearchBar>
+            <Contacts setContent={setContent}/>
+   
+            </div>
+       
+    
+            
          {/* Drawer */}
          <Drawer
             variant="temporary"
@@ -43,11 +59,11 @@ function SideBar() {
                }}
             >
                <Button variant="contained" style={{
-                  width:"90%"
+                  width:"90%",backgroundColor:" #b89696"
                }}>New mail</Button >
-               <Folder name="sent" />
-               <Folder name="inbox" />
-               <Folder name="trash" />
+               <Folder name="sent" setContent={setContent} selectedFolder={selectedFolder} setSelectedFolder={setSelectedFolder}/>
+               <Folder name="inbox"  setContent={setContent} selectedFolder={selectedFolder} setSelectedFolder={setSelectedFolder}/>
+               <Folder name="trash"  setContent={setContent} selectedFolder={selectedFolder} setSelectedFolder={setSelectedFolder}/>
             </Stack>
          </Drawer>
       </Box>

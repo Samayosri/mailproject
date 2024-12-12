@@ -3,7 +3,8 @@ import { Stack, TextField } from "@mui/material";
 function MailContent({ sender, receiver, subject, body }) {
   return (
     <>
-      <Stack spacing={2}>
+   
+    <Stack spacing={2} >
         {/* Sender Field */}
         <TextField
           label="Sender"
@@ -38,6 +39,7 @@ function MailContent({ sender, receiver, subject, body }) {
           fullWidth
         />
       </Stack>
+ 
     </>
   );
 }

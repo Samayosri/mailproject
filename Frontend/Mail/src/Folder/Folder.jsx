@@ -5,11 +5,12 @@ import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 import MailIcon from '@mui/icons-material/Mail';
 import SendIcon from '@mui/icons-material/Send'; 
 
-function Folder({ name }) {
+function Folder({ setContent,name,selectedFolder,setSelectedFolder }) {
    return (
       <>
-         <Button
-         style={{width:"90%"}}
+         <Button 
+            
+         style={{width:"90%" ,backgroundColor:" #b89696",color:"white"}}
             variant="outlined"
             endIcon={
                 name === "sent" ? (
@@ -22,6 +23,10 @@ function Folder({ name }) {
                   <ArrowForwardIosIcon />
                )
             }
+            onClick={()=>{
+                setContent("mails");
+                setSelectedFolder(name)
+            }}
          >
             {name}
          </Button>

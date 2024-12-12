@@ -1,18 +1,31 @@
 import { Box, Button, Stack } from "@mui/material";
 import { useState } from "react";
 import MailContent from "./MailContent";
+import "./Mail.css"
+import DivContent from "../DivContent/DivContent";
 
-function Mail({ listOfmails }) {
+function Mail({folders,selectedFolder }) {
+    
+  
+    let listOfmails;
+    folders.forEach(element => {
+        if(element.folderName===selectedFolder){
+            listOfmails=element.mails; 
+        }
+    });
+    console.log(listOfmails);
 
   const [selectedMail, setSelectedMail] = useState(null);
 
 
   function handleDisplayMail(m) {
+
     setSelectedMail(m);
   }
 
   const mail = listOfmails.map((m, index) => (
-    <Button
+    <Button 
+     style={{backgroundColor:" #b89696"}}
       key={index}
       variant="contained"
       sx={{ marginBottom: 1 }}
@@ -26,18 +39,20 @@ function Mail({ listOfmails }) {
     <>
       <Box>
         <Stack spacing={2}>
-          {mail} 
+          {mail}
         </Stack>
 
       
         {selectedMail && (
           <Box sx={{ marginTop: 2 }}>
+     
             <MailContent
               sender={selectedMail.sender}
               receiver={selectedMail.receiver}
               subject={selectedMail.subject}
               body={selectedMail.body}
-            />
+           />
+    
           </Box>
         )}
       </Box>

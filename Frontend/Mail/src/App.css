@@ -1,16 +1,9 @@
 #root {
   margin: 0 ;
   text-align: center;
-  background: #d19e9e;
+  background: #eeeff1f5;
   height: 100vh;
   width: 100vw;
   padding: 0;
-}
-body{
-  margin: 0 ;
-  text-align: center;
-  background: #000;
-  height: 100vh;
-  width: 100vw;
-  padding: 0;
+
 }
