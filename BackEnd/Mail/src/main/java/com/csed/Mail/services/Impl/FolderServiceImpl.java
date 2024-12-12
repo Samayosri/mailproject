@@ -6,9 +6,11 @@ import com.csed.Mail.model.MailEntity;
 import com.csed.Mail.model.UserEntity;
 import com.csed.Mail.repositories.FolderRepository;
 import com.csed.Mail.repositories.UserRepository;
+import org.springframework.stereotype.Service;
+
 import java.util.HashSet;
 import java.util.Optional;
-
+@Service
 public class FolderServiceImpl implements FolderService {
     private final FolderRepository folderRepository;
     private final UserRepository userRepository;
