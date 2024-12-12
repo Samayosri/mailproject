@@ -9,5 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
-    Optional<FolderEntity> findByOwnerAndName(UserEntity owner, String name);
+
+    Optional<FolderEntity> getFolderByName(String name);
+    Optional<FolderEntity> getFolderByOwnerId(Long ownerId);
+    Optional<FolderEntity> findByOwnerAndName(UserEntity owner ,String name);
+
 }

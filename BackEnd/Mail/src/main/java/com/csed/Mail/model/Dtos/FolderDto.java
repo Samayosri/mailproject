@@ -13,4 +13,6 @@ import lombok.NoArgsConstructor;
 public class FolderDto {
     private UserEntity ownerId;
     private String name;
+    private Long id;
+
 }

@@ -1,24 +1,29 @@
 package com.csed.Mail.model.Dtos;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.csed.Mail.model.FolderEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+import java.util.HashSet;
+import java.util.Set;
 
 public class UserDto {
     private Long id;
     private String name;
     private String emailAddress;
     private String password;
-
+    private Set<FolderEntity> folders = new HashSet<>();
+    @JsonIgnore
     public Long getId() {
         return id;
+    }
+
+    public Set<FolderEntity> getFolders() {
+        return folders;
+    }
+
+    public void setFolders(Set<FolderEntity> folders) {
+        this.folders = folders;
     }
 
     public void setId(Long id) {

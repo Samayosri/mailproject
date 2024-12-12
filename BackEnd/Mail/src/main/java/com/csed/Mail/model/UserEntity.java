@@ -1,5 +1,6 @@
 package com.csed.Mail.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,7 +31,7 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<FolderEntity> folders = new HashSet<>();
-
+@JsonIgnore
     public Long getId() {
         return id;
     }
