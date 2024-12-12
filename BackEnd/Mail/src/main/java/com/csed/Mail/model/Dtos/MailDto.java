@@ -19,5 +19,4 @@ public class MailDto {
     private List<String> ccReceivers;
     private Importance importance;
     private List<AttachmentDto> attachments = new ArrayList<>();
-
 }

@@ -1,6 +1,5 @@
-package com.csed.Mail.services;
+package com.csed.Mail.Services;
 
-import com.csed.Mail.model.Dtos.MailDto;
 import com.csed.Mail.model.MailEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

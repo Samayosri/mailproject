@@ -1,10 +1,10 @@
-package com.csed.Mail.services;
+package com.csed.Mail.Services;
 
 import com.csed.Mail.model.FolderEntity;
 import com.csed.Mail.model.MailEntity;
 
 public interface FolderService {
 
-    FolderEntity sendMail(MailEntity mailEntity);
+    void sendMail(MailEntity mailEntity);
 
 }

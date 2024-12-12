@@ -1,6 +1,7 @@
 package com.csed.Mail.repositories;
 
 import com.csed.Mail.model.MailEntity;
+import com.csed.Mail.model.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,7 +26,5 @@ public interface MailRepository extends JpaRepository<MailEntity, Long> {
             @Param("folderId") Long folderId,
             Pageable pageable
     );
-
-
 }
 

@@ -32,8 +32,5 @@ public class UserController {
         catch (IllegalArgumentException e){
             return new ResponseEntity<>( e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
-
-
     }
 }

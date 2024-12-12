@@ -4,7 +4,9 @@ import com.csed.Mail.mappers.Mapper;
 import com.csed.Mail.model.Dtos.MailDto;
 import com.csed.Mail.model.MailEntity;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MailMapperImpl implements Mapper<MailEntity, MailDto> {
     private final ModelMapper modelMapper;
 
