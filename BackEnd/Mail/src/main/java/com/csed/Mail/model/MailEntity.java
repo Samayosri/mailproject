@@ -38,29 +38,14 @@ public class MailEntity {
     @Lob
     private String body;
 
-    @ManyToMany
-    @JoinTable(
-            name = "mail_to_receivers",
-            joinColumns = @JoinColumn(name = "mail_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<UserEntity> toReceivers = new HashSet<>();
+    @ElementCollection
+    private Set<String> toReceivers = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "mail_cc_receivers",
-            joinColumns = @JoinColumn(name = "mail_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<UserEntity> ccReceivers = new HashSet<>();
+    @ElementCollection
+    private Set<String> ccReceivers = new HashSet<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "mail_bcc_receivers",
-            joinColumns = @JoinColumn(name = "mail_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private Set<UserEntity> bccReceivers = new HashSet<>();
+    @ElementCollection
+    private Set<String> bccReceivers = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     private Importance importance;
@@ -73,8 +58,11 @@ public class MailEntity {
 
     @PrePersist
     protected void onCreate() {
-        this.creationDate = LocalDateTime.now();
-        if (this.importance == null)
+        if (this.creationDate == null) {
+            this.creationDate = LocalDateTime.now();
+        }
+        if (this.importance == null) {
             this.importance = Importance.NORMAL;
+        }
     }
 }

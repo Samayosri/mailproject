@@ -26,4 +26,6 @@ public interface MailRepository extends JpaRepository<MailEntity, Long> {
             Pageable pageable
     );
 
+
 }
+
