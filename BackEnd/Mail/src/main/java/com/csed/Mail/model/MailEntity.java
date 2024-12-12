@@ -46,13 +46,12 @@ public class MailEntity {
     @ElementCollection
     private Set<String> bccReceivers = new HashSet<>();
 
-    @Enumerated(EnumType.STRING)
     private Integer importance;
 
-    @OneToMany(mappedBy = "mail", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "mail", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<AttachmentEntity> attachments = new HashSet<>();
 
-    @ManyToMany(mappedBy = "emails", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "emails", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     private Set<FolderEntity> folders = new HashSet<>();
 
     @PrePersist

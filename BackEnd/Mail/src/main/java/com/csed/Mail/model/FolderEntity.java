@@ -1,5 +1,7 @@
 package com.csed.Mail.model;
 
+import com.csed.Mail.model.Dtos.FolderDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,20 +22,24 @@ public class FolderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner_id", nullable = false)
+    private Long userId;
+    @ManyToOne
+    @JoinColumn(nullable = false)
     private UserEntity owner;
 
     @Column(nullable = false)
     private String name;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "folder_emails",
             joinColumns = @JoinColumn(name = "folder_id"),
             inverseJoinColumns = @JoinColumn(name = "mail_id")
     )
     private Set<MailEntity> emails = new HashSet<>();
+    @JsonIgnore
+    public FolderDto getDto(){
+        return FolderDto.builder().id(id).userId(owner.getId()).name(name).build();
+    }
 }
 

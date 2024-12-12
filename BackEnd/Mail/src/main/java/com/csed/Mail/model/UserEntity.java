@@ -1,5 +1,6 @@
 package com.csed.Mail.model;
 
+import com.csed.Mail.model.Dtos.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -29,6 +30,10 @@ public class UserEntity {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<FolderEntity> folders = new HashSet<>();
+    @JsonIgnore
+    public UserDto getuserdto(){
+        return UserDto.builder().id(id).name(name).emailAddress(emailAddress).build();
+    }
 }
