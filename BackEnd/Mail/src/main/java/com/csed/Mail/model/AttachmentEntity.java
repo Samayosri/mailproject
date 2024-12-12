@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 @Entity
+@Transactional
 @Table(name = "Attachments")
 public class AttachmentEntity implements Serializable {
 

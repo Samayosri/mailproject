@@ -7,11 +7,16 @@ import com.csed.Mail.model.UserEntity;
 import com.csed.Mail.repositories.FolderRepository;
 import com.csed.Mail.repositories.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+
 @Service
+@Transactional
 public class FolderServiceImpl implements FolderService {
+
     private final FolderRepository folderRepository;
     private final UserRepository userRepository;
 
@@ -21,61 +26,60 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public void sendMail(MailEntity mailEntity) {
-        // Remove from Drafts
-        Optional<FolderEntity> draftFolder = folderRepository.findByOwnerAndName(mailEntity.getSender(), "Drafts");
-        if(draftFolder.isEmpty()) {
-            FolderEntity draft = createFolder(mailEntity.getSender(), "Drafts");
-            folderRepository.save(draft);
-        } else {
-            draftFolder.ifPresent(folderEntity -> folderEntity.getEmails().remove(mailEntity));
-        }
+    public void sendMail(MailEntity mailEntity) throws Exception {
+        // Move the mail to "Sent" and remove from "Drafts"
+        moveToFolder(mailEntity, "Drafts", false);  // Remove from Drafts
+        moveToFolder(mailEntity, "Sent", true);     // Add to Sent Folder
 
-        // Add to Sent folder
-        Optional<FolderEntity> sentFolder = folderRepository.findByOwnerAndName(mailEntity.getSender(), "Sent");
-        if (sentFolder.isEmpty()) {
-            FolderEntity sent = createFolder(mailEntity.getSender(), "Sent");
-            sent.getEmails().add(mailEntity);
-            folderRepository.save(sent);
-        } else {
-            sentFolder.get().getEmails().add(mailEntity);
-            folderRepository.save(sentFolder.get());
-        }
-
-        // Add to Receivers' Inboxes
-        for (String emailAddress : mailEntity.getToReceivers()) {
-            processReceiverInbox(emailAddress, mailEntity);
-        }
-        for (String emailAddress : mailEntity.getCcReceivers()) {
-            processReceiverInbox(emailAddress, mailEntity);
-        }
-        for (String emailAddress : mailEntity.getBccReceivers()) {
-            processReceiverInbox(emailAddress, mailEntity);
-        }
+        processReceivers(mailEntity.getToReceivers(), mailEntity);
+        processReceivers(mailEntity.getCcReceivers(), mailEntity);
+        processReceivers(mailEntity.getBccReceivers(), mailEntity);
     }
 
-    private void processReceiverInbox(String emailAddress, MailEntity mailEntity) {
-        Optional<UserEntity> receiver = userRepository.findByEmailAddress(emailAddress);
-        if (receiver.isPresent()) {
-            Optional<FolderEntity> inboxFolder = folderRepository.findByOwnerAndName(receiver.get(), "Inbox");
-            if (inboxFolder.isEmpty()) {
-                FolderEntity inbox = createFolder(receiver.get(), "Inbox");
-                inbox.getEmails().add(mailEntity);
-                folderRepository.save(inbox);
+    @Override
+    public void draftMail(MailEntity mailEntity) throws Exception {
+        moveToFolder(mailEntity, "Drafts", true);
+    }
+
+    private void processReceivers(Set<String> receivers, MailEntity mailEntity) throws Exception {
+        for (String emailAddress : receivers) {
+            Optional<UserEntity> receiver = userRepository.findByEmailAddress(emailAddress);
+            if (receiver.isPresent()) {
+                moveToFolder(mailEntity, "Inbox", true, receiver.get());
             } else {
-                inboxFolder.get().getEmails().add(mailEntity);
-                folderRepository.save(inboxFolder.get());
+                throw new Exception(emailAddress + " does not exist.");
             }
         }
     }
 
-    private FolderEntity createFolder(UserEntity user, String folderName) {
-        FolderEntity folder = FolderEntity.builder()
-                .owner(user)
-                .name(folderName)
-                .emails(new HashSet<>())
-                .build();
+    private void moveToFolder(MailEntity mailEntity, String folderName, boolean add) {
+        moveToFolder(mailEntity, folderName, add, mailEntity.getSender());
+    }
+
+    private void moveToFolder(MailEntity mailEntity, String folderName, boolean add, UserEntity user) {
+        FolderEntity folder = folderRepository.findByOwnerAndName(user, folderName)
+                .orElseGet(() -> createFolder(user, folderName));
+
+        Set<MailEntity> emails = new HashSet<>(folder.getEmails());
+
+        if (add) {
+            emails.add(mailEntity);
+        } else {
+            emails.remove(mailEntity);
+        }
+
+        folder.setEmails(emails);
         folderRepository.save(folder);
-        return folder;
+    }
+
+
+    private FolderEntity createFolder(UserEntity user, String folderName) {
+        return folderRepository.save(
+                FolderEntity.builder()
+                        .owner(user)
+                        .name(folderName)
+                        .emails(new HashSet<>())
+                        .build()
+        );
     }
 }

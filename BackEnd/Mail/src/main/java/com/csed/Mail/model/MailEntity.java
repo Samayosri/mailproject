@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -15,14 +16,13 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
+@Transactional
 @Table(name = "Mails")
 public class MailEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-//    private Integer threadId;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "sender_id", nullable = false)
@@ -62,9 +62,5 @@ public class MailEntity {
         if (this.importance == null) {
             this.importance = 3;
         }
-        // low 4
-        // medium 3
-        // high 2
-        // urgent 1
     }
 }

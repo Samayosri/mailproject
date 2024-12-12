@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface MailService {
 
-    Page<MailEntity> findAllByFolder(Long userId, Long folderId, Pageable pageable);
+    Page<MailEntity> getEmailsByFolderId(Long folderId, Pageable pageable);
 
     MailEntity sendMail(MailEntity mailEntity);
 }
