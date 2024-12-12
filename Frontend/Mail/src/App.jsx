@@ -53,8 +53,9 @@ const App = () => {
    
     <>
     {
-      window==="sign up"&& <Registration window={window } setWindow={setWindow} customerDTO={customerDTO} setCustomerDTO={setCustomerDTO} signed={signed} setSigned={setSigned}></Registration>
-    }
+      window==="sign up"&& <Registration window={window } setWindow={setWindow} customerDTO={customerDTO} setCustomerDTO={setCustomerDTO} signed={signed} setSigned={setSigned}></Registration>}
+    { window==="sign in"&&<Registration window={window } setWindow={setWindow} customerDTO={customerDTO} setCustomerDTO={setCustomerDTO} signed={signed} setSigned={setSigned}></Registration>}
+    
    {
          window =="mail"&&signed && 
          <Box sx={{ flexGrow: 1, height:"100%"}} >
