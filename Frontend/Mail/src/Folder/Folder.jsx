@@ -6,6 +6,9 @@ import MailIcon from '@mui/icons-material/Mail';
 import SendIcon from '@mui/icons-material/Send'; 
 
 function Folder({ setContent,name,selectedFolder,setSelectedFolder }) {
+   function handleFolderSelected(){
+      setContent("mails");
+   }
    return (
       <>
          <Button 
@@ -19,12 +22,15 @@ function Folder({ setContent,name,selectedFolder,setSelectedFolder }) {
                   <AutoDeleteIcon />
                ) : name === "inbox" ? (
                   <MailIcon />
-               ) : (
+               ) : name==="draft"?(
+                  <ArrowForwardIosIcon />
+               ):
+               (
                   <ArrowForwardIosIcon />
                )
             }
             onClick={()=>{
-                setContent("mails");
+              
                 setSelectedFolder(name)
             }}
          >

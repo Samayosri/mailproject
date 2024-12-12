@@ -26,82 +26,26 @@ const App = () => {
     phoneNumber: null,
   });
   const[content,setContent]=useState("mails")
-
-  // Mails data state, storing actual mail data
   
   const [folders, setFolders] = useState([
-     { 
-      folderName:"inbox",
-      mails:[
-        {
-          sender: "Ahmed",
-          receiver: "Noor",
-          subject: "React JS",
-        
-          body: "Hello, first mail"
-        }
-        , {
-          sender: "John",
-          receiver: "Sara",
-          subject: "Project Update",
-    
-          body: "Please check the latest update on the project."
-        }
-      ]
-     },
-     {
-      folderName:"trash",
-      mails:[
-        {
-          sender: "sama",
-          receiver: "samaa",
-          subject: "spring ",
-          body: "Hello, first mail"
-        }
-        , {
-          sender: "menna",
-          receiver: "Sara",
-          subject: "thank u",
-          body: "Please check the latest update on the project."
-        }
-      ]
-     },
-     {
-      folderName:"trash",
-      mails:[
-        {
-          sender: "sama",
-          receiver: "samaa",
-          subject: "spring ",
-          body: "Hello, first mail"
-        }
-        , {
-          sender: "menna",
-          receiver: "Sara",
-          subject: "thank u",
-          body: "Please check the latest update on the project."
-        }
-      ]
-     },
-
-    {
-      folderName:"sent",
-      mails:[
-        {
-          sender: "sama",
-          receiver: "samaa",
-          subject: "spring ",
-          body: "Hello, first mail"
-        }
-        , {
-          sender: "menna",
-          receiver: "Sara",
-          subject: "thank u",
-          body: "Please check the latest update on the project."
-        }
-      ]
+     {  
+      id:2,
+      name:"",
+      userId:1,
      }
-   
+     ,
+     { 
+      id:1,
+      name:"trash",
+      userId:5,
+
+     },{
+      id:3,
+      name:"draft",
+      userId:6,
+
+     }
+  
   ]);
 
   return (

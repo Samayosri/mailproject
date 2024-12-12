@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { AttachFile } from '@mui/icons-material';
+import {
+  IconButton,
+} from '@mui/material';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -18,20 +19,17 @@ const VisuallyHiddenInput = styled('input')({
 
 export default function InputFileUpload({onChange}) {
   return (
-    <Button
+    <IconButton
       component="label"
-      role={undefined}
-      variant="contained"
-      tabIndex={-1}
-      startIcon={<AttachFile/>}
+      sx={{ color: 'dodgerblue' }}
     >
-        
-      <VisuallyHiddenInput
+      <AttachFile />
+      <input
         type="file"
-        onChange={onChange
-        }
+        onChange={onChange}
         multiple
+        hidden
       />
-    </Button>
+    </IconButton>
   );
 }
