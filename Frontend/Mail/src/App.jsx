@@ -6,6 +6,7 @@ import Mail from './Mail/Mail';
 import SideBar from './SideBar/SideBar';
 import SearchBar from './SearchBar/SearchBar';
 import DivContent from './DivContent/DivContent'
+import Registration from './Registration/Registration'
 import "./App.css";
 import { use } from 'react';
 
@@ -30,18 +31,18 @@ const App = () => {
   const [folders, setFolders] = useState([
      {  
       id:2,
-      name:"",
+      name:"Sent",
       userId:1,
      }
      ,
      { 
       id:1,
-      name:"trash",
+      name:"Trash",
       userId:5,
 
      },{
       id:3,
-      name:"draft",
+      name:"Drafts",
       userId:6,
 
      }
@@ -49,13 +50,20 @@ const App = () => {
   ]);
 
   return (
+   
     <>
+    {
+      window==="sign up"&& <Registration window={window } setWindow={setWindow} customerDTO={customerDTO} setCustomerDTO={setCustomerDTO} signed={signed} setSigned={setSigned}></Registration>
+    }
+   {
+         window =="mail"&&signed && 
+         <Box sx={{ flexGrow: 1, height:"100%"}} >
+           
+            <DivContent content={content}  setContent={setContent} selectedFolder={selectedFolder} folders={folders} setSelectedFolder={setSelectedFolder} setFolders={setFolders}></DivContent>
+               
+             </Box>
+   } 
 
-<Box sx={{ flexGrow: 1, height:"100%"}} >
-  
-   <DivContent content={content}  setContent={setContent} selectedFolder={selectedFolder} folders={folders} setSelectedFolder={setSelectedFolder}></DivContent>
-      
-    </Box>
       
     </>
   

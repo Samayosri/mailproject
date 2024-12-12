@@ -1,22 +1,35 @@
 import { Stack, TextField } from "@mui/material";
 
-function MailContent({ sender, receiver, subject, body }) {
+function MailContent({ mail = {} }) {
+ 
+  const defaultEmail = {
+    id: mail.id || null,
+    senderId: mail.senderId || null,
+    subject: mail.subject || "Hello there ",
+    senderEmailAddress: mail.senderEmailAddress || "bla bla",
+    to: mail.to || "",
+    body: mail.body || "",
+    importance: mail.importance || null,
+    attachments: mail.attachments || [],
+    creationDate: mail.creationDate || null, 
+  };
+
+ 
   return (
     <>
-   
-    <Stack spacing={2} >
+      <Stack spacing={2}>
         {/* Sender Field */}
         <TextField
           label="Sender"
-          value={sender}
+          value={defaultEmail.senderEmailAddress}
           disabled
           fullWidth
         />
-        
+
         {/* Receiver Field */}
         <TextField
           label="Receiver"
-          value={receiver}
+          value={defaultEmail.to}
           disabled
           fullWidth
         />
@@ -24,7 +37,7 @@ function MailContent({ sender, receiver, subject, body }) {
         {/* Subject Field */}
         <TextField
           label="Subject"
-          value={subject}
+          value={defaultEmail.subject}
           disabled
           fullWidth
         />
@@ -32,14 +45,15 @@ function MailContent({ sender, receiver, subject, body }) {
         {/* Body Field */}
         <TextField
           label="Body"
-          value={body}
+          value={defaultEmail.body}
           disabled
           multiline
           rows={4}
           fullWidth
         />
+
+       
       </Stack>
- 
     </>
   );
 }

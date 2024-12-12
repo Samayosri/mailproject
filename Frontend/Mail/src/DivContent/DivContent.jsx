@@ -1,11 +1,11 @@
 import Mail from "../Mail/Mail";
 import SideBar from "../SideBar/SideBar";
 import { Box, Button, Stack } from "@mui/material";
-function DivContent({content,setContent , selectedFolder,folders ,setSelectedFolder }){
+function DivContent({content,setContent , selectedFolder,folders ,setFolders,setSelectedFolder }){
      return(
         <>
       
-        <SideBar folders={folders} selectedFolder={selectedFolder} setSelectedFolder={setSelectedFolder }setContent={setContent}></SideBar>
+        <SideBar folders={folders} selectedFolder={selectedFolder} setSelectedFolder={setSelectedFolder} setFolders={setFolders}setContent={setContent}></SideBar>
         <div style={{width:"80%",margin:"auto" ,background:"white",height:"100%"}}>
         {
           content==="mails"&& <Mail folders={folders} selectedFolder={selectedFolder} ></Mail>

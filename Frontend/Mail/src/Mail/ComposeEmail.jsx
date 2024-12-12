@@ -21,9 +21,9 @@ const ComposeEmail = ({ open, onClose, mail = {} }) => {
   const defaultEmail = {
     id: mail.id || null,
     senderId: mail.senderId || null,
-    subject: mail.subject || "",
-    senderEmailAddress: mail.senderEmailAddress || "",
-    to: mail.to || "",
+    subject: mail.subject || "helll",
+    senderEmailAddress: mail.senderEmailAddress || "samaa",
+    to: mail.to || "laaaa",
     body: mail.body || "",
     importance: mail.importance || null,
     attachments: mail.attachments || [],

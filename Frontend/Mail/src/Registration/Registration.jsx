@@ -45,7 +45,9 @@ function Registration({ window, setWindow, customerDTO, setCustomerDTO, signed, 
         password: formData.password,
         phoneNumber: formData.phone,
       };
-
+      setSigned(true);
+      setWindow("mail");
+      /*
       const url = signup
         ? "http://localhost:8080/customer/signup"
         : "http://localhost:8080/customer/login";
@@ -56,7 +58,7 @@ function Registration({ window, setWindow, customerDTO, setCustomerDTO, signed, 
         if (response.status === 201) {
           setCustomerDTO(response.data);
           setSigned(true);
-          setWindow(response.data.role === "admin" ? "admin" : "home");
+          setWindow("mail");
         } 
       } catch (error) {
         if (error.response?.status === 400) {
@@ -68,7 +70,7 @@ function Registration({ window, setWindow, customerDTO, setCustomerDTO, signed, 
           console.error("Unexpected Error:", error);
           showNoteMessage("An unexpected error occurred. Please try again.");
         }
-      }
+      }*/
     }
   }
 

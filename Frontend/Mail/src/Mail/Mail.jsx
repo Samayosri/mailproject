@@ -15,7 +15,28 @@ import axios from "axios";
 import ComposeEmail from "./ComposeEmail";
 
 function Mail({ folders, selectedFolder }) {
-  const [mails, setMails] = useState([]);
+  const [mails, setMails] = useState([
+    {
+      id: 1,
+      sender: "John Doe",
+      subject: "Meeting Reminder",
+      senderEmailAddress: "john.doe@example.com",
+      body: "Don't forget about the meeting tomorrow at 10 AM.",
+      importance: "High",
+      attachments: [],
+      creationDate: "2024-12-12",
+    },
+    {
+      id: 2,
+      sender: "Jane Smith",
+      subject: "Hello!",
+      senderEmailAddress: "jane.smith@example.com",
+      body: "Just wanted to say hi.",
+      importance: "Low",
+      attachments: [],
+      creationDate: "2024-12-11",
+    },
+  ]);
   const [selectedMail, setSelectedMail] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +53,7 @@ function Mail({ folders, selectedFolder }) {
     (folder) => folder.folderName === selectedFolder
     
   )?.folderID;
-  
+  /*
   useEffect(() => {
     if (folderID) {
       axios
@@ -40,9 +61,10 @@ function Mail({ folders, selectedFolder }) {
         .then((response) => setMails(response.data))
         .catch((error) => console.error("Error fetching mails:", error));
     }
-  }, [folderID]);
+  }, [folderID]);*/
 
-
+ 
+  
   function handleDisplayMail(m) {
     setSelectedMail(m);
   }
@@ -57,13 +79,13 @@ function Mail({ folders, selectedFolder }) {
       <Stack spacing={2}>
         {mails.map((m, index) => (
           <Button
-            style={{ backgroundColor: "#b89696" }}
+            style={{ backgroundColor: "#aee7fe" ,color:"black"}}
             key={index}
             variant="contained"
             sx={{ marginBottom: 1 }}
             onClick={() => handleDisplayMail(m)}
           >
-            {m.sender} - {m.subject}
+            {m.sender || "Unknown Sender"} - {m.subject || "No Subject"}
           </Button>
         ))}
       </Stack>
@@ -84,7 +106,7 @@ function Mail({ folders, selectedFolder }) {
               padding: "16px 24px",
             }}
           >
-            <Typography variant="h6">Mail Content</Typography>
+     
             <IconButton
               aria-label="close"
               onClick={handleCloseDialog}
@@ -98,14 +120,12 @@ function Mail({ folders, selectedFolder }) {
             </IconButton>
           </DialogTitle>
         <DialogContent dividers sx={{ padding: "16px" }}>
-          {selectedFolder === "draft" ? (
-            <ComposeEmail onClose={handleClose} open={isOpen} mail={selectedMail} />
+        {console.log(selectedFolder)}
+          {selectedFolder === "Drafts" ? (
+               <ComposeEmail open={isOpen} mail={selectedMail}></ComposeEmail>
           ) : (
             <MailContent
-              sender={selectedMail.sender}
-              receiver={selectedMail.receiver}
-              subject={selectedMail.subject}
-              body={selectedMail.body}
+              mail={selectedMail}
             />
           )}
       </DialogContent>

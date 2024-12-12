@@ -4,34 +4,37 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 import MailIcon from '@mui/icons-material/Mail';
 import SendIcon from '@mui/icons-material/Send'; 
-
+import DraftsIcon from '@mui/icons-material/Drafts';
+import ComposeEmail from '../Mail/ComposeEmail';
 function Folder({ setContent,name,selectedFolder,setSelectedFolder }) {
-   function handleFolderSelected(){
-      setContent("mails");
-   }
+
+
    return (
+ 
       <>
          <Button 
             
-         style={{width:"90%" ,backgroundColor:" #b89696",color:"white"}}
-            variant="outlined"
+         style={{width:"90%" ,backgroundColor:" #aee7fe",color:"black"}}
+            
+            variant="contained"
             endIcon={
-                name === "sent" ? (
+                name === "Sent" ? (
                   <SendIcon />
-               ) : name === "trash" ? (
+               ) : name === "Trash" ? (
                   <AutoDeleteIcon />
-               ) : name === "inbox" ? (
+               ) : name === "Inbox" ? (
                   <MailIcon />
-               ) : name==="draft"?(
-                  <ArrowForwardIosIcon />
+               ) : name==="Drafts"?(
+                   <DraftsIcon/>
                ):
                (
                   <ArrowForwardIosIcon />
                )
             }
             onClick={()=>{
-              
-                setSelectedFolder(name)
+               setSelectedFolder(name);
+               setContent("mails");
+               
             }}
          >
             {name}
