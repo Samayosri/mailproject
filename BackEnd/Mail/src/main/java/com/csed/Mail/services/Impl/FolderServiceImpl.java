@@ -72,7 +72,7 @@ public class FolderServiceImpl implements FolderService {
         }
 
         folder.setEmails(emails);
-        //mailRepository.save(mailEntity);
+        mailRepository.save(mailEntity);
         folderRepository.save(folder);
     }
 

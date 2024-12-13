@@ -19,10 +19,10 @@ public class AttachmentDto {
     private String file;
 
     public AttachmentEntity getAttachment(){
-       return AttachmentEntity.builder().
-               id(null).
-               fileType(fileType).
-               fileData(file != null ? Base64.getDecoder().decode(file) : null).
-               build();
+        return AttachmentEntity.builder().
+                id(null).
+                fileType(fileType).
+                fileData(file != null ? Base64.getDecoder().decode(file) : null).
+                build();
     }
 }

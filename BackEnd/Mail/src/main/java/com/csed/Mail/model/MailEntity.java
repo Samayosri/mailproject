@@ -26,7 +26,7 @@ public class MailEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "sender_id", nullable = false)
     private UserEntity sender;
 
@@ -36,12 +36,15 @@ public class MailEntity {
     @Column(nullable = false)
     private String subject;
 
+    @Lob
     private String body;
 
     @ElementCollection
     private List<String> toReceivers = new ArrayList<>();
+
     @ElementCollection
     private List<String> ccReceivers = new ArrayList<>();
+
     @ElementCollection
     private List<String> bccReceivers = new ArrayList<>();
 
@@ -51,7 +54,7 @@ public class MailEntity {
     private List<AttachmentEntity> attachments = new ArrayList<>();
 
     @ManyToMany(mappedBy = "emails", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<FolderEntity> folders =new ArrayList<>();
+    private List<FolderEntity> folders = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
