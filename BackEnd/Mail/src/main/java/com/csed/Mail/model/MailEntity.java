@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -24,7 +26,7 @@ public class MailEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sender_id", nullable = false)
     private UserEntity sender;
 
@@ -34,25 +36,22 @@ public class MailEntity {
     @Column(nullable = false)
     private String subject;
 
-    @Lob
     private String body;
 
     @ElementCollection
-    private Set<String> toReceivers = new HashSet<>();
-
+    private List<String> toReceivers = new ArrayList<>();
     @ElementCollection
-    private Set<String> ccReceivers = new HashSet<>();
-
+    private List<String> ccReceivers = new ArrayList<>();
     @ElementCollection
-    private Set<String> bccReceivers = new HashSet<>();
+    private List<String> bccReceivers = new ArrayList<>();
 
     private Integer importance;
 
     @OneToMany(mappedBy = "mail", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<AttachmentEntity> attachments = new HashSet<>();
+    private List<AttachmentEntity> attachments = new ArrayList<>();
 
     @ManyToMany(mappedBy = "emails", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<FolderEntity> folders = new HashSet<>();
+    private List<FolderEntity> folders =new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

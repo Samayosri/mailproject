@@ -47,14 +47,17 @@ public class MailController {
     @PostMapping("/send")
     public ResponseEntity<?> sendMail(@RequestBody MailDto mailDto) {
         try{
-            System.out.println(mailDto.toString());
+           // System.out.println(mailDto.toString());
             MailEntity sentMail = mailMapper.mapFromDto(mailDto);
-            System.out.println(sentMail.toString());
+            if(sentMail.getSender() == null){
+                throw new IllegalArgumentException("helloo");
+            }
+            //System.out.println(sentMail.toString());
 
             folderService.sendMail(sentMail);
-            return ResponseEntity.status(HttpStatus.OK).body("Email is sent successfully.");
+          return ResponseEntity.status(HttpStatus.OK).body("Email is sent successfully.");
         }
-        catch (Exception e) {
+        catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }

@@ -1,5 +1,6 @@
 package com.csed.Mail.model;
 
+import com.csed.Mail.model.Dtos.AttachmentDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.util.Base64;
 
 @Data
 @NoArgsConstructor
@@ -36,4 +38,12 @@ public class AttachmentEntity implements Serializable {
     @Lob
     @Basic(fetch = FetchType.EAGER)
     private byte[] fileData;
+
+    public AttachmentDto getDto(){
+        return AttachmentDto.builder().file(fileData != null ? Base64.getEncoder().encodeToString(fileData) : null).
+                fileName(fileName).
+                fileType(fileType).
+                build();
+    }
+
 }

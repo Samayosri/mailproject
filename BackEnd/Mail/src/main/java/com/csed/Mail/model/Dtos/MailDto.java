@@ -29,9 +29,9 @@ public class MailDto {
     private String subject;
     private String body;
 
-    private Set<String> toReceivers = new HashSet<>();
-    private Set<String> ccReceivers = new HashSet<>();
-    private Set<String> bccReceivers = new HashSet<>();
+    private List<String> toReceivers = new ArrayList<>();
+    private List<String> ccReceivers = new ArrayList<>();
+    private List<String> bccReceivers = new ArrayList<>();
 
     private Integer importance;
 
