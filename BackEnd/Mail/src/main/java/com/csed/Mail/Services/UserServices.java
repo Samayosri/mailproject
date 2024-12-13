@@ -5,11 +5,8 @@ import com.csed.Mail.model.FolderEntity;
 import com.csed.Mail.model.UserEntity;
 import com.csed.Mail.repositories.FolderRepository;
 import com.csed.Mail.repositories.UserRepository;
-import com.csed.Mail.mappers.impl.UserMapperImpl;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Optional;
 
 @Service

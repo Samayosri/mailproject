@@ -34,4 +34,19 @@ public ResponseEntity<?> create(@RequestBody FolderDto folderDto) {
     return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
       }
      }
- }
+    @PutMapping ("/edit")
+    public ResponseEntity<?> edit(@RequestBody FolderDto folderDto) {
+        try {
+            return new ResponseEntity<>(folderServices.renaming(folderDto), HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @DeleteMapping ("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        try {  folderServices.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+        catch (IllegalArgumentException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+ }}}

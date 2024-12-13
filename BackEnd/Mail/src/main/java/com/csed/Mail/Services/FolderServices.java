@@ -8,6 +8,7 @@ import com.csed.Mail.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,5 +40,37 @@ public class FolderServices {
       folderadded.setOwner(existeduser.get());
       folderRepository.save(folderadded);
      return folderadded.getDto();
-   }}
+   }
+public FolderDto renaming(FolderDto folderDto){
+    List<String> defaultfolder = Arrays.asList("Inbox", "Sent", "Drafts", "Trash");
+    Optional<FolderEntity> defaultfol = folderRepository.getFolderById(folderDto.getId());
+    if (defaultfolder.contains(defaultfol.get().getName())) {
+        throw new IllegalArgumentException("This folder can't be renamed");
+    }
+    Optional<FolderEntity> oldfolder=folderRepository.getFolderByName(folderDto.getName());
+    if(oldfolder.isPresent()&&oldfolder.get().getUserId().equals(folderDto.getUserId()))
+        throw new IllegalArgumentException("this folder name is used");
+    Optional<FolderEntity> existedfolder= folderRepository.getFolderById(folderDto.getId());
+
+    FolderEntity folderEntity = existedfolder.get();
+    folderEntity.setName(folderDto.getName());
+    folderEntity.setOwner(userRepository.findById(folderDto.getUserId()).get());
+
+    FolderEntity editedFolder = folderRepository.save(folderEntity);
+    return editedFolder.getDto();
+}
+public void delete(Long id ) {
+        List<String> defaultfolder = Arrays.asList("Inbox", "Sent", "Drafts", "Trash");
+        Optional<FolderEntity> existedfolder = folderRepository.getFolderById(id);
+        if (existedfolder.isPresent()) {
+            if (defaultfolder.contains(existedfolder.get().getName())) {
+                throw new IllegalArgumentException("This folder can't be deleted");
+            }
+            folderRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("Folder not found for the given id and userId");
+        }
+    }
+}
+
 

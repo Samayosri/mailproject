@@ -10,12 +10,10 @@ import com.csed.Mail.repositories.MailRepository;
 import com.csed.Mail.repositories.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
-@Transactional
 public class FolderServiceImpl implements FolderService {
 
     private final FolderRepository folderRepository;
