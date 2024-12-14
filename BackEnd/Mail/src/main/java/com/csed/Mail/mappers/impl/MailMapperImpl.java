@@ -26,6 +26,7 @@ public class MailMapperImpl implements Mapper<MailEntity,MailDto> {
         MailDto mailDto = MailDto.builder().
                 id(mailEntity.getId()).
                 senderId(mailEntity.getSender().getId()).
+                senderMailAddress(mailEntity.getSender().getEmailAddress()).
                 creationDate(mailEntity.getCreationDate()).subject(mailEntity.
                 getSubject()).
                 body(mailEntity.getBody()).
@@ -56,7 +57,7 @@ public class MailMapperImpl implements Mapper<MailEntity,MailDto> {
                 attachments(new ArrayList<>()).folders(new ArrayList<>()).
                 build();
 
-         Optional<UserEntity> user = userRepository.findById(1L);
+         Optional<UserEntity> user = userRepository.findById(mailDto.getSenderId());
          if(user.isEmpty()){
              throw new IllegalArgumentException("user with mail not exist !!! ghost sending email");}
             mailEntity.setSender(user.get());

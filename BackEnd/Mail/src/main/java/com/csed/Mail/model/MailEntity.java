@@ -34,13 +34,13 @@ public class MailEntity {
 
     private String body;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> toReceivers = new ArrayList<>();
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> ccReceivers = new ArrayList<>();
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> bccReceivers = new ArrayList<>();
 
     private Integer importance;

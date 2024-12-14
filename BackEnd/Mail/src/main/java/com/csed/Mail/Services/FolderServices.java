@@ -60,6 +60,7 @@ public FolderDto renaming(FolderDto folderDto){
     return editedFolder.getDto();
 }
 public void delete(Long id ) {
+
         List<String> defaultfolder = Arrays.asList("Inbox", "Sent", "Drafts", "Trash");
         Optional<FolderEntity> existedfolder = folderRepository.getFolderById(id);
         if (existedfolder.isPresent()) {
@@ -70,6 +71,20 @@ public void delete(Long id ) {
         } else {
             throw new IllegalArgumentException("Folder not found for the given id and userId");
         }
+          /*  Optional<FolderEntity> folder = folderRepository.findById(id);
+            if(folder.isPresent()){
+                UserEntity user = folder.get().getOwner();
+                user.getFolders().remove(folder.get());
+                userRepository.save(user);
+                folderRepository.delete(folder.get());
+            }
+            else {
+                throw new IllegalArgumentException("not found");
+            } ahmed tried to test this but the  folder not removed from table
+                me and sama will search for the reason related to the folder,user,mail entity
+            */
+
+
     }
 }
 

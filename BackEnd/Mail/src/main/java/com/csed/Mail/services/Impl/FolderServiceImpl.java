@@ -8,7 +8,6 @@ import com.csed.Mail.model.UserEntity;
 import com.csed.Mail.repositories.FolderRepository;
 import com.csed.Mail.repositories.MailRepository;
 import com.csed.Mail.repositories.UserRepository;
-import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,21 +28,34 @@ public class FolderServiceImpl implements FolderService {
     @Override
     public void sendMail(MailEntity mailEntity) throws IllegalArgumentException {
 
-        //check for recivers if any one of them found put mail in drafts and throw exeption
-        // and pass mail dto
+        checkReceivers(mailEntity.getToReceivers());
+        checkReceivers(mailEntity.getBccReceivers());
+        checkReceivers(mailEntity.getCcReceivers());
+
          mailEntity = mailRepository.save(mailEntity);
         // Move the mail to "Sent" and remove from "Drafts"
         moveToFolder(mailEntity, "Drafts", false);  // Remove from Drafts
+        List<String> hideBcc = mailEntity.getBccReceivers(); // remove bcc from mail entity
+        mailEntity.setBccReceivers(null);
         moveToFolder(mailEntity, "Sent", true);     // Add to Sent Folder
 
         processReceivers(mailEntity.getToReceivers(), mailEntity);
         processReceivers(mailEntity.getCcReceivers(), mailEntity);
-        processReceivers(mailEntity.getBccReceivers(), mailEntity);
+        processReceivers(hideBcc, mailEntity);
+        // tested sending to multible recivers and send to wrong mail
+        // and adding to draft and edting it
+        // try to add mail to draft then send it it removed succcesfully nice
     }
 
     @Override
     public void draftMail(MailEntity mailEntity) throws IllegalArgumentException {
-        moveToFolder(mailEntity, "Drafts", true);
+        if(mailEntity.getId() == null){ // create new mail by butting in draft
+            moveToFolder(mailEntity, "Drafts", true);
+        }
+        else{ // mail exist only need update it
+            mailRepository.save(mailEntity);
+        }
+
     }
 
     private void processReceivers(List<String> receivers, MailEntity mailEntity) throws IllegalArgumentException {
@@ -56,20 +68,38 @@ public class FolderServiceImpl implements FolderService {
             }
         }
     }
+    private void checkReceivers(List<String> receivers) throws IllegalArgumentException {
+        for (String emailAddress : receivers) {
+            Optional<UserEntity> receiver = userRepository.findByEmailAddress(emailAddress);
+            if (receiver.isEmpty()) {
+                throw new IllegalArgumentException(emailAddress + " does not exist.");
+            }
+        }
+    }
 
     private void moveToFolder(MailEntity mailEntity, String folderName, boolean add) {
         moveToFolder(mailEntity, folderName, add, mailEntity.getSender());
     }
 
     private void moveToFolder(MailEntity mailEntity, String folderName, boolean add, UserEntity user) {
-        Optional<FolderEntity> folder = folderRepository.findByOwnerAndName(user, folderName);
+        List<FolderEntity> folders = user.getFolders();
+        FolderEntity folder = null;
+        for(FolderEntity f : folders){
+            if(f.getName().equals(folderName)){
+                folder = f;
+                break;
+            }
+        }
+        if(folder == null){
+            throw new IllegalArgumentException("folder not found");
+        }
 
         if (add) {
-            folder.get().getEmails().add(mailEntity);
+            folder.getEmails().add(mailEntity);
         } else {
-           folder.get().getEmails().remove(mailEntity);
+           folder.getEmails().remove(mailEntity);
         }
-        folderRepository.save(folder.get());
+        folderRepository.save(folder);
     }
 
 
