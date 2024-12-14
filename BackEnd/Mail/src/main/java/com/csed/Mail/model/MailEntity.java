@@ -1,10 +1,7 @@
 package com.csed.Mail.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -13,12 +10,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Transactional
 @Table(name = "Mails")
 public class MailEntity {
 
@@ -26,8 +23,7 @@ public class MailEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "sender_id", nullable = false)
+    @ManyToOne
     private UserEntity sender;
 
     @Column(nullable = false)
@@ -36,7 +32,6 @@ public class MailEntity {
     @Column(nullable = false)
     private String subject;
 
-    @Lob
     private String body;
 
     @ElementCollection
@@ -53,7 +48,7 @@ public class MailEntity {
     @OneToMany(mappedBy = "mail", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<AttachmentEntity> attachments = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "emails", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "emails", fetch = FetchType.EAGER)
     private List<FolderEntity> folders = new ArrayList<>();
 
     @PrePersist

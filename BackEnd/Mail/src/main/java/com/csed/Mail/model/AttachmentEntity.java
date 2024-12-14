@@ -2,21 +2,18 @@ package com.csed.Mail.model;
 
 import com.csed.Mail.model.Dtos.AttachmentDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.Base64;
 
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Transactional
 @Table(name = "Attachments")
 public class AttachmentEntity implements Serializable {
 

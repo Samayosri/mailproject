@@ -28,6 +28,10 @@ public class FolderServiceImpl implements FolderService {
 
     @Override
     public void sendMail(MailEntity mailEntity) throws IllegalArgumentException {
+
+        //check for recivers if any one of them found put mail in drafts and throw exeption
+        // and pass mail dto
+         mailEntity = mailRepository.save(mailEntity);
         // Move the mail to "Sent" and remove from "Drafts"
         moveToFolder(mailEntity, "Drafts", false);  // Remove from Drafts
         moveToFolder(mailEntity, "Sent", true);     // Add to Sent Folder
@@ -58,20 +62,14 @@ public class FolderServiceImpl implements FolderService {
     }
 
     private void moveToFolder(MailEntity mailEntity, String folderName, boolean add, UserEntity user) {
-        FolderEntity folder = folderRepository.findByOwnerAndName(user, folderName)
-                .orElseGet(() -> createFolder(user, folderName));
-
-        List<MailEntity> emails = new ArrayList<>(folder.getEmails());
+        Optional<FolderEntity> folder = folderRepository.findByOwnerAndName(user, folderName);
 
         if (add) {
-            emails.add(mailEntity);
+            folder.get().getEmails().add(mailEntity);
         } else {
-            emails.remove(mailEntity);
+           folder.get().getEmails().remove(mailEntity);
         }
-
-        folder.setEmails(emails);
-        mailRepository.save(mailEntity);
-        folderRepository.save(folder);
+        folderRepository.save(folder.get());
     }
 
 

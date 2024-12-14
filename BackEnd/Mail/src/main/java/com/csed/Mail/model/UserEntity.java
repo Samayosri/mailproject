@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Set;
 
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Transactional
 @Table(name = "Users")
 public class UserEntity {
 
@@ -33,6 +33,8 @@ public class UserEntity {
 
     @Column(nullable = false)
     private String password;
+    @OneToMany(mappedBy = "sender",fetch = FetchType.EAGER)
+    private List<MailEntity> mails = new ArrayList<>();
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<FolderEntity> folders = new ArrayList<>();
