@@ -6,6 +6,8 @@ import com.csed.Mail.model.FolderEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class FolderMapperImpl implements Mapper<FolderEntity, FolderDto> {
     private final ModelMapper modelMapper;
@@ -22,5 +24,15 @@ public class FolderMapperImpl implements Mapper<FolderEntity, FolderDto> {
     @Override
     public FolderEntity mapFromDto(FolderDto folderDto) {
         return this.modelMapper.map(folderDto, FolderEntity.class);
+    }
+
+    @Override
+    public List<FolderDto> mapListToDto(List<FolderEntity> a) {
+        return List.of();
+    }
+
+    @Override
+    public List<FolderEntity> mapListFromDto(List<FolderDto> b) {
+        return List.of();
     }
 }

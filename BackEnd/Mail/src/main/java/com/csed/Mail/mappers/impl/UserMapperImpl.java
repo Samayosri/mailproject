@@ -6,6 +6,8 @@ import com.csed.Mail.model.UserEntity;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class UserMapperImpl implements Mapper<UserEntity, UserDto> {
     private final ModelMapper modelMapper;
@@ -22,5 +24,15 @@ public class UserMapperImpl implements Mapper<UserEntity, UserDto> {
     @Override
     public UserEntity mapFromDto(UserDto userDto) {
         return this.modelMapper.map(userDto, UserEntity.class);
+    }
+
+    @Override
+    public List<UserDto> mapListToDto(List<UserEntity> a) {
+        return List.of();
+    }
+
+    @Override
+    public List<UserEntity> mapListFromDto(List<UserDto> b) {
+        return List.of();
     }
 }

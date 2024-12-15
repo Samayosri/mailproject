@@ -6,6 +6,8 @@ import com.csed.Mail.model.Dtos.AttachmentDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class AttachmentMapperImpl implements Mapper<AttachmentEntity, AttachmentDto> {
 
@@ -24,5 +26,15 @@ public class AttachmentMapperImpl implements Mapper<AttachmentEntity, Attachment
     @Override
     public AttachmentEntity mapFromDto(AttachmentDto attachmentDto) {
         return this.modelMapper.map(attachmentDto, AttachmentEntity.class);
+    }
+
+    @Override
+    public List<AttachmentDto> mapListToDto(List<AttachmentEntity> a) {
+        return List.of();
+    }
+
+    @Override
+    public List<AttachmentEntity> mapListFromDto(List<AttachmentDto> b) {
+        return List.of();
     }
 }

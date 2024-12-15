@@ -10,18 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Component
 public class MailMapperImpl implements Mapper<MailEntity,MailDto> {
-
-
     private final UserRepository userRepository;
     @Autowired
     public MailMapperImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    @Override
     public MailDto mapToDto(MailEntity mailEntity) {
         MailDto mailDto = MailDto.builder().
                 id(mailEntity.getId()).
@@ -40,9 +40,17 @@ public class MailMapperImpl implements Mapper<MailEntity,MailDto> {
             mailDto.getAttachments().add(a.getDto());
         }
         return mailDto;
-
+    }
+    @Override
+    public List<MailDto> mapListToDto(List<MailEntity> mailEntities) {
+        List<MailDto> mailDtos = new ArrayList<>();
+        for(MailEntity m : mailEntities){
+            mailDtos.add(mapToDto(m));
+        }
+        return mailDtos;
     }
 
+    @Override
     public MailEntity mapFromDto(MailDto mailDto)
     {
          MailEntity mailEntity =  MailEntity.builder().
@@ -58,11 +66,27 @@ public class MailMapperImpl implements Mapper<MailEntity,MailDto> {
                 build();
 
          Optional<UserEntity> user = userRepository.findById(mailDto.getSenderId());
-         if(user.isEmpty()){
-             throw new IllegalArgumentException("user with mail not exist !!! ghost sending email");}
-            mailEntity.setSender(user.get());
-           return mailEntity;
+         if(user.isEmpty()) {
+             throw new IllegalArgumentException("user with mail not exist !!! ghost sending email");
+         }
+
+        if (!user.get().getEmailAddress().equals(mailDto.getSenderMailAddress())) {
+            System.out.println("hellooooo");
+            throw new IllegalArgumentException("The user id and the email address are not compatible.");
+        }
+
+        mailEntity.setSender(user.get());
+
+         return mailEntity;
 
 
+    }
+    @Override
+    public List<MailEntity> mapListFromDto(List<MailDto> mailDtos) {
+        List<MailEntity> mailEntities = new ArrayList<>();
+        for(MailDto m : mailDtos){
+            mailEntities.add(mapFromDto(m));
+        }
+        return mailEntities;
     }
 }

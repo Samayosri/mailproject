@@ -1,6 +1,5 @@
 package com.csed.Mail.Services.Impl;
 
-import com.csed.Mail.MailApplication;
 import com.csed.Mail.Services.FolderService;
 import com.csed.Mail.model.FolderEntity;
 import com.csed.Mail.model.MailEntity;
@@ -26,90 +25,114 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public void sendMail(MailEntity mailEntity) throws IllegalArgumentException {
+    public MailEntity sendMail(MailEntity mailEntity) throws IllegalArgumentException {
+        validateReceivers(mailEntity);
 
-        checkReceivers(mailEntity.getToReceivers());
-        checkReceivers(mailEntity.getBccReceivers());
-        checkReceivers(mailEntity.getCcReceivers());
+        mailEntity = mailRepository.save(mailEntity);
 
-         mailEntity = mailRepository.save(mailEntity);
-        // Move the mail to "Sent" and remove from "Drafts"
-        moveToFolder(mailEntity, "Drafts", false);  // Remove from Drafts
-        List<String> hideBcc = mailEntity.getBccReceivers(); // remove bcc from mail entity
+        List<String> bccReceivers = new ArrayList<>(mailEntity.getBccReceivers());
         mailEntity.setBccReceivers(null);
-        moveToFolder(mailEntity, "Sent", true);     // Add to Sent Folder
 
-        processReceivers(mailEntity.getToReceivers(), mailEntity);
-        processReceivers(mailEntity.getCcReceivers(), mailEntity);
-        processReceivers(hideBcc, mailEntity);
-        // tested sending to multible recivers and send to wrong mail
-        // and adding to draft and edting it
-        // try to add mail to draft then send it it removed succcesfully nice
+        moveMailBetweenFoldersByName(mailEntity, "Drafts", "Sent", mailEntity.getSender());
+
+        sendMailToReceivers(mailEntity.getToReceivers(), mailEntity);
+        sendMailToReceivers(mailEntity.getCcReceivers(), mailEntity);
+        sendMailToReceivers(bccReceivers, mailEntity);
+
+        return mailEntity;
     }
 
     @Override
-    public void draftMail(MailEntity mailEntity) throws IllegalArgumentException {
-        if(mailEntity.getId() == null){ // create new mail by butting in draft
-            moveToFolder(mailEntity, "Drafts", true);
+    public MailEntity draftMail(MailEntity mailEntity) {
+        if (mailEntity.getId() == null) {
+            mailEntity = mailRepository.save(mailEntity);
+            addEmailToFolderByName(mailEntity, "Drafts", mailEntity.getSender());
+        } else {
+            mailEntity = mailRepository.save(mailEntity);
         }
-        else{ // mail exist only need update it
-            mailRepository.save(mailEntity);
-        }
-
+        return mailEntity;
     }
 
-    private void processReceivers(List<String> receivers, MailEntity mailEntity) throws IllegalArgumentException {
+    @Override
+    public void validateReceivers(MailEntity mailEntity) {
+        checkReceivers(mailEntity.getToReceivers(), "To");
+        checkReceivers(mailEntity.getCcReceivers(), "CC");
+        checkReceivers(mailEntity.getBccReceivers(), "BCC");
+    }
+
+    private void checkReceivers(List<String> receivers, String type) {
+        if(receivers == null) return;
+        for (String emailAddress : receivers) {
+            if (userRepository.findByEmailAddress(emailAddress).isEmpty()) {
+                throw new IllegalArgumentException(type + " receiver '" + emailAddress + "' does not exist.");
+            }
+        }
+    }
+
+    @Override
+    public void sendMailToReceivers(List<String> receivers, MailEntity mailEntity) {
         for (String emailAddress : receivers) {
             Optional<UserEntity> receiver = userRepository.findByEmailAddress(emailAddress);
             if (receiver.isPresent()) {
-                moveToFolder(mailEntity, "Inbox", true, receiver.get());
+                addEmailToFolderByName(mailEntity, "Inbox", receiver.get());
             } else {
                 throw new IllegalArgumentException(emailAddress + " does not exist.");
             }
         }
     }
-    private void checkReceivers(List<String> receivers) throws IllegalArgumentException {
-        for (String emailAddress : receivers) {
-            Optional<UserEntity> receiver = userRepository.findByEmailAddress(emailAddress);
-            if (receiver.isEmpty()) {
-                throw new IllegalArgumentException(emailAddress + " does not exist.");
-            }
-        }
-    }
 
-    private void moveToFolder(MailEntity mailEntity, String folderName, boolean add) {
-        moveToFolder(mailEntity, folderName, add, mailEntity.getSender());
-    }
-
-    private void moveToFolder(MailEntity mailEntity, String folderName, boolean add, UserEntity user) {
+    @Override
+    public Long getFolderIdByName(String folderName, UserEntity user) {
         List<FolderEntity> folders = user.getFolders();
-        FolderEntity folder = null;
-        for(FolderEntity f : folders){
-            if(f.getName().equals(folderName)){
-                folder = f;
-                break;
+        for (FolderEntity folder : folders) {
+            if (folder.getName().equals(folderName)) {
+                return folder.getId();
             }
         }
-        if(folder == null){
-            throw new IllegalArgumentException("folder not found");
-        }
+        throw new IllegalArgumentException("Folder { " + folderName + " } not found");
+    }
+    @Override
+    public void moveMailBetweenFoldersByName(MailEntity mailEntity, String fromFolder, String toFolder, UserEntity sender) {
+        removeEmailFromFolderByName(mailEntity, fromFolder, sender);
+        addEmailToFolderByName(mailEntity, toFolder, sender);
+    }
 
-        if (add) {
-            folder.getEmails().add(mailEntity);
-        } else {
-           folder.getEmails().remove(mailEntity);
-        }
+    @Override
+    public void moveMailBetweenFoldersById(MailEntity mailEntity, Long fromFolder, Long toFolder) {
+        removeEmailFromFolderById(mailEntity, fromFolder);
+        addEmailToFolderById(mailEntity, toFolder);
+    }
+
+
+    @Override
+    public FolderEntity getFolderById(Long folderId) {
+        return folderRepository.findById(folderId)
+                .orElseThrow(() -> new IllegalArgumentException("Folder with ID '" + folderId + "' not found."));
+    }
+
+    @Override
+    public void addEmailToFolderById(MailEntity mailEntity, Long folderId) {
+        FolderEntity folder = getFolderById(folderId);
+        folder.getEmails().add(mailEntity);
         folderRepository.save(folder);
     }
 
+    @Override
+    public void removeEmailFromFolderById(MailEntity mailEntity, Long folderId) {
+        FolderEntity folder = getFolderById(folderId);
+        folder.getEmails().remove(mailEntity);
+        folderRepository.save(folder);
+    }
 
-    private FolderEntity createFolder(UserEntity user, String folderName) {
-        return folderRepository.save(
-                FolderEntity.builder()
-                        .owner(user)
-                        .name(folderName)
-                        .emails(new ArrayList<>())
-                        .build()
-        );
+    @Override
+    public void addEmailToFolderByName(MailEntity mailEntity, String folderName, UserEntity user) {
+        Long folderId = getFolderIdByName(folderName, user);
+        addEmailToFolderById(mailEntity, folderId);
+    }
+
+    @Override
+    public void removeEmailFromFolderByName(MailEntity mailEntity, String folderName, UserEntity user) {
+        Long folderId = getFolderIdByName(folderName, user);
+        removeEmailFromFolderById(mailEntity, folderId);
     }
 }

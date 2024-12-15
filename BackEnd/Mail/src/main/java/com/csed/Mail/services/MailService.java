@@ -9,9 +9,11 @@ import java.util.List;
 
 
 public interface MailService {
-
-    Page<MailEntity> getEmailsByFolderId(Long folderId, Pageable pageable);
     List<MailDto> getListEmailsByFolderId(Long folderId);
 
-    MailEntity sendMail(MailEntity mailEntity);
+    List<MailDto> sortDtoMailsByDate(List<MailDto> dtoMails);
+
+    List<MailDto> sortDtoMailsByImportance(List<MailDto> dtoMails);
+
+    List<MailDto> getPage(List<MailDto> mailDtos, int pageNumber, int pageSize);
 }

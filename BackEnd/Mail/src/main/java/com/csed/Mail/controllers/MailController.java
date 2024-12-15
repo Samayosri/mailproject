@@ -3,16 +3,11 @@ package com.csed.Mail.controllers;
 import com.csed.Mail.Services.FolderService;
 import com.csed.Mail.mappers.Mapper;
 import com.csed.Mail.model.Dtos.MailDto;
-import com.csed.Mail.model.Dtos.UserDto;
 import com.csed.Mail.model.MailEntity;
 import com.csed.Mail.Services.MailService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/mails")
@@ -27,47 +22,29 @@ public class MailController {
         this.mailMapper = mailMapper;
         this.folderService =folderService;
     }
-    @GetMapping("/{folderId}")
-    public ResponseEntity<?> getMailsByFolderId(@PathVariable long folderId, Pageable pageable) {
+
+    @GetMapping("get/{folderId}/{pageNumber}/{pageSize}")
+    public ResponseEntity<?> getMails(
+            @PathVariable long folderId,
+            @PathVariable int pageNumber,
+            @PathVariable int pageSize
+
+    ) {
         try {
-            Page<MailEntity> mails = mailService.getEmailsByFolderId(folderId, pageable);
-            Page<MailDto> mailDtos = mails.map(mailMapper::mapToDto);
-            return ResponseEntity.ok(mailDtos);
+            return new ResponseEntity<>(mailService.getPage(mailService.sortDtoMailsByImportance(mailService.getListEmailsByFolderId(folderId)), pageNumber, pageSize), HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-    @GetMapping("get/{folderId}") // to test with list mails
-    public ResponseEntity<?> getMails(@PathVariable long folderId) {
-        try {
-
-            List<MailDto> mailDtos = mailService.getListEmailsByFolderId(folderId);
-            return ResponseEntity.ok(mailDtos);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
-
-    // id   name    userId
-    // 1    inbox   nourId
-    // 2    sent    nourId
-    // 3    inbox   ahmedId
-    // 4    sent    ahmedId
-    // 5    work    ahmedId
 
     @PostMapping("/send")
     public ResponseEntity<?> sendMail(@RequestBody MailDto mailDto) {
         try{
-           // System.out.println(mailDto.toString());
             MailEntity sentMail = mailMapper.mapFromDto(mailDto);
             if(sentMail.getSender() == null){
                 throw new IllegalArgumentException("helloo");
             }
-            //System.out.println(sentMail.toString());
-
-            folderService.sendMail(sentMail);
-          return ResponseEntity.status(HttpStatus.OK).body("Email is sent successfully.");
+            return new ResponseEntity<>(mailMapper.mapToDto(folderService.sendMail(sentMail)), HttpStatus.OK);
         }
         catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -77,13 +54,13 @@ public class MailController {
     @PostMapping("/draft")
     public ResponseEntity<?> draftMail(@RequestBody MailDto mailDto){
         try {
-            MailEntity sentMail = mailMapper.mapFromDto(mailDto);
-            folderService.draftMail(sentMail);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Email added to draft.");
+            return new ResponseEntity<>(
+                    mailMapper.mapToDto(folderService.draftMail(mailMapper.mapFromDto(mailDto))),
+                    HttpStatus.OK
+            );
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
 }
