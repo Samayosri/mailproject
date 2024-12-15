@@ -7,14 +7,25 @@ import {
   DialogContent,
   IconButton,
   Typography,
+  Checkbox,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
 import MailContent from "./MailContent";
 import axios from "axios"; 
 import ComposeEmail from "./ComposeEmail";
+import { WidthFull } from "@mui/icons-material";
 
 function Mail({ folders, selectedFolder }) {
+  const [checkedMails, setCheckedMails] = useState([]);
+  
+  const handleCheckboxChange = (mailId) => {
+    setCheckedMails((prev) =>
+      prev.includes(mailId)
+        ? prev.filter((id) => id !== mailId)
+        : [...prev, mailId]
+    );
+  };
   const [mails, setMails] = useState([
     {
       id: 1,
@@ -49,6 +60,12 @@ function Mail({ folders, selectedFolder }) {
     setIsOpen(false);
   };
 
+  function handleMove(){
+    //send request to move to another folder
+  }
+  function handleDelete(){
+    
+  }
   const folderID = folders.find(
     (folder) => folder.folderName === selectedFolder
     
@@ -76,21 +93,65 @@ function Mail({ folders, selectedFolder }) {
 
   return (
     <Box>
-      <Stack spacing={2}>
-        {mails.map((m, index) => (
-          <Button
-            style={{ backgroundColor: "#aee7fe" ,color:"black"}}
-            key={index}
-            variant="contained"
-            sx={{ marginBottom: 1 }}
-            onClick={() => handleDisplayMail(m)}
+      <Box style={{
+   
+        display:"flex",
+        flexDirection:"column",
+        position:"absolute",
+        right:"1%",
+        gap:"10px"
+
+      }}>
+      <Button variant="contained"
+      
+    >Move</Button>
+    <Button variant="outlined" color="error"
+
+    >
+     
+  Delete
+   </Button>
+      </Box>
+
+    <Stack spacing={2}>
+        {mails.map((mail) => (
+          <Box
+            key={mail.id}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              backgroundColor: "#e0f7fa",
+
+              padding: 1,
+              borderRadius: 1,
+              boxShadow: 1,
+            }}
           >
-            {m.sender || "Unknown Sender"} - {m.subject || "No Subject"}
-          </Button>
+            <Checkbox
+              checked={checkedMails.includes(mail.id)}
+              onChange={() => handleCheckboxChange(mail.id)}
+            />
+            <Button
+
+              variant="contained"
+              sx={{
+              
+                flex: 1,
+                justifyContent: "flex-start",
+                backgroundColor: "#aee7fe",
+                color: "black",
+                textTransform: "none",
+              }}
+              onClick={() => handleDisplayMail(mail)}
+            >
+              <Typography variant="body1" noWrap>
+                <strong>{mail.sender || "Unknown Sender"}:</strong> {mail.subject || "No Subject"}
+              </Typography>
+            </Button>
+          </Box>
         ))}
       </Stack>
-
-      {selectedMail && (
+      {(selectedMail && selectedFolder !== "Drafts")&&(
         <Dialog
           open={Boolean(selectedMail)}
           onClose={handleCloseDialog}
@@ -118,20 +179,25 @@ function Mail({ folders, selectedFolder }) {
             >
               <CloseIcon />
             </IconButton>
-          </DialogTitle>
-        <DialogContent dividers sx={{ padding: "16px" }}>
-        {console.log(selectedFolder)}
-          {selectedFolder === "Drafts" ? (
-               <ComposeEmail open={isOpen} mail={selectedMail}></ComposeEmail>
-          ) : (
-            <MailContent
+          </DialogTitle> 
+          <DialogContent dividers sx={{ padding: "16px" }}>
+          <MailContent
               mail={selectedMail}
             />
-          )}
-      </DialogContent>
-
-        </Dialog>
-      )}
+        </DialogContent>
+        </Dialog>  )}
+      
+       
+      {console.log(selectedFolder)}
+      <Box dividers sx={{ padding: "16px" }}>
+        {(selectedFolder === "Drafts"&&selectedMail)&&(
+               <ComposeEmail open={true} onClose={setSelectedMail}></ComposeEmail>
+          ) 
+         
+          }
+        </Box>
+          
+  
     </Box>
   );
 }
