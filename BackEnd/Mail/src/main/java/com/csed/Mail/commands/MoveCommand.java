@@ -27,13 +27,14 @@ public class MoveCommand extends Command{
     public void execute() {
         List<FolderEntity> folders = user.getFolders();
         for(FolderEntity folder : folders){
-            if(folder.getId().equals(sourceFolderId)){
-                folders.remove(folder);
+            if(folder.getId().equals(sourceFolderId)) {
+                folder.getEmails().remove(mail);
+                commandService.saveFolder(folder);
             }
             else if(folder.getId().equals(destinationFolderId)){
-                folders.add(folder);
+                folder.getEmails().add(mail);
+                commandService.saveFolder(folder);
             }
         }
-        commandService.saveUser(user);
     }
 }

@@ -30,6 +30,10 @@ public class CommandService {
     public MailEntity getMailById(Long id){
         return mailRepository.findById(id).orElseThrow( () -> new IllegalArgumentException("Mail not Found"));
     }
+    public FolderEntity saveFolder(FolderEntity folder){
+        return folderRepository.save(folder);
+    }
+
 
     public void saveUser(UserEntity user){
         userRepository.save(user);

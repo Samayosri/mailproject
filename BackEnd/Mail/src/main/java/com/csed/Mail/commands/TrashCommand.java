@@ -27,17 +27,18 @@ public class TrashCommand extends Command{
 
     @Override
     public void execute() {
+        //set delete date
         List<FolderEntity> folders = user.getFolders();
         for(FolderEntity folder : folders){
-            if(folder.getId().equals(sourceFolderId)){
-                folders.remove(folder);
+            if(folder.getId().equals(sourceFolderId)) {
+                folder.getEmails().remove(mail);
+                commandService.saveFolder(folder);
             }
             else if(folder.getId().equals(destinationFolderId)){
-                folders.add(folder);
+                folder.getEmails().add(mail);
+                commandService.saveFolder(folder);
             }
         }
-        // set delete date for mail entity
-        commandService.saveUser(user);
 
     }
 }
