@@ -9,8 +9,8 @@ public class CommandFactory {
 
     public Command getCommand(String commandType){
         return switch (commandType) {
-            case "send" -> new SendCommand();
-            case "draft" -> new DraftCommand();
+            case "send" -> new SendCommand(commandService);
+            case "draft" -> new DraftCommand(commandService);
             case "move" -> new MoveCommand(commandService);
             case "trash" -> new TrashCommand(commandService);
             default -> null;

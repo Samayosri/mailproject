@@ -35,17 +35,13 @@ public class CommandService {
         userRepository.save(user);
     }
 
-    public void validateReceivers(MailEntity mailEntity) {
-        checkReceivers(mailEntity.getToReceivers(), "To");
-        checkReceivers(mailEntity.getCcReceivers(), "CC");
-        checkReceivers(mailEntity.getBccReceivers(), "BCC");
-    }
 
-    private void checkReceivers(List<String> receivers, String type) {
+
+    public void checkReceivers(List<String> receivers) {
         if(receivers == null) return;
         for (String emailAddress : receivers) {
             if (userRepository.findByEmailAddress(emailAddress).isEmpty()) {
-                throw new IllegalArgumentException(type + " receiver '" + emailAddress + "' does not exist.");
+                throw new IllegalArgumentException( emailAddress + "' does not exist.");
             }
         }
     }
