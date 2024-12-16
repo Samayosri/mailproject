@@ -14,6 +14,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
+import axios from "axios"; 
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -71,7 +72,7 @@ const ComposeEmail = ({ open, onClose, mail = {},userId,method}) => {
     }
   };
 
-  const handleSend = () => {
+  const handleSend = async() => {
     /*
 
     if method is draft send request to update mail
@@ -92,7 +93,7 @@ const ComposeEmail = ({ open, onClose, mail = {},userId,method}) => {
       return;
     }
 
-     /*
+     
       const url ="http://localhost:8080//mails/send" 
 
       try {
@@ -113,7 +114,7 @@ const ComposeEmail = ({ open, onClose, mail = {},userId,method}) => {
         } else {
           console.error("Unexpected Error:", error);
         }
-      }*/
+      }
 
     const isEmailSent = true; // will be removed when deal with api
     if (isEmailSent) {

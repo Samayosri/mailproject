@@ -9,13 +9,15 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import axios from "axios";
 
 function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setContent, userId }) {
-  
+
   useEffect(() => {
     const fetchFolders = async () => {
       try {
         const response = await axios.get(`http://localhost:8080/folder/${userId}`);
         if (response.status === 200) {
+       
           setFolders(response.data);
+          console.log(folders);
         }
       } catch (error) {
         if (error.response?.status === 400) {
@@ -114,7 +116,7 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
             New mail
           </Button>
 
-          {folders && folders.length > 0 ? (
+  {folders && folders.length > 0 ? (
   folders.map((folder) => (
     <Folder
       key={folder.id} 

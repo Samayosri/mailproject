@@ -14,8 +14,6 @@ import { useEffect, useState } from "react";
 import MailContent from "./MailContent";
 import axios from "axios"; 
 import ComposeEmail from "./ComposeEmail";
-import { WidthFull } from "@mui/icons-material";
-
 function Mail({ folders, selectedFolder ,userId}) {
   const [checkedMails, setCheckedMails] = useState([]);
   
@@ -55,8 +53,10 @@ function Mail({ folders, selectedFolder ,userId}) {
     if (folderID) {
       const fetchMails = async () => {
         try {
-          const response = await axios.get(`http://localhost:8080/mail/${userId}`);
+          const response = await axios.get(`http://localhost:8080/mail/${folderID}`);
+          console.log("heyyyy");
           if (response.status === 200) {
+          
             setMails(response.data);
           }
         } catch (error) {
