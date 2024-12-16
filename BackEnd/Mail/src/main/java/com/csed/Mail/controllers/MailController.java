@@ -3,6 +3,7 @@ package com.csed.Mail.controllers;
 import com.csed.Mail.Services.FolderService;
 import com.csed.Mail.mappers.Mapper;
 import com.csed.Mail.model.Dtos.MailDto;
+import com.csed.Mail.model.Dtos.MoveDto;
 import com.csed.Mail.model.MailEntity;
 import com.csed.Mail.Services.MailService;
 import org.springframework.http.HttpStatus;
@@ -88,6 +89,17 @@ public class MailController {
     ) { // use search service
         return ResponseEntity.status(HttpStatus.OK).body("");
     }
+    @PutMapping("/move")
+    public ResponseEntity<?> move(@RequestBody MoveDto moveDto){
+        return null; // will be done by cammands
+
+    }
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> delete(@RequestBody MoveDto moveDto){
+        return null; // will be done by commands
+
+    }
+
 
 
 }
