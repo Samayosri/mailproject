@@ -140,10 +140,10 @@ public class FolderServiceImpl implements FolderService {
                 break;
             }
         }
-        if(folder == null){
+        if(folder == null) {
             throw new IllegalArgumentException("folder not found");
         }
-            folder.getEmails().remove(mailEntity);
+        folder.getEmails().remove(mailEntity);
         folderRepository.save(folder);
 
     }

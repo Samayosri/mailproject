@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MoveDto {
+    private Long userId;
     private Long sourceFolderId;
     private Long destinationFolderId;
     private List<Long> mailIds;
