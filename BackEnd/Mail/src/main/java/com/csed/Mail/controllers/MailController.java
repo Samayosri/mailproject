@@ -1,5 +1,8 @@
 package com.csed.Mail.controllers;
 
+import com.csed.Mail.Search.Criteria;
+import com.csed.Mail.Search.Impl.DateCriteria;
+import com.csed.Mail.Search.Impl.ImportanceCriteria;
 import com.csed.Mail.Services.FolderService;
 import com.csed.Mail.mappers.Mapper;
 import com.csed.Mail.model.Dtos.MailDto;
@@ -87,7 +90,8 @@ public class MailController {
             @RequestParam(required = false,defaultValue = "5") Integer pageSize
 
     ) { // use search service
-        return ResponseEntity.status(HttpStatus.OK).body("");
+        Criteria criteria = new ImportanceCriteria("2");
+        return new ResponseEntity<>(criteria.meetCriteria(mailService.getListEmailsByFolderId(folderId)), HttpStatus.OK);
     }
     @PutMapping("/move")
     public ResponseEntity<?> move(@RequestBody MoveDto moveDto){

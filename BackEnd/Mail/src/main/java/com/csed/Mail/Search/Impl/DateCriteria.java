@@ -5,6 +5,7 @@ import com.csed.Mail.model.Dtos.MailDto;
 import lombok.NonNull;
 
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,14 +18,13 @@ public class DateCriteria extends Criteria {
     @Override
     public List<MailDto> meetCriteria(List<MailDto> mailDtos) {
         List<MailDto> result = new ArrayList<>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         for (MailDto mailDto : mailDtos) {
             if (mailDto.getCreationDate() != null) {
-                // Convert creationDate to string in "yyyy-MM-dd" format
-                String creationDate = dateFormat.format(mailDto.getCreationDate());
+                String creationDate = mailDto.getCreationDate().toLocalDate().format(dateFormatter);
 
-                if (creationDate.contains(getKeyword())) {
+                if (creationDate.equals(getKeyword())) {
                     result.add(mailDto);
                 }
             }
