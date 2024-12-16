@@ -34,6 +34,9 @@ public class CommandService {
     public void saveUser(UserEntity user){
         userRepository.save(user);
     }
+    public MailEntity saveMail(MailEntity mail){
+       return mailRepository.save(mail);
+    }
 
 
 
@@ -45,6 +48,15 @@ public class CommandService {
             }
         }
     }
+    public MailEntity draftMail(MailEntity mailEntity) {
+        if (mailEntity.getId() == null) {
+            mailEntity = mailRepository.save(mailEntity);
+            addEmailToFolderByName(mailEntity, "Drafts", mailEntity.getSender());
+        } else {
+            mailEntity = mailRepository.save(mailEntity);
+        }
+        return mailEntity;
+     }
     public FolderEntity getFolderById(Long folderId) {
         return folderRepository.findById(folderId)
                 .orElseThrow(() -> new IllegalArgumentException("Folder with ID '" + folderId + "' not found."));
@@ -80,5 +92,6 @@ public class CommandService {
 
         return mailEntity;
     }
+
 
 }

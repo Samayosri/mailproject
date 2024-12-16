@@ -12,8 +12,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class MoveCommand implements Command{
-    private MoveDto moveDto;
+public class MoveCommand extends Command{
     private Long sourceFolderId;
     private Long destinationFolderId;
     UserEntity user;

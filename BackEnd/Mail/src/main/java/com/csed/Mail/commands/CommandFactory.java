@@ -1,5 +1,9 @@
 package com.csed.Mail.commands;
 
+
+import org.springframework.stereotype.Service;
+
+@Service
 public class CommandFactory {
     private final CommandService commandService;
 

@@ -6,8 +6,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class SendCommand implements Command{
-   private MailEntity mailEntity;
+public class SendCommand extends Command{
     String reciever;
     private final CommandService commandService;
 
@@ -17,7 +16,9 @@ public class SendCommand implements Command{
 
     @Override
     public void execute() {
+        commandService.removeEmailFromFolderByName(mailEntity,"Drafts",mailEntity.getSender());
      commandService.sendMailToReceivers(reciever, mailEntity);
+     commandService.addEmailToFolderByName(mailEntity,"Sent",mailEntity.getSender());
     }
 
 

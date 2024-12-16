@@ -14,11 +14,10 @@ public class Invoker {
     Command command;
     Queue<Command> commandList;
     private final CommandService commandService;
- private final MailRepository mailRepository;
-    public Invoker(CommandService commandService,MailRepository mailRepository) {
+    public Invoker(CommandService commandService) {
         this.commandService = commandService;
         this.commandList = new LinkedList<>();
-         this.mailRepository=mailRepository;
+
     }
 
     public void setCommand(Command command){
@@ -65,24 +64,18 @@ public class Invoker {
                 Receivers.addAll(mailEntity.getBccReceivers());
             }
             commandService.checkReceivers(Receivers);
-            mailEntity = mailRepository.save(mailEntity);
-            SendCommand send = new SendCommand(commandService);
-            send.setMailEntity(mailEntity);
-            send.setReciever(String.valueOf(Receivers));
-            commandList.add(send);
-        }
-        if(command instanceof DraftCommand ){
-            MailEntity mailEntity = ((DraftCommand) command).getMailEntity();
-
-            if (mailEntity.getId() == null) {
-                mailEntity = mailRepository.save(mailEntity);
-            } else {
-                mailRepository.save(mailEntity);
+            mailEntity.setBccReceivers(null);
+            mailEntity = commandService.saveMail(mailEntity);
+            for(String receiver : Receivers){
+                SendCommand send = new SendCommand(commandService);
+                send.setMailEntity(mailEntity);
+                send.setReciever(receiver);
+                commandList.add(send);
             }
 
-            DraftCommand draft = new DraftCommand(commandService);
-            draft.setMailEntity(mailEntity);
-            commandList.add(draft);
+        }
+        if(command instanceof DraftCommand ){
+            commandList.add(command);
         }
 
     }

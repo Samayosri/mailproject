@@ -6,9 +6,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class DraftCommand implements Command{
-
-    MailEntity mailEntity;
+public class DraftCommand extends Command{
 
     private final CommandService commandService;
 
@@ -17,6 +15,6 @@ public class DraftCommand implements Command{
     }
     @Override
     public void execute() {
-        commandService.addEmailToFolderByName(mailEntity, "Drafts", mailEntity.getSender());
+        commandService.draftMail(mailEntity);
     }
 }

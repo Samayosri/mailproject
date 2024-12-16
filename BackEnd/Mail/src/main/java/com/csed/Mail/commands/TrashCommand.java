@@ -12,9 +12,8 @@ import java.util.List;
 
 @Setter
 @Getter
-public class TrashCommand implements Command{
+public class TrashCommand extends Command{
 
-    MoveDto moveDto;
     private final CommandService commandService;
     private Long sourceFolderId;
     private Long destinationFolderId;
