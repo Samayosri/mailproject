@@ -31,32 +31,41 @@ function Mail({ folders, selectedFolder }) {
       id: 1,
       sender: "John Doe",
       subject: "Meeting Reminder",
+      senderId : 8,
       senderEmailAddress: "john.doe@example.com",
       body: "Don't forget about the meeting tomorrow at 10 AM.",
-      importance: "High",
+      importance: 1 ,
       attachments: [],
       creationDate: "2024-12-12",
+      toReceivers : ["ddhjkf","fdhjkf"],
+      ccReceivers : ["djbmbmhjkf","fdhkkhjhjkf"],
+      bccReceivers : ["dddsfsfhjkf","fdhvfjkvfjjkf"]
     },
     {
       id: 2,
       sender: "Jane Smith",
       subject: "Hello!",
+      senderId : 4,
       senderEmailAddress: "jane.smith@example.com",
       body: "Just wanted to say hi.",
-      importance: "Low",
+      importance: 3,
       attachments: [],
       creationDate: "2024-12-11",
+      toReceivers : ["ddhjkf","fdhjkf"],
+      ccReceivers : ["djbmbmhjkf","fdhkkhjhjkf"],
+      bccReceivers : ["dddsfsfhjkf","fdhvfjkvfjjkf"]
+
     },
   ]);
   const [selectedMail, setSelectedMail] = useState(null);
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // compose
 
-  const handleOpen = () => {
+  const handleOpen = () => { // compose
     setIsOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = () => { // compose
     setIsOpen(false);
   };
 
@@ -83,6 +92,7 @@ function Mail({ folders, selectedFolder }) {
  
   
   function handleDisplayMail(m) {
+    handleOpen()
     setSelectedMail(m);
   }
 
@@ -145,7 +155,7 @@ function Mail({ folders, selectedFolder }) {
               onClick={() => handleDisplayMail(mail)}
             >
               <Typography variant="body1" noWrap>
-                <strong>{mail.sender || "Unknown Sender"}:</strong> {mail.subject || "No Subject"}
+                <strong>{mail.senderEmailAddress || "Unknown Sender"}:</strong> {mail.subject || "No Subject"}
               </Typography>
             </Button>
           </Box>
@@ -191,7 +201,7 @@ function Mail({ folders, selectedFolder }) {
       {console.log(selectedFolder)}
       <Box dividers sx={{ padding: "16px" }}>
         {(selectedFolder === "Drafts"&&selectedMail)&&(
-               <ComposeEmail open={true} onClose={setSelectedMail}></ComposeEmail>
+               <ComposeEmail open={isOpen} onClose={handleClose} mail={selectedMail}></ComposeEmail>
           ) 
          
           }
