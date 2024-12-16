@@ -132,7 +132,19 @@ public class FolderServiceImpl implements FolderService {
 
     @Override
     public void removeEmailFromFolderByName(MailEntity mailEntity, String folderName, UserEntity user) {
-        Long folderId = getFolderIdByName(folderName, user);
-        removeEmailFromFolderById(mailEntity, folderId);
+        List<FolderEntity> folders = user.getFolders();
+        FolderEntity folder = null;
+        for(FolderEntity f : folders){
+            if(f.getName().equals(folderName)){
+                folder = f;
+                break;
+            }
+        }
+        if(folder == null){
+            throw new IllegalArgumentException("folder not found");
+        }
+            folder.getEmails().remove(mailEntity);
+        folderRepository.save(folder);
+
     }
 }

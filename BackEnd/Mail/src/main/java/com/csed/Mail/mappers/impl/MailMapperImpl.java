@@ -2,6 +2,7 @@ package com.csed.Mail.mappers.impl;
 
 import com.csed.Mail.mappers.Mapper;
 import com.csed.Mail.model.AttachmentEntity;
+import com.csed.Mail.model.Dtos.AttachmentDto;
 import com.csed.Mail.model.Dtos.MailDto;
 import com.csed.Mail.model.MailEntity;
 import com.csed.Mail.model.UserEntity;
@@ -59,9 +60,9 @@ public class MailMapperImpl implements Mapper<MailEntity,MailDto> {
                  subject(mailDto.getSubject()).
                 body(mailDto.getBody()).
                 toReceivers(mailDto.getToReceivers()).
-                ccReceivers(mailDto.getCcReceivers()).
-                bccReceivers(mailDto.getBccReceivers()).
-                importance(mailDto.getImportance()).
+                ccReceivers(mailDto.getCcReceivers()==null ? new ArrayList<>():mailDto.getCcReceivers()).
+                bccReceivers(mailDto.getBccReceivers()==null ? new ArrayList<>():mailDto.getBccReceivers()).
+                importance(mailDto.getImportance() ).
                 attachments(new ArrayList<>()).folders(new ArrayList<>()).
                 build();
 
@@ -69,7 +70,9 @@ public class MailMapperImpl implements Mapper<MailEntity,MailDto> {
          if(user.isEmpty()) {
              throw new IllegalArgumentException("user with mail not exist !!! ghost sending email");
          }
-
+        for(AttachmentDto a : mailDto.getAttachments()){
+            mailEntity.getAttachments().add(a.getAttachment());
+        }
 //        if (!user.get().getEmailAddress().equals(mailDto.getSenderMailAddress())) {
 //            System.out.println("hellooooo");
 //            throw new IllegalArgumentException("The user id and the email address are not compatible.");

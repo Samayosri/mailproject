@@ -47,7 +47,7 @@ public class MailController {
         }
     }
 
-    @GetMapping("get/{folderId}")
+    @GetMapping("/{folderId}")
     public ResponseEntity<?> getMails(
             @PathVariable Long folderId,
             @RequestParam(required = false,defaultValue = "date") String sort,

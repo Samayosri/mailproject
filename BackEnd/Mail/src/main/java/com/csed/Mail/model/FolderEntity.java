@@ -30,7 +30,7 @@ public class FolderEntity {
     @Column(nullable = false)
     private String name;
 
-    @ManyToMany(cascade ={CascadeType.PERSIST, CascadeType.MERGE} ,fetch = FetchType.EAGER)
+    @ManyToMany(cascade =CascadeType.ALL ,fetch = FetchType.EAGER)
     private List<MailEntity> emails = new ArrayList<>();
     @JsonIgnore
     public FolderDto getDto(){
