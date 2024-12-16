@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import {Container} from "@mui/material" 
 import axios from 'axios'
 
-function Registration({ window, setWindow, customerDTO, setCustomerDTO, signed, setSigned }) {
+function Registration({ setUserId,window, setWindow, customerDTO, setCustomerDTO, signed, setSigned }) {
   const [noteMessage, setNoteMessage] = useState("");//to handle massage error to be visible in form  
   function showNoteMessage(message) {
     setNoteMessage(message);
@@ -57,6 +57,7 @@ function Registration({ window, setWindow, customerDTO, setCustomerDTO, signed, 
 
         if (response.status === 201) {
           setCustomerDTO(response.data);
+          setUserId(customerDTO.id);
           setSigned(true);
           setWindow("mail");
         } 

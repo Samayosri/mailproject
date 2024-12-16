@@ -19,7 +19,8 @@ import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InputFileUpload from "./InputFileUpload";
 
-const ComposeEmail = ({ open, onClose, mail = {}}) => {
+const ComposeEmail = ({ open, onClose, mail = {},userId,method}) => {
+ 
   const mailDto = {
     id: mail.id|| null,
     senderId: mail.senderId || null,
@@ -71,6 +72,11 @@ const ComposeEmail = ({ open, onClose, mail = {}}) => {
   };
 
   const handleSend = () => {
+    /*
+
+    if method is draft send request to update mail
+    if new mail send to create new mail in folder Drafts
+    */
     let errorMessage = "";
     if (!email.toReceivers.length) {
       errorMessage = "Please fill out the 'To' field.";
@@ -131,6 +137,13 @@ const ComposeEmail = ({ open, onClose, mail = {}}) => {
   };
 
   const handleClose = () => {
+    (method==="draft")?
+    ///send request to backend to update this mail
+    onClose(false)///set selected mail to false
+    :
+    ///send request to backend to create new mail in drafts folder
+    null
+
     /*
       const url ="http://localhost:8080//mails/draft" 
 

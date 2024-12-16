@@ -8,7 +8,7 @@ import ComposeEmail from "../Mail/ComposeEmail";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 
 
-function SideBar({ selectedFolder, setSelectedFolder, folders,setFolders, setContent }) {
+function SideBar({ selectedFolder, setSelectedFolder, folders,setFolders, setContent ,userId}) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [newFolder, setNewFolder] = useState(false);
@@ -131,7 +131,7 @@ function SideBar({ selectedFolder, setSelectedFolder, folders,setFolders, setCon
         </Stack>
       </Drawer>
 
-      {isOpen && <ComposeEmail open={isOpen} onClose={handleClose} />}
+      {isOpen && <ComposeEmail open={true} onClose={handleClose} userId={userId} method={"new mail"}/>}
     </Box>
   );
 }

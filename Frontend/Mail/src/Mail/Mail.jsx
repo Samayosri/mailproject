@@ -16,7 +16,7 @@ import axios from "axios";
 import ComposeEmail from "./ComposeEmail";
 import { WidthFull } from "@mui/icons-material";
 
-function Mail({ folders, selectedFolder }) {
+function Mail({ folders, selectedFolder ,userId}) {
   const [checkedMails, setCheckedMails] = useState([]);
   
   const handleCheckboxChange = (mailId) => {
@@ -201,7 +201,7 @@ function Mail({ folders, selectedFolder }) {
       {console.log(selectedFolder)}
       <Box dividers sx={{ padding: "16px" }}>
         {(selectedFolder === "Drafts"&&selectedMail)&&(
-               <ComposeEmail open={isOpen} onClose={handleClose} mail={selectedMail}></ComposeEmail>
+               <ComposeEmail open={isOpen} onClose={handleClose} mail={selectedMail } userId={userId} method={"draft"}></ComposeEmail>
           ) 
          
           }
