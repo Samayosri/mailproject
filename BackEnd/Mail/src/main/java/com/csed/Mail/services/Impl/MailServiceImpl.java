@@ -1,8 +1,10 @@
 package com.csed.Mail.Services.Impl;
 
 import com.csed.Mail.Services.MailService;
+import com.csed.Mail.commands.*;
 import com.csed.Mail.mappers.Mapper;
 import com.csed.Mail.model.Dtos.MailDto;
+import com.csed.Mail.model.Dtos.MoveDto;
 import com.csed.Mail.model.FolderEntity;
 import com.csed.Mail.model.MailEntity;
 import com.csed.Mail.repositories.FolderRepository;
@@ -21,14 +23,37 @@ import java.util.stream.Collectors;
 public class MailServiceImpl implements MailService {
     MailRepository mailRepository;
     FolderRepository folderRepository;
+    private final CommandFactory commandFactory ;
+    private final CommandService commandService;
     private final Mapper<MailEntity, MailDto> mailMapper;
 
-    @Autowired
-    public MailServiceImpl(MailRepository mailRepository, FolderRepository folderRepository, Mapper<MailEntity, MailDto> mailMapper) {
+    public MailServiceImpl(MailRepository mailRepository, FolderRepository folderRepository, CommandFactory commandFactory, CommandService commandService, Mapper<MailEntity, MailDto> mailMapper) {
         this.mailRepository = mailRepository;
         this.folderRepository = folderRepository;
+        this.commandFactory = commandFactory;
+        this.commandService = commandService;
         this.mailMapper = mailMapper;
     }
+
+    @Override
+    public void move(MoveDto moveDto){
+        Invoker invoker = new Invoker(commandService);
+        MoveCommand moveCommand = (MoveCommand) commandFactory.getCommand("move");
+        moveCommand .setMoveDto(moveDto);
+        invoker.setCommand(moveCommand);
+        invoker.executeCommand();
+
+    }
+    @Override
+    public void trash(MoveDto moveDto){
+        Invoker invoker = new Invoker(commandService);
+        TrashCommand trashCommand = (TrashCommand) commandFactory.getCommand("trash");
+        trashCommand .setMoveDto(moveDto);
+        invoker.setCommand(trashCommand);
+        invoker.executeCommand();
+
+    }
+
 
     @Override
     public List<MailDto> getListEmailsByFolderId(Long folderId) throws RuntimeException{

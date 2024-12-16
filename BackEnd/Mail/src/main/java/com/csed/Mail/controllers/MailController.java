@@ -96,12 +96,25 @@ public class MailController {
     }
     @PutMapping("/move")
     public ResponseEntity<?> move(@RequestBody MoveDto moveDto){
-        return null; // will be done by cammands
+        try {
+            mailService.move(moveDto);
+            return ResponseEntity.status(HttpStatus.OK).body("");
 
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+
+        }
     }
     @DeleteMapping("/delete")
     public ResponseEntity<?> delete(@RequestBody MoveDto moveDto){
-        return null; // will be done by commands
+        try {
+            mailService.trash(moveDto);
+            return ResponseEntity.status(HttpStatus.OK).body("");
+
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        }
 
     }
 

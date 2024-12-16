@@ -16,9 +16,7 @@ public class SendCommand extends Command{
 
     @Override
     public void execute() {
-        commandService.removeEmailFromFolderByName(mailEntity,"Drafts",mailEntity.getSender());
      commandService.sendMailToReceivers(reciever, mailEntity);
-     commandService.addEmailToFolderByName(mailEntity,"Sent",mailEntity.getSender());
     }
 
 

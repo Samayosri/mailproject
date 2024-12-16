@@ -56,31 +56,41 @@ public class CommandService {
             mailEntity = mailRepository.save(mailEntity);
         }
         return mailEntity;
-     }
-    public FolderEntity getFolderById(Long folderId) {
-        return folderRepository.findById(folderId)
-                .orElseThrow(() -> new IllegalArgumentException("Folder with ID '" + folderId + "' not found."));
     }
-    public void addEmailToFolderById(MailEntity mailEntity, Long folderId) {
-        FolderEntity folder = getFolderById(folderId);
+
+    public void removeEmailFromFolderByName(MailEntity mailEntity, String folderName, UserEntity user) {
+        List<FolderEntity> folders = user.getFolders();
+        FolderEntity folder = null;
+        for(FolderEntity f : folders){
+            if(f.getName().equals(folderName)){
+                folder = f;
+                break;
+            }
+        }
+        if(folder == null) {
+            throw new IllegalArgumentException("folder not found");
+        }
+        folder.getEmails().remove(mailEntity);
+        folderRepository.save(folder);
+
+    }
+
+
+    public void addEmailToFolderByName(MailEntity mailEntity, String folderName, UserEntity user) {
+        List<FolderEntity> folders = user.getFolders();
+        FolderEntity folder = null;
+        for(FolderEntity f : folders){
+            if(f.getName().equals(folderName)){
+                folder = f;
+                break;
+            }
+        }
+        if(folder == null) {
+            throw new IllegalArgumentException("folder not found");
+        }
         folder.getEmails().add(mailEntity);
         folderRepository.save(folder);
     }
-    public Long getFolderIdByName(String folderName, UserEntity user) {
-        List<FolderEntity> folders = user.getFolders();
-        for (FolderEntity folder : folders) {
-            if (folder.getName().equals(folderName)) {
-                return folder.getId();
-            }
-        }
-        throw new IllegalArgumentException("Folder { " + folderName + " } not found");
-    }
-
-    public void addEmailToFolderByName(MailEntity mailEntity, String folderName, UserEntity user) {
-        Long folderId = getFolderIdByName(folderName, user);
-        addEmailToFolderById(mailEntity, folderId);
-    }
-
     public void sendMailToReceivers(String emailAddress, MailEntity mailEntity) {
         Optional<UserEntity> receiver = userRepository.findByEmailAddress(emailAddress);
         addEmailToFolderByName(mailEntity, "Inbox", receiver.get());
