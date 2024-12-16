@@ -1,6 +1,7 @@
 package com.csed.Mail.Services.Impl;
 
 import com.csed.Mail.Services.FolderService;
+import com.csed.Mail.commands.*;
 import com.csed.Mail.model.FolderEntity;
 import com.csed.Mail.model.MailEntity;
 import com.csed.Mail.model.UserEntity;
@@ -17,41 +18,67 @@ public class FolderServiceImpl implements FolderService {
     private final FolderRepository folderRepository;
     private final UserRepository userRepository;
     private final MailRepository mailRepository;
+   private final CommandFactory commandFactory;
+   private final CommandService commandService;
 
-    public FolderServiceImpl(FolderRepository folderRepository, UserRepository userRepository, MailRepository mailRepository) {
+    public FolderServiceImpl(FolderRepository folderRepository, UserRepository userRepository, MailRepository mailRepository, CommandFactory commandFactory, CommandService commandService) {
         this.folderRepository = folderRepository;
         this.userRepository = userRepository;
         this.mailRepository = mailRepository;
+        this.commandFactory = commandFactory;
+        this.commandService = commandService;
     }
 
     @Override
     public MailEntity sendMail(MailEntity mailEntity) throws IllegalArgumentException {
-        validateReceivers(mailEntity);
-
-        mailEntity = mailRepository.save(mailEntity);
-
-        List<String> bccReceivers = new ArrayList<>(mailEntity.getBccReceivers());
-        mailEntity.setBccReceivers(null);
-
-        moveMailBetweenFoldersByName(mailEntity, "Drafts", "Sent", mailEntity.getSender());
-
-        sendMailToReceivers(mailEntity.getToReceivers(), mailEntity);
-        sendMailToReceivers(mailEntity.getCcReceivers(), mailEntity);
-        sendMailToReceivers(bccReceivers, mailEntity);
-
-        return mailEntity;
+        Invoker invoker = new Invoker(commandService);
+        SendCommand sendCommand = (SendCommand) commandFactory.getCommand("send");
+        sendCommand.setMailEntity(mailEntity);
+        invoker.setCommand(sendCommand);
+        invoker.executeCommand();
+        return null;
     }
+
+//    @Override
+//    public MailEntity sendMail(MailEntity mailEntity) throws IllegalArgumentException {
+//        validateReceivers(mailEntity);
+//
+//        mailEntity = mailRepository.save(mailEntity);
+//
+//        List<String> bccReceivers = new ArrayList<>(mailEntity.getBccReceivers());
+//        mailEntity.setBccReceivers(null);
+//
+//        moveMailBetweenFoldersByName(mailEntity, "Drafts", "Sent", mailEntity.getSender());
+//
+//        sendMailToReceivers(mailEntity.getToReceivers(), mailEntity);
+//        sendMailToReceivers(mailEntity.getCcReceivers(), mailEntity);
+//        sendMailToReceivers(bccReceivers, mailEntity);
+//
+//        return mailEntity;
+//    }
 
     @Override
     public MailEntity draftMail(MailEntity mailEntity) {
-        if (mailEntity.getId() == null) {
-            mailEntity = mailRepository.save(mailEntity);
-            addEmailToFolderByName(mailEntity, "Drafts", mailEntity.getSender());
-        } else {
-            mailEntity = mailRepository.save(mailEntity);
-        }
-        return mailEntity;
+
+        Invoker invoker = new Invoker(commandService);
+        DraftCommand draftCommand = (DraftCommand) commandFactory.getCommand("draft");
+        draftCommand.setMailEntity(mailEntity);
+        invoker.setCommand(draftCommand);
+        invoker.executeCommand();
+        return null;
+
     }
+
+//    @Override
+//    public MailEntity draftMail(MailEntity mailEntity) {
+//        if (mailEntity.getId() == null) {
+//            mailEntity = mailRepository.save(mailEntity);
+//            addEmailToFolderByName(mailEntity, "Drafts", mailEntity.getSender());
+//        } else {
+//            mailEntity = mailRepository.save(mailEntity);
+//        }
+//        return mailEntity;
+//    }
 
     @Override
     public void validateReceivers(MailEntity mailEntity) {

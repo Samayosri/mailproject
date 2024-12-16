@@ -12,13 +12,11 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
-public class MoveCommand implements Command{
-    MoveDto moveDto;
-    Long fromId;
-    Long toId;
+public class MoveCommand extends Command{
+    private Long sourceFolderId;
+    private Long destinationFolderId;
     UserEntity user;
-    MailEntity mail;
+    private MailEntity mail;
     private final CommandService commandService;
 
     public MoveCommand(CommandService commandService) {
@@ -29,10 +27,10 @@ public class MoveCommand implements Command{
     public void execute() {
         List<FolderEntity> folders = user.getFolders();
         for(FolderEntity folder : folders){
-            if(folder.getId().equals(fromId)){
+            if(folder.getId().equals(sourceFolderId)){
                 folders.remove(folder);
             }
-            else if(folder.getId().equals(toId)){
+            else if(folder.getId().equals(destinationFolderId)){
                 folders.add(folder);
             }
         }

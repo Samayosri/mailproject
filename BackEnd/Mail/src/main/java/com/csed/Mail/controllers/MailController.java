@@ -36,7 +36,8 @@ public class MailController {
     public ResponseEntity<?> sendMail(@RequestBody MailDto mailDto) {
         try {
             MailEntity sentMail = mailMapper.mapFromDto(mailDto);
-            return new ResponseEntity<>(mailMapper.mapToDto(folderService.sendMail(sentMail)), HttpStatus.CREATED);
+            folderService.sendMail(sentMail);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -45,10 +46,8 @@ public class MailController {
     @PostMapping("/draft")
     public ResponseEntity<?> draftMail(@RequestBody MailDto mailDto) {
         try {
-            return new ResponseEntity<>(
-                    mailMapper.mapToDto(folderService.draftMail(mailMapper.mapFromDto(mailDto))),
-                    HttpStatus.CREATED
-            );
+            folderService.draftMail(mailMapper.mapFromDto(mailDto));
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

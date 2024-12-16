@@ -9,6 +9,7 @@ import com.csed.Mail.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CommandService {
@@ -23,24 +24,6 @@ public class CommandService {
         this.mailRepository = mailRepository;
     }
 
-//    public void moveMailBetweenFoldersById(MailEntity mailEntity, Long fromFolder, Long toFolder) {
-//        removeEmailFromFolderById(mailEntity, fromFolder);
-//        addEmailToFolderById(mailEntity, toFolder);
-//    }
-//    public FolderEntity getFolderById(Long folderId) {
-//        return folderRepository.findById(folderId)
-//                .orElseThrow(() -> new IllegalArgumentException("Folder with ID '" + folderId + "' not found."));
-//    }
-//    public void addEmailToFolderById(MailEntity mailEntity, Long folderId) {
-//        FolderEntity folder = getFolderById(folderId);
-//        folder.getEmails().add(mailEntity);
-//        folderRepository.save(folder);
-//    }
-//    public void removeEmailFromFolderById(MailEntity mailEntity, Long folderId) {
-//        FolderEntity folder = getFolderById(folderId);
-//        folder.getEmails().remove(mailEntity);
-//        folderRepository.save(folder);
-//    }
     public UserEntity getUserById(Long id){
         return userRepository.findById(id).orElseThrow( () -> new IllegalArgumentException("User not Found"));
     }
@@ -51,22 +34,64 @@ public class CommandService {
     public void saveUser(UserEntity user){
         userRepository.save(user);
     }
-
-    public void validateReceivers(MailEntity mailEntity) {
-        checkReceivers(mailEntity.getToReceivers(), "To");
-        checkReceivers(mailEntity.getCcReceivers(), "CC");
-        checkReceivers(mailEntity.getBccReceivers(), "BCC");
+    public MailEntity saveMail(MailEntity mail){
+       return mailRepository.save(mail);
     }
 
-    private void checkReceivers(List<String> receivers, String type) {
+
+
+    public void checkReceivers(List<String> receivers) {
         if(receivers == null) return;
         for (String emailAddress : receivers) {
             if (userRepository.findByEmailAddress(emailAddress).isEmpty()) {
-                throw new IllegalArgumentException(type + " receiver '" + emailAddress + "' does not exist.");
+                throw new IllegalArgumentException( emailAddress + "' does not exist.");
             }
         }
     }
+    public MailEntity draftMail(MailEntity mailEntity) {
+        if (mailEntity.getId() == null) {
+            mailEntity = mailRepository.save(mailEntity);
+            addEmailToFolderByName(mailEntity, "Drafts", mailEntity.getSender());
+        } else {
+            mailEntity = mailRepository.save(mailEntity);
+        }
+        return mailEntity;
+     }
+    public FolderEntity getFolderById(Long folderId) {
+        return folderRepository.findById(folderId)
+                .orElseThrow(() -> new IllegalArgumentException("Folder with ID '" + folderId + "' not found."));
+    }
+    public void addEmailToFolderById(MailEntity mailEntity, Long folderId) {
+        FolderEntity folder = getFolderById(folderId);
+        folder.getEmails().add(mailEntity);
+        folderRepository.save(folder);
+    }
+    public Long getFolderIdByName(String folderName, UserEntity user) {
+        List<FolderEntity> folders = user.getFolders();
+        for (FolderEntity folder : folders) {
+            if (folder.getName().equals(folderName)) {
+                return folder.getId();
+            }
+        }
+        throw new IllegalArgumentException("Folder { " + folderName + " } not found");
+    }
 
+    public void addEmailToFolderByName(MailEntity mailEntity, String folderName, UserEntity user) {
+        Long folderId = getFolderIdByName(folderName, user);
+        addEmailToFolderById(mailEntity, folderId);
+    }
+
+    public void sendMailToReceivers(String emailAddress, MailEntity mailEntity) {
+        Optional<UserEntity> receiver = userRepository.findByEmailAddress(emailAddress);
+        addEmailToFolderByName(mailEntity, "Inbox", receiver.get());
+    }
+
+    public MailEntity sendMail(MailEntity mailEntity,String Reciever) throws IllegalArgumentException {
+
+        sendMailToReceivers(Reciever, mailEntity);
+
+        return mailEntity;
+    }
 
 
 }

@@ -12,15 +12,13 @@ import java.util.List;
 
 @Setter
 @Getter
-@Builder
-public class TrashCommand implements Command{
+public class TrashCommand extends Command{
 
-    MoveDto moveDto;
     private final CommandService commandService;
-    Long fromId;
-    Long toId;
-    UserEntity user;
-    MailEntity mail;
+    private Long sourceFolderId;
+    private Long destinationFolderId;
+    private UserEntity user;
+    private MailEntity mail;
 
     public TrashCommand(CommandService commandService) {
         this.commandService = commandService;
@@ -31,17 +29,15 @@ public class TrashCommand implements Command{
     public void execute() {
         List<FolderEntity> folders = user.getFolders();
         for(FolderEntity folder : folders){
-            if(folder.getId().equals(fromId)){
+            if(folder.getId().equals(sourceFolderId)){
                 folders.remove(folder);
             }
-            else if(folder.getId().equals(toId)){
+            else if(folder.getId().equals(destinationFolderId)){
                 folders.add(folder);
             }
         }
         // set delete date for mail entity
         commandService.saveUser(user);
-
-
 
     }
 }
