@@ -9,29 +9,34 @@ import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class SenderNameCriteria extends Criteria {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    private UserRepository userRepository;
-
-    public SenderNameCriteria(@NonNull String keyword) {
+    public SenderNameCriteria(@NonNull String keyword, UserRepository userRepository) {
         super(keyword.trim());
+        this.userRepository = userRepository;
     }
-
 
     @Override
     public List<MailDto> meetCriteria(List<MailDto> mailDtos) {
-        Set<Long> senderIds = mailDtos.stream()
-                .map(MailDto::getSenderId)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+        Set<Long> senderIds = new HashSet<>();
+        for (MailDto mailDto : mailDtos) {
+            if (mailDto.getSenderId() != null) {
+                senderIds.add(mailDto.getSenderId());
+            }
+        }
 
-        Map<Long, String> senderNames = userRepository.findAllById(senderIds).stream()
-                .filter(user -> user.getName() != null)
-                .collect(Collectors.toMap(UserEntity::getId, user -> user.getName().toLowerCase()));
+        Map<Long, String> senderNames = new HashMap<>();
+        Iterable<UserEntity> users = userRepository.findAllById(senderIds);
+        for (UserEntity user : users) {
+            if (user.getName() != null) {
+                senderNames.put(user.getId(), user.getName().toLowerCase());
+            }
+        }
 
         List<MailDto> result = new ArrayList<>();
         for (MailDto mailDto : mailDtos) {
@@ -43,6 +48,7 @@ public class SenderNameCriteria extends Criteria {
                 }
             }
         }
+
         return result;
     }
 }

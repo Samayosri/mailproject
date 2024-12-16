@@ -1,6 +1,8 @@
 package com.csed.Mail.controllers;
 
 import com.csed.Mail.Search.Criteria;
+import com.csed.Mail.Search.CriteriaFacade;
+import com.csed.Mail.Search.Dtos.CriteriaDto;
 import com.csed.Mail.Search.Impl.DateCriteria;
 import com.csed.Mail.Search.Impl.ImportanceCriteria;
 import com.csed.Mail.Services.FolderService;
@@ -22,11 +24,13 @@ public class MailController {
     private final MailService mailService;
     private final FolderService folderService;
     private final Mapper<MailEntity, MailDto> mailMapper;
+    private final CriteriaFacade criteriaFacade;
 
-    public MailController(MailService mailService, Mapper<MailEntity, MailDto> mailMapper, FolderService folderService) {
+    public MailController(MailService mailService, Mapper<MailEntity, MailDto> mailMapper, FolderService folderService, CriteriaFacade criteriaFacade) {
         this.mailService = mailService;
         this.mailMapper = mailMapper;
         this.folderService = folderService;
+        this.criteriaFacade = criteriaFacade;
     }
     @PostMapping("/send")
     public ResponseEntity<?> sendMail(@RequestBody MailDto mailDto) {
@@ -83,15 +87,13 @@ public class MailController {
     @GetMapping("get/{userId}")
     public ResponseEntity<?> searchMails(
             @PathVariable Long userId,
-            @RequestParam(required = false,defaultValue = "null") Long folderId,
-            @RequestParam String searchMethod,
-            @RequestParam String searchWord,
-            @RequestParam Integer pageNumber,
-            @RequestParam(required = false,defaultValue = "5") Integer pageSize
-
-    ) { // use search service
-        Criteria criteria = new ImportanceCriteria("2");
-        return new ResponseEntity<>(criteria.meetCriteria(mailService.getListEmailsByFolderId(folderId)), HttpStatus.OK);
+            @RequestParam(required = false) Long folderId,
+            @RequestBody CriteriaDto criteriaDto
+            ) { // use search service
+        System.out.println(
+                folderId
+        );
+        return new ResponseEntity<>(criteriaFacade.getMails(userId, folderId, criteriaDto), HttpStatus.OK);
     }
     @PutMapping("/move")
     public ResponseEntity<?> move(@RequestBody MoveDto moveDto){

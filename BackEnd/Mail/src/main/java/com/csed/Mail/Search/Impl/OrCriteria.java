@@ -11,9 +11,9 @@ import java.util.ArrayList;
 public class OrCriteria extends Criteria {
     private List<Criteria> criterias;
 
-    public OrCriteria(@NonNull String keyword, Criteria... criterias) {
+    public OrCriteria(@NonNull String keyword, List<Criteria> criterias) {
         super(keyword.trim());
-        this.criterias = List.of(criterias);
+        this.criterias = criterias;
     }
 
     @Override

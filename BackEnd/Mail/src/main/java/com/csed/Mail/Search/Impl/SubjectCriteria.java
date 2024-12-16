@@ -6,6 +6,7 @@ import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class SubjectCriteria extends Criteria {
 
     public SubjectCriteria(@NonNull String keyword) {

@@ -13,11 +13,11 @@ import java.util.Optional;
 
 
 public class ReceiversNameCriteria extends Criteria {
-    @Autowired
     private UserRepository userRepository;
-
-    public ReceiversNameCriteria(@NonNull String keyword) {
+    @Autowired
+    public ReceiversNameCriteria(@NonNull String keyword, UserRepository userRepository) {
         super(keyword.trim());
+        this.userRepository = userRepository;
     }
 
 
