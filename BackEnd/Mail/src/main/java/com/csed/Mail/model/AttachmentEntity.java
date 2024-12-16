@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Setter
@@ -37,9 +38,9 @@ public class AttachmentEntity implements Serializable {
     private byte[] fileData;
 
     public AttachmentDto getDto(){
-        return AttachmentDto.builder().file(fileData != null ? Base64.getEncoder().encodeToString(fileData) : null).
-                fileName(fileName).
-                fileType(fileType).
+        return AttachmentDto.builder().file(fileData != null ? new String(fileData, StandardCharsets.UTF_8) : null).
+                file(fileName).
+                file(fileType).
                 build();
     }
 

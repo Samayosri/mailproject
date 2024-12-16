@@ -70,10 +70,10 @@ public class MailMapperImpl implements Mapper<MailEntity,MailDto> {
              throw new IllegalArgumentException("user with mail not exist !!! ghost sending email");
          }
 
-        if (!user.get().getEmailAddress().equals(mailDto.getSenderMailAddress())) {
-            System.out.println("hellooooo");
-            throw new IllegalArgumentException("The user id and the email address are not compatible.");
-        }
+//        if (!user.get().getEmailAddress().equals(mailDto.getSenderMailAddress())) {
+//            System.out.println("hellooooo");
+//            throw new IllegalArgumentException("The user id and the email address are not compatible.");
+//        } at the sent the sender mail is not setted for now uncomment it after full merge with ui
 
         mailEntity.setSender(user.get());
 

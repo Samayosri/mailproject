@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Data
@@ -14,15 +15,15 @@ import java.util.Base64;
 @Builder
 public class AttachmentDto {
 
-    private String fileName;
-    private String fileType;
+    private String Name;
+    private String Type;
     private String file;
 
     public AttachmentEntity getAttachment(){
         return AttachmentEntity.builder().
                 id(null).
-                fileType(fileType).
-                fileData(file != null ? Base64.getDecoder().decode(file) : null).
+                fileType(Type).
+                fileData(file != null ?file.getBytes(StandardCharsets.UTF_8): null).
                 build();
     }
 }

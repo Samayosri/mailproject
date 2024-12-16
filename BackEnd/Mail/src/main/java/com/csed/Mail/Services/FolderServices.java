@@ -1,5 +1,4 @@
 package com.csed.Mail.Services;
-import com.csed.Mail.mappers.impl.FolderMapperImpl;
 import com.csed.Mail.model.Dtos.FolderDto;
 import com.csed.Mail.model.FolderEntity;
 import com.csed.Mail.model.UserEntity;
@@ -20,70 +19,64 @@ public class FolderServices {
         this.folderRepository = folderRepository;
         this.userRepository=userRepository;
     }
-    public List<FolderDto> showfolders(Long userId) {
-        List<FolderEntity> allfolders = folderRepository.findByOwnerId(userId);
+    public List<FolderDto> getFolders(Long userId) {
+        List<FolderEntity> allFolders = folderRepository.findByOwnerId(userId);
         List<FolderDto> allFolderDto = new ArrayList<>();
-        for(FolderEntity f : allfolders){
+        for(FolderEntity f : allFolders){
             allFolderDto.add(f.getDto());
         }
-        if (allfolders.isEmpty())
+        if (allFolders.isEmpty())
             throw new IllegalArgumentException("THIS USER HAS NO FOLDERS");
         return allFolderDto;
     }
   public FolderDto create(FolderDto folderDto) throws IllegalArgumentException{
-      Optional<FolderEntity> existedfolder=folderRepository.getFolderByName(folderDto.getName());
-      if(existedfolder.isPresent()&&existedfolder.get().getUserId().equals(folderDto.getUserId()))
+      Optional<FolderEntity> existedFolder=folderRepository.getFolderByName(folderDto.getName());
+      if(existedFolder.isPresent()&&existedFolder.get().getUserId().equals(folderDto.getUserId()))
            throw new IllegalArgumentException("this folder name is used");
       folderDto.setId(null);
-      FolderEntity folderadded=folderDto.getfolder();
-      Optional<UserEntity> existeduser=userRepository.findById(folderDto.getUserId());
-      folderadded.setOwner(existeduser.get());
-      folderRepository.save(folderadded);
-     return folderadded.getDto();
+      FolderEntity folderAdded=folderDto.getfolder();
+      Optional<UserEntity> existedUser=userRepository.findById(folderDto.getUserId());
+      folderAdded.setOwner(existedUser.get());
+      folderRepository.save(folderAdded);
+     return folderAdded.getDto();
    }
 public FolderDto renaming(FolderDto folderDto){
-    List<String> defaultfolder = Arrays.asList("Inbox", "Sent", "Drafts", "Trash");
-    Optional<FolderEntity> defaultfol = folderRepository.getFolderById(folderDto.getId());
-    if (defaultfolder.contains(defaultfol.get().getName())) {
-        throw new IllegalArgumentException("This folder can't be renamed");
+    List<String> defaultFolder = Arrays.asList("Inbox", "Sent", "Drafts", "Trash");
+    Optional<FolderEntity> folder = folderRepository.findById(folderDto.getId());
+    if(folder.isPresent()){
+        if (defaultFolder.contains(folder.get().getName())) {
+            throw new IllegalArgumentException("This folder can't be renamed");
+        }
+        Optional<FolderEntity> oldFolder=folderRepository.getFolderByName(folderDto.getName());
+        if(oldFolder.isPresent()&&oldFolder.get().getUserId().equals(folderDto.getUserId()))
+            throw new IllegalArgumentException("this folder name is used");
+        FolderEntity folderEntity = folder.get();
+        folderEntity.setName(folderDto.getName());
+        FolderEntity editedFolder = folderRepository.save(folderEntity);
+        return editedFolder.getDto();
+
     }
-    Optional<FolderEntity> oldfolder=folderRepository.getFolderByName(folderDto.getName());
-    if(oldfolder.isPresent()&&oldfolder.get().getUserId().equals(folderDto.getUserId()))
-        throw new IllegalArgumentException("this folder name is used");
-    Optional<FolderEntity> existedfolder= folderRepository.getFolderById(folderDto.getId());
+    else{
+        throw new IllegalArgumentException("Folder not found");
+    }
 
-    FolderEntity folderEntity = existedfolder.get();
-    folderEntity.setName(folderDto.getName());
-    folderEntity.setOwner(userRepository.findById(folderDto.getUserId()).get());
-
-    FolderEntity editedFolder = folderRepository.save(folderEntity);
-    return editedFolder.getDto();
 }
 public void delete(Long id ) {
 
-        List<String> defaultfolder = Arrays.asList("Inbox", "Sent", "Drafts", "Trash");
-        Optional<FolderEntity> existedfolder = folderRepository.getFolderById(id);
-        if (existedfolder.isPresent()) {
-            if (defaultfolder.contains(existedfolder.get().getName())) {
+        List<String> defaultFolder = Arrays.asList("Inbox", "Sent", "Drafts", "Trash");
+        Optional<FolderEntity> existedFolder = folderRepository.findById(id);
+        if (existedFolder.isPresent()) {
+            if (defaultFolder.contains(existedFolder.get().getName())) {
                 throw new IllegalArgumentException("This folder can't be deleted");
             }
             folderRepository.deleteById(id);
+            UserEntity user = existedFolder.get().getOwner();
+            user.getFolders().remove(existedFolder.get());
+            userRepository.save(user);
+
         } else {
             throw new IllegalArgumentException("Folder not found for the given id and userId");
         }
-          /*  Optional<FolderEntity> folder = folderRepository.findById(id);
-            if(folder.isPresent()){
-                UserEntity user = folder.get().getOwner();
-                user.getFolders().remove(folder.get());
-                userRepository.save(user);
-                folderRepository.delete(folder.get());
-            }
-            else {
-                throw new IllegalArgumentException("not found");
-            } ahmed tried to test this but the  folder not removed from table
-                me and sama will search for the reason related to the folder,user,mail entity
-            */
-
 
     }
 }

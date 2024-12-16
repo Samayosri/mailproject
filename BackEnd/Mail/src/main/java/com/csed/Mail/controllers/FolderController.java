@@ -3,26 +3,24 @@ package com.csed.Mail.controllers;
 import com.csed.Mail.Services.FolderServices;
 import com.csed.Mail.model.Dtos.FolderDto;
 
-import com.csed.Mail.model.FolderEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/folder")
-public class Foldercontroller {
+public class FolderController {
    private final FolderServices folderServices;
 
-   public Foldercontroller(FolderServices folderServices) {
+   public FolderController(FolderServices folderServices) {
        this.folderServices = folderServices;
    }
 
-    @GetMapping("/show/{id}")
-    public ResponseEntity<List<FolderDto>> showFolders(@PathVariable Long id) {
-        List<FolderDto> folders = folderServices.showfolders(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<List<FolderDto>> getFolders(@PathVariable Long id) {
+        List<FolderDto> folders = folderServices.getFolders(id);
         return new ResponseEntity<>(folders, HttpStatus.OK);
     }
 
@@ -34,19 +32,23 @@ public ResponseEntity<?> create(@RequestBody FolderDto folderDto) {
     return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
       }
      }
-    @PutMapping ("/edit")
-    public ResponseEntity<?> edit(@RequestBody FolderDto folderDto) {
+    @PutMapping ("/edit/{id}")
+    public ResponseEntity<?> edit(@RequestBody FolderDto folderDto,@PathVariable Long id) {
         try {
+            folderDto.setId(id);
             return new ResponseEntity<>(folderServices.renaming(folderDto), HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-    @DeleteMapping ("/{id}")
+
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
-        try {  folderServices.delete(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            folderServices.delete(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
-        catch (IllegalArgumentException e){
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
- }}}
+}

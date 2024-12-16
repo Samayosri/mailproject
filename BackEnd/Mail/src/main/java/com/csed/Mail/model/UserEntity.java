@@ -36,7 +36,7 @@ public class UserEntity {
     @OneToMany(mappedBy = "sender",fetch = FetchType.EAGER)
     private List<MailEntity> mails = new ArrayList<>();
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER,orphanRemoval = true)
     private List<FolderEntity> folders = new ArrayList<>();
     @JsonIgnore
     public UserDto getuserdto(){
