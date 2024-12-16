@@ -6,7 +6,7 @@ import MailIcon from '@mui/icons-material/Mail';
 import SendIcon from '@mui/icons-material/Send'; 
 import DraftsIcon from '@mui/icons-material/Drafts';
 import ComposeEmail from '../Mail/ComposeEmail';
-function Folder({ setContent,name,selectedFolder,setSelectedFolder }) {
+function Folder({ setContent,name,setSelectedFolder }) {
 
 
    return (

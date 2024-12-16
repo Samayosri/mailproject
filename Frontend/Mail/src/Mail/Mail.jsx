@@ -27,35 +27,6 @@ function Mail({ folders, selectedFolder ,userId}) {
     );
   };
   const [mails, setMails] = useState([
-    {
-      id: 1,
-      sender: "John Doe",
-      subject: "Meeting Reminder",
-      senderId : 8,
-      senderEmailAddress: "john.doe@example.com",
-      body: "Don't forget about the meeting tomorrow at 10 AM.",
-      importance: 1 ,
-      attachments: [],
-      creationDate: "2024-12-12",
-      toReceivers : ["ddhjkf","fdhjkf"],
-      ccReceivers : ["djbmbmhjkf","fdhkkhjhjkf"],
-      bccReceivers : ["dddsfsfhjkf","fdhvfjkvfjjkf"]
-    },
-    {
-      id: 2,
-      sender: "Jane Smith",
-      subject: "Hello!",
-      senderId : 4,
-      senderEmailAddress: "jane.smith@example.com",
-      body: "Just wanted to say hi.",
-      importance: 3,
-      attachments: [],
-      creationDate: "2024-12-11",
-      toReceivers : ["ddhjkf","fdhjkf"],
-      ccReceivers : ["djbmbmhjkf","fdhkkhjhjkf"],
-      bccReceivers : ["dddsfsfhjkf","fdhvfjkvfjjkf"]
-
-    },
   ]);
   const [selectedMail, setSelectedMail] = useState(null);
 
@@ -79,15 +50,27 @@ function Mail({ folders, selectedFolder ,userId}) {
     (folder) => folder.folderName === selectedFolder
     
   )?.folderID;
-  /*
+  
   useEffect(() => {
     if (folderID) {
-      axios
-      .get(`http://localhost:8080/${folderID}`) 
-        .then((response) => setMails(response.data))
-        .catch((error) => console.error("Error fetching mails:", error));
+      const fetchMails = async () => {
+        try {
+          const response = await axios.get(`http://localhost:8080/mail/${userId}`);
+          if (response.status === 200) {
+            setMails(response.data);
+          }
+        } catch (error) {
+          if (error.response?.status === 400) {
+            console.error("Error 400:", error.response.data);
+          } else {
+            console.error("Unexpected Error:", error);
+  
+          }
+        }
+      };
+      fetchMails();
     }
-  }, [folderID]);*/
+  }, [folderID]);
 
  
   

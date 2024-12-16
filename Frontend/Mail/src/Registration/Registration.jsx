@@ -1,30 +1,34 @@
 import "./Registration.css";
 import { useState, useEffect } from "react";
-import {Container} from "@mui/material" 
-import axios from 'axios'
+import { Container } from "@mui/material";
+import axios from 'axios';
 
-function Registration({ setUserId,window, setWindow, customerDTO, setCustomerDTO, signed, setSigned }) {
-  const [noteMessage, setNoteMessage] = useState("");//to handle massage error to be visible in form  
+
+function Registration({ setUserId, window, setWindow, signed, setSigned }) {
+  const [noteMessage, setNoteMessage] = useState(""); // to handle error messages
+  // Function to display a message and hide it after 2 seconds
   function showNoteMessage(message) {
     setNoteMessage(message);
-    setTimeout(() => setNoteMessage(""), 2000);// Hide the msg after 2sec
+    setTimeout(() => setNoteMessage(""), 2000); // Hide the msg after 2 seconds
   }
+  useEffect(() => {
+  console.log("Updated window:", window);
+  console.log("Updated signed:", signed);
+}, [window, signed]);
+
+
+  // Function to validate the form data
   function validData(signUp) {
+    console.log(formData);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
     let msg = "";
 
-    if ((!formData.email || !formData.password) || (signUp && (!formData.name || !formData.confirmPass || !formData.phone))) {
+    if (!formData.email || !formData.password || !formData.name) {
       msg = "Please fill in all required fields!";
     } else if (!emailRegex.test(formData.email)) {
       msg = "Invalid email format!";
     }
-    else if ((formData.password != formData.confirmPass) && signUp) {
-      msg = "Passwords don't match!!"
 
-    }
-    else if (!/^\d{11}$/.test(formData.phone) && signUp) {
-      msg = "Phone number must be exactly 11 digits!";
-    }
     if (msg) {
       showNoteMessage(msg);
       return false;
@@ -32,87 +36,83 @@ function Registration({ setUserId,window, setWindow, customerDTO, setCustomerDTO
     return true;
   }
 
-
+  // Function to handle registration or login
   async function handleRegistration(signup) {
     if (validData(signup)) {
-      const customerData =
-      {
+      const customerData = {
         id: null,
-        role: null,
-        points: null,
         name: formData.name,
-        mail: formData.email,
+        emailAddress: formData.email,
         password: formData.password,
-        phoneNumber: formData.phone,
       };
-      setSigned(true);
-      setWindow("mail");
-      /*
+
       const url = signup
-        ? "http://localhost:8080/customer/signup"
-        : "http://localhost:8080/customer/login";
+        ? "http://localhost:8080/user/signup"
+        : "http://localhost:8080/user/login";
 
       try {
         const response = await axios.post(url, customerData);
-
         if (response.status === 201) {
-          setCustomerDTO(response.data);
-          setUserId(customerDTO.id);
-          setSigned(true);
+          console.log("response is",response.data);
+          setUserId(response.data.id);
           setWindow("mail");
-        } 
+          setSigned(true);
+        }
       } catch (error) {
         if (error.response?.status === 400) {
           // Account not found or other bad request error
           console.error("Error 400:", error.response.data);
-          showNoteMessage(error.response.data); // Displays "account not found signup to continue"
+          showNoteMessage(error.response.data); // Displays "account not found, sign up to continue"
         } else {
           // Generic error handler
           console.error("Unexpected Error:", error);
           showNoteMessage("An unexpected error occurred. Please try again.");
         }
-      }*/
+      }
     }
   }
 
-
+  // Form data state
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    confirmPass: "",
-    phone: ""
   });
 
+  // Function to handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-
-  //sign-up and sign-in button options to handle two cases
-  const signUp = [{ name: "Name", id: 1 }, { name: "E-mail Address", id: 2 }, { name: "Password", id: 3 },
-  { name: "Confirm Password", id: 4 }, { name: "Phone Number", id: 5 }, { name: "Sign UP", id: 6 },
+  // Sign-up form options
+  const signUp = [
+    { name: "Name", id: 1 },
+    { name: "E-mail Address", id: 2 },
+    { name: "Password", id: 4 },
+    { name: "Sign UP", id: 5 },
   ];
 
+  // Sign-in form options
   const signIn = [
-    { name: "E-mail Address", id: 1 }, { name: "Password", id: 2 }, { name: "Sign IN", id: 3 },
+    { name: "Name", id: 1 },
+    { name: "E-mail Address", id: 2 },
+    { name: "Password", id: 3 },
+    { name: "Sign IN", id: 4 },
   ];
 
-
+  // Rendering sign-up form fields
   const signUpOptions = signUp.map((op) => {
-    if (op.name === "Password" || op.name === "Confirm Password") {
+    if (op.name === "Password") {
       return (
         <input
-          name={op.name === "Password" ? "password" : "confirmPass"}
+          name="password"
           type="password"
           key={op.id}
           className="signUp-options"
           placeholder={op.name}
-          value={op.name === "Password" ? formData.password : formData.confirmPass}
-          onChange={(e) =>
-            handleInputChange(e)
-          }
+          value={formData.password}
+          onChange={handleInputChange}
         />
       );
     }
@@ -121,47 +121,31 @@ function Registration({ setUserId,window, setWindow, customerDTO, setCustomerDTO
       return (
         <>
           {noteMessage && <h1 style={{ fontSize: "1rem" }}>{noteMessage}</h1>}
-
           <input
             type="submit"
             key={op.id}
-            className={"signUp"}
+            className="signUp"
             onClick={() => handleRegistration(true)}
             value={op.name}
           />
         </>
-
       );
     }
 
     return (
       <input
         type="text"
-        name={
-          op.name === "Name"
-            ? "name"
-            : op.name === "E-mail Address"
-              ? "email"
-              : "phone"
-        }
+        name={op.name === "Name" ? "name" : "email"}
         key={op.id}
         className="signUp-options"
         placeholder={op.name}
-        value={
-          op.name === "Name"
-            ? formData.name
-            : op.name === "E-mail Address"
-              ? formData.email
-              : formData.phone
-        }
-        onChange={(e) =>
-          handleInputChange(e)
-        }
+        value={op.name === "Name" ? formData.name : formData.email}
+        onChange={handleInputChange}
       />
     );
   });
 
-
+  // Rendering sign-in form fields
   const signInOptions = signIn.map((op) => {
     if (op.name === "Password") {
       return (
@@ -172,7 +156,7 @@ function Registration({ setUserId,window, setWindow, customerDTO, setCustomerDTO
           className="signUp-options"
           placeholder={"Enter " + op.name}
           value={formData.password}
-          onChange={(e) => handleInputChange(e)}
+          onChange={handleInputChange}
         />
       );
     }
@@ -185,10 +169,9 @@ function Registration({ setUserId,window, setWindow, customerDTO, setCustomerDTO
             type="submit"
             key={op.id}
             className="signUp"
-            onClick={() => { handleRegistration(false) }}
+            onClick={() => handleRegistration(false)}
             value={op.name}
           />
-
         </>
       );
     }
@@ -196,48 +179,46 @@ function Registration({ setUserId,window, setWindow, customerDTO, setCustomerDTO
     return (
       <input
         type="text"
-        name="email"
+        name={op.name === "Name" ? "name" : "email"}
         key={op.id}
         className="signUp-options"
         placeholder={op.name}
-        value={formData.email}
-        onChange={(e) => handleInputChange(e)}
+        value={op.name === "Name" ? formData.name : formData.email}
+        onChange={handleInputChange}
       />
     );
   });
 
-
+  // Conditional rendering for Sign-Up or Sign-In form
   function SignUp_SignIn() {
     return window === "sign in" ? signInOptions : signUpOptions;
   }
-  
+
   return (
-    <>
-      <Container>
-       <div className="regist">
-         <h1 style={{ color: "black" }}>
-           {window === "sign in" ? "Welcome Back" : "Create Account"}
-         </h1>
-         {SignUp_SignIn()}
+    <Container>
+      <div className="regist">
+        <h1 style={{ color: "black" }}>
+          {window === "sign in" ? "Welcome Back" : "Create Account"}
+        </h1>
+        {SignUp_SignIn()}
 
-         {window === "sign in" && (
-           <a
-             className="create-account"
-             href="##"
-             style={{ color: "blue" }}
-             onClick={() => {
-               setWindow("sign up")
-             }}
-           >
-             Create new Account
-           </a>
-         )}
-       </div>
-       {window == "sign up" && <button className="login" onClick={() => { setWindow("sign in") }}>Login</button>} 
-
-      </Container>
-     
-    </>
+        {window === "sign in" && (
+          <a
+            className="create-account"
+            href="##"
+            style={{ color: "blue" }}
+            onClick={() => setWindow("sign up")}
+          >
+            Create new Account
+          </a>
+        )}
+      </div>
+      {window === "sign up" && (
+        <button className="login" onClick={() => setWindow("sign in")}>
+          Login
+        </button>
+      )}
+    </Container>
   );
 }
 
