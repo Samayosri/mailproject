@@ -81,6 +81,7 @@ public class MailController {
             @PathVariable Long userId,
             @RequestParam(required = false,defaultValue = "null") Long folderId,
             @RequestParam String searchMethod,
+            @RequestParam String searchWord,
             @RequestParam Integer pageNumber,
             @RequestParam(required = false,defaultValue = "5") Integer pageSize
 
