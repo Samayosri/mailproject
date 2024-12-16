@@ -33,3 +33,19 @@ public interface FolderService {
     void removeEmailFromFolderByName(MailEntity mailEntity, String folderName, UserEntity user);
 }
 
+
+// move from to
+// delete
+// send
+// draft
+
+// deleted emails:
+//      email id
+//      user id
+//      deletion date
+
+// trash :
+// when the user requested the trash folder:
+// for each email in trash:
+//          check if the deletion time has expired : delete it from trash folder and the table
+//          else: send it

@@ -2,13 +2,10 @@ package com.csed.Mail.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
