@@ -30,7 +30,8 @@ public class UserEntity {
 
     @Column(nullable = false)
     private String emailAddress;
-
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER,orphanRemoval = true)
+    private List<ContactEntity> contacts = new ArrayList<>();
     @Column(nullable = false)
     private String password;
     @OneToMany(mappedBy = "sender",fetch = FetchType.EAGER)
