@@ -20,11 +20,11 @@ import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InputFileUpload from "./InputFileUpload";
 
-const ComposeEmail = ({ open, onClose, mail = {},userId,method}) => {
- 
+const ComposeEmail = ({ open, onClose, mail = {},userId}) => {
+  
   const mailDto = {
     id: mail.id|| null,
-    senderId: mail.senderId || null,
+    senderId: userId,
     subject: mail.subject || "",
     senderEmailAddress: mail.senderEmailAddress || "",
     toReceivers: mail.toReceivers || [],
@@ -73,6 +73,7 @@ const ComposeEmail = ({ open, onClose, mail = {},userId,method}) => {
   };
 
   const handleSend = async() => {
+
     /*
 
     if method is draft send request to update mail
@@ -93,10 +94,10 @@ const ComposeEmail = ({ open, onClose, mail = {},userId,method}) => {
       return;
     }
 
-     
-      const url ="http://localhost:8080//mails/send" 
+      const url ="http://localhost:8080/mail/send" 
 
       try {
+        console.log(email)
         const response = await axios.post(url, email);
 
         if (response.status === 201) {
@@ -115,38 +116,27 @@ const ComposeEmail = ({ open, onClose, mail = {},userId,method}) => {
           console.error("Unexpected Error:", error);
         }
       }
-
-    const isEmailSent = true; // will be removed when deal with api
-    if (isEmailSent) {
-      console.log(email);
-      setSnackbarMessage("Email sent successfully!");
-      setSnackbarSeverity("success");
-      triggerSnackbarAndClose();
-    } else {
-      setSnackbarMessage("Failed to send email.");
-      setSnackbarSeverity("error");
-      triggerSnackbarAndClose();
-    }
-  };
+  
+   };
 
   const triggerSnackbarAndClose = () => {
     setOpenSnackbar(true);
     setTimeout(() => {
-      onClose();
+      onClose(false);
       setOpenSnackbar(false);
     }, 1500);
   };
 
-  const handleClose = () => {
-    (method==="draft")?
-    ///send request to backend to update this mail
-    onClose(false)///set selected mail to false
-    :
-    ///send request to backend to create new mail in drafts folder
-    null
-
-    /*
-      const url ="http://localhost:8080//mails/draft" 
+  const handleClose = async () => {
+    
+    // (method==="draft")?
+    // ///send request to backend to update this mail
+    // onClose(false)///set selected mail to false
+    // :
+    // ///send request to backend to create new mail in drafts folder
+    // null
+  
+      const url ="http://localhost:8080/mail/draft" 
 
       try {
         const response = await axios.post(url, email);
@@ -165,10 +155,8 @@ const ComposeEmail = ({ open, onClose, mail = {},userId,method}) => {
         } else {
           console.error("Unexpected Error:", error);
         }
-      }*/
-    setSnackbarMessage("Email saved to drafts.");
-    setSnackbarSeverity("info");
-    triggerSnackbarAndClose();
+      }
+   
  
   };
 

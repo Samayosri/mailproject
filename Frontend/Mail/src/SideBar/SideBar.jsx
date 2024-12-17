@@ -8,7 +8,7 @@ import ComposeEmail from "../Mail/ComposeEmail";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import axios from "axios";
 
-function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setContent, userId }) {
+function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setContent, userId ,setMails}) {
 
   useEffect(() => {
     const fetchFolders = async () => {
@@ -123,6 +123,10 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
       name={folder.name}
       setContent={setContent}
       setSelectedFolder={setSelectedFolder}
+      selectedFolder={selectedFolder}
+      folders={folders}
+      setMails={setMails}
+
     />
   ))
 ) : (
@@ -152,7 +156,7 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
         </Stack>
       </Drawer>
 
-      {isOpen && <ComposeEmail open={isOpen} onClose={handleClose} userId={userId} method={"new mail"} />}
+      {isOpen && <ComposeEmail open={isOpen} onClose={handleClose} userId={userId}  />}
     </Box>
   );
 }

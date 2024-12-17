@@ -5,10 +5,44 @@ import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 import MailIcon from '@mui/icons-material/Mail';
 import SendIcon from '@mui/icons-material/Send'; 
 import DraftsIcon from '@mui/icons-material/Drafts';
-import ComposeEmail from '../Mail/ComposeEmail';
-function Folder({ setContent,name,setSelectedFolder }) {
+import axios from 'axios';
 
-
+function Folder({ setContent,name,setSelectedFolder,selectedFolder,folders ,setMails}) {
+   function handleFolderSelected(){
+      setSelectedFolder(name);
+      setContent("mails");
+      const folderID = folders.find(
+         (folder) => folder.name === selectedFolder
+         
+       )?.id;
+      
+         if (folderID) {
+           const fetchMails = async () => {
+           console.log("heyyyyyyyyy")
+             try {
+               const response = await axios.get(`http://localhost:8080/mail/${folderID}`,{
+                  params: {
+                    pageNumber:0
+                  }
+                });
+          
+               if (response.status === 200) {
+                  console.log(response.data);
+                 setMails(response.data);
+               }
+             } catch (error) {
+               if (error.response?.status === 400) {
+                 console.error("Error 400:", error.response.data);
+               } else {
+                 console.error("Unexpected Error:", error);
+       
+               }
+             }
+           };
+           fetchMails();
+         }
+     
+   }
    return (
  
       <>
@@ -31,11 +65,7 @@ function Folder({ setContent,name,setSelectedFolder }) {
                   <ArrowForwardIosIcon />
                )
             }
-            onClick={()=>{
-               setSelectedFolder(name);
-               setContent("mails");
-               
-            }}
+            onClick={handleFolderSelected}
          >
             {name}
          </Button>

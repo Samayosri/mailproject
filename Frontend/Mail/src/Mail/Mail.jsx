@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import MailContent from "./MailContent";
 import axios from "axios"; 
 import ComposeEmail from "./ComposeEmail";
-function Mail({ folders, selectedFolder ,userId}) {
+function Mail({folders, selectedFolder ,userId,mails}) {
   const [checkedMails, setCheckedMails] = useState([]);
   
   const handleCheckboxChange = (mailId) => {
@@ -24,8 +24,7 @@ function Mail({ folders, selectedFolder ,userId}) {
         : [...prev, mailId]
     );
   };
-  const [mails, setMails] = useState([
-  ]);
+ 
   const [selectedMail, setSelectedMail] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false); // compose
@@ -49,29 +48,7 @@ function Mail({ folders, selectedFolder ,userId}) {
     
   )?.folderID;
   
-  useEffect(() => {
-    if (folderID) {
-      const fetchMails = async () => {
-        try {
-          const response = await axios.get(`http://localhost:8080/mail/${folderID}`);
-          console.log("heyyyy");
-          if (response.status === 200) {
-          
-            setMails(response.data);
-          }
-        } catch (error) {
-          if (error.response?.status === 400) {
-            console.error("Error 400:", error.response.data);
-          } else {
-            console.error("Unexpected Error:", error);
   
-          }
-        }
-      };
-      fetchMails();
-    }
-  }, [folderID]);
-
  
   
   function handleDisplayMail(m) {
@@ -138,7 +115,7 @@ function Mail({ folders, selectedFolder ,userId}) {
               onClick={() => handleDisplayMail(mail)}
             >
               <Typography variant="body1" noWrap>
-                <strong>{mail.senderEmailAddress || "Unknown Sender"}:</strong> {mail.subject || "No Subject"}
+                <strong>{mail.senderMailAddress || "Unknown Sender"}:</strong> {mail.subject || "No Subject"}
               </Typography>
             </Button>
           </Box>
@@ -184,7 +161,7 @@ function Mail({ folders, selectedFolder ,userId}) {
       {console.log(selectedFolder)}
       <Box dividers sx={{ padding: "16px" }}>
         {(selectedFolder === "Drafts"&&selectedMail)&&(
-               <ComposeEmail open={isOpen} onClose={handleClose} mail={selectedMail } userId={userId} method={"draft"}></ComposeEmail>
+               <ComposeEmail open={isOpen} onClose={handleClose} mail={selectedMail } userId={userId} ></ComposeEmail>
           ) 
          
           }

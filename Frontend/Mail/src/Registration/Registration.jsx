@@ -23,7 +23,7 @@ function Registration({ setUserId, window, setWindow, signed, setSigned }) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
     let msg = "";
 
-    if (!formData.email || !formData.password || !formData.name) {
+    if (!formData.email || !formData.password || (signUp&&!formData.name)) {
       msg = "Please fill in all required fields!";
     } else if (!emailRegex.test(formData.email)) {
       msg = "Invalid email format!";
@@ -95,7 +95,6 @@ function Registration({ setUserId, window, setWindow, signed, setSigned }) {
 
   // Sign-in form options
   const signIn = [
-    { name: "Name", id: 1 },
     { name: "E-mail Address", id: 2 },
     { name: "Password", id: 3 },
     { name: "Sign IN", id: 4 },
@@ -179,11 +178,11 @@ function Registration({ setUserId, window, setWindow, signed, setSigned }) {
     return (
       <input
         type="text"
-        name={op.name === "Name" ? "name" : "email"}
+        name={"email"}
         key={op.id}
         className="signUp-options"
         placeholder={op.name}
-        value={op.name === "Name" ? formData.name : formData.email}
+        value={formData.email}
         onChange={handleInputChange}
       />
     );
