@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/folder")
+@CrossOrigin(origins = "http://localhost:5173")
 public class FolderController {
    private final FolderServices folderServices;
 

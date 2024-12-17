@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "Mails")
-public class MailEntity {
+public class MailEntity implements Cloneable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,11 +42,11 @@ public class MailEntity {
 
     private Integer importance;
 
-    @OneToMany(mappedBy = "mail", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "mail",cascade = CascadeType.DETACH,fetch = FetchType.EAGER)
     private List<AttachmentEntity> attachments = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "emails", fetch = FetchType.EAGER)
-    private List<FolderEntity> folders = new ArrayList<>();
+    @ManyToOne
+    private FolderEntity folder;
 
     @PrePersist
     protected void onCreate() {
@@ -55,6 +55,24 @@ public class MailEntity {
         }
         if (this.importance == null) {
             this.importance = 3;
+        }
+    }
+
+    @Override
+    public MailEntity clone() {
+        try {
+            MailEntity clone = (MailEntity) super.clone();
+            clone.setId(null);
+            clone.setToReceivers(new ArrayList<>(toReceivers));
+            clone.setCcReceivers(new ArrayList<>(ccReceivers));
+//            clone.setAttachments(new ArrayList<>());
+//            for(AttachmentEntity a : attachments){
+//                clone.attachments.add(a.clone());
+//            }
+
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
         }
     }
 }

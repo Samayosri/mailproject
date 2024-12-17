@@ -8,16 +8,16 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Getter
 @Setter
-public class MoveCommand extends Command{
-    private Long sourceFolderId;
-    private Long destinationFolderId;
-    UserEntity user;
-    private MailEntity mail;
+public class MoveCommand implements Command {
     private final CommandService commandService;
+    MoveDto moveDto;
 
     public MoveCommand(CommandService commandService) {
         this.commandService = commandService;
@@ -25,16 +25,14 @@ public class MoveCommand extends Command{
 
     @Override
     public void execute() {
-        List<FolderEntity> folders = user.getFolders();
-        for(FolderEntity folder : folders){
-            if(folder.getId().equals(sourceFolderId)) {
-                folder.getEmails().remove(mail);
-                commandService.saveFolder(folder);
+            Set<MailEntity> selectedMails = new HashSet<>();
+            for (Long id : moveDto.getMailIds()) {
+                selectedMails.add(commandService.getMailById(id));
             }
-            else if(folder.getId().equals(destinationFolderId)){
-                folder.getEmails().add(mail);
-                commandService.saveFolder(folder);
+            FolderEntity folder = commandService.getFolder(moveDto.getDestinationFolderId());
+            for(MailEntity mailEntity : selectedMails){
+                mailEntity.setFolder(folder);
+                commandService.saveMail(mailEntity);
             }
-        }
     }
 }

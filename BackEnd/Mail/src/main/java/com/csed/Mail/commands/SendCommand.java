@@ -6,8 +6,9 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class SendCommand extends Command{
-    String reciever;
+public class SendCommand implements Command{
+    String recevier;
+    MailEntity mailEntity;
     private final CommandService commandService;
 
     public SendCommand(CommandService commandService) {
@@ -16,7 +17,8 @@ public class SendCommand extends Command{
 
     @Override
     public void execute() {
-     commandService.sendMailToReceivers(reciever, mailEntity);
+
+        commandService.sendMailToReceivers(recevier, mailEntity);
     }
 
 

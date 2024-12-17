@@ -1,7 +1,6 @@
 package com.csed.Mail.model;
 
 import com.csed.Mail.model.Dtos.ContactDto;
-import com.csed.Mail.model.Dtos.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +28,7 @@ public class ContactEntity {
     public ContactDto getcontactdto(){
         return ContactDto.builder()
                 .name(name)
-                .ownerid(owner.getId())
+                .ownerId(owner.getId())
                 .emailAddress(emailAddress)
                 .id(id)
         .build();

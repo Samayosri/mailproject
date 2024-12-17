@@ -35,8 +35,8 @@ public class ContactServices {
         Optional<ContactEntity> existingContact = contactsRepository.findByName(contactDto.getName());
         if((existingContact.isEmpty())){
             contactDto.setId(null);
-            ContactEntity contact=contactDto.getcontact();
-            contact.setOwner(userRepository.findById(contactDto.getOwnerid()).get());
+            ContactEntity contact=contactDto.getContact();
+            contact.setOwner(userRepository.findById(contactDto.getOwnerId()).get());
             contact.setEmailAddress(contactDto.getEmailAddress());
             contactsRepository.save(contact);
             return contact.getcontactdto();
@@ -48,8 +48,8 @@ public class ContactServices {
         if(id==contactDto.getId()){
             Optional<ContactEntity> existingContact = contactsRepository.findById(id);
             if((existingContact.isPresent())){
-                ContactEntity contact=contactDto.getcontact();
-                contact.setOwner(userRepository.findById(contactDto.getOwnerid()).get());
+                ContactEntity contact=contactDto.getContact();
+                contact.setOwner(userRepository.findById(contactDto.getOwnerId()).get());
                 contact.setEmailAddress(contactDto.getEmailAddress());
                 return contactsRepository.save(contact).getcontactdto();
             }

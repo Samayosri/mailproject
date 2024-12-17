@@ -6,9 +6,10 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class DraftCommand extends Command{
+public class DraftCommand implements Command{
 
     private final CommandService commandService;
+    MailEntity mailEntity;
 
     public DraftCommand(CommandService commandService) {
         this.commandService = commandService;

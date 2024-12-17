@@ -1,6 +1,8 @@
 package com.csed.Mail.model.Dtos;
 
 import com.csed.Mail.model.AttachmentEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,16 +15,18 @@ import java.util.Base64;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+
 public class AttachmentDto {
 
-    private String Name;
-    private String Type;
+    private String name;
+    private String type;
     private String file;
 
+    @JsonIgnore
     public AttachmentEntity getAttachment(){
         return AttachmentEntity.builder().
-                id(null).
-                fileType(Type).
+                fileName(name).
+                fileType(type).
                 fileData(file != null ?file.getBytes(StandardCharsets.UTF_8): null).
                 build();
     }

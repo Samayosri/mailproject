@@ -8,17 +8,18 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
-public class TrashCommand extends Command{
+public class TrashCommand implements Command{
 
     private final CommandService commandService;
-    private Long sourceFolderId;
-    private Long destinationFolderId;
-    private UserEntity user;
-    private MailEntity mail;
+    MoveDto moveDto;
+
+
 
     public TrashCommand(CommandService commandService) {
         this.commandService = commandService;
@@ -28,17 +29,17 @@ public class TrashCommand extends Command{
     @Override
     public void execute() {
         //set delete date
-        List<FolderEntity> folders = user.getFolders();
-        for(FolderEntity folder : folders){
-            if(folder.getId().equals(sourceFolderId)) {
-                folder.getEmails().remove(mail);
-                commandService.saveFolder(folder);
-            }
-            else if(folder.getId().equals(destinationFolderId)){
-                folder.getEmails().add(mail);
-                commandService.saveFolder(folder);
-            }
+        Set<MailEntity> selectedMails = new HashSet<>();
+        for (Long id : moveDto.getMailIds()) {
+            selectedMails.add(commandService.getMailById(id));
         }
+        FolderEntity folder = commandService.getFolder(moveDto.getDestinationFolderId());
+        for(MailEntity mailEntity : selectedMails){
+            mailEntity.setFolder(folder);
+            commandService.saveMail(mailEntity);
+        }
+
+
 
     }
 }

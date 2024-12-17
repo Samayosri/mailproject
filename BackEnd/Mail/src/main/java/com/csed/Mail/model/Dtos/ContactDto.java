@@ -1,9 +1,8 @@
 package com.csed.Mail.model.Dtos;
 
+
 import com.csed.Mail.model.ContactEntity;
-import com.csed.Mail.model.UserEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,14 +17,15 @@ import java.util.List;
 @Builder
 public class ContactDto {
     private  Long id;
-    private Long ownerid;
+    private Long ownerId;
     private String name;
     private List<String> emailAddress=new ArrayList<>();
     @JsonIgnore
-    public ContactEntity getcontact(){
-        return ContactEntity.builder()
+    public ContactEntity getContact(){
+        return ContactEntity .builder()
                 .id(id)
                 .name(name)
                 .build();
     }
+
 }

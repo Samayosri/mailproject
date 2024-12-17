@@ -34,6 +34,10 @@ public class CommandService {
         return folderRepository.save(folder);
     }
 
+    public FolderEntity getFolder(Long id){
+        return folderRepository.findById(id).orElseThrow( () -> new IllegalArgumentException("Folder not Found"));
+    }
+
 
     public void saveUser(UserEntity user){
         userRepository.save(user);
@@ -92,8 +96,8 @@ public class CommandService {
         if(folder == null) {
             throw new IllegalArgumentException("folder not found");
         }
-        folder.getEmails().add(mailEntity);
-        folderRepository.save(folder);
+        mailEntity.setFolder(folder);
+        mailRepository.save(mailEntity);
     }
     public void sendMailToReceivers(String emailAddress, MailEntity mailEntity) {
         Optional<UserEntity> receiver = userRepository.findByEmailAddress(emailAddress);

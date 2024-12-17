@@ -5,10 +5,7 @@ import com.csed.Mail.model.MailEntity;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
-public abstract class Command {
-    protected MailEntity mailEntity;
-    protected MoveDto moveDto;
-    abstract void execute();
+public interface Command {
+
+    abstract void execute() throws IllegalArgumentException;
 }

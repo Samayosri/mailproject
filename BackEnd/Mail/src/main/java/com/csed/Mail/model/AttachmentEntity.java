@@ -16,7 +16,7 @@ import java.util.Base64;
 @Builder
 @Entity
 @Table(name = "Attachments")
-public class AttachmentEntity implements Serializable {
+public class AttachmentEntity implements Serializable,Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,9 +39,22 @@ public class AttachmentEntity implements Serializable {
 
     public AttachmentDto getDto(){
         return AttachmentDto.builder().file(fileData != null ? new String(fileData, StandardCharsets.UTF_8) : null).
-                file(fileName).
-                file(fileType).
+                name(fileName).
+                type(fileType).
                 build();
     }
+
+    @Override
+    public AttachmentEntity clone() {
+        try {
+            AttachmentEntity clone = (AttachmentEntity) super.clone();
+            clone.setMail(null);
+            clone.setId(null);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
 
 }

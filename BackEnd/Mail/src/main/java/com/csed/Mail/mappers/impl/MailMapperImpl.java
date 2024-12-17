@@ -63,7 +63,7 @@ public class MailMapperImpl implements Mapper<MailEntity,MailDto> {
                 ccReceivers(mailDto.getCcReceivers()==null ? new ArrayList<>():mailDto.getCcReceivers()).
                 bccReceivers(mailDto.getBccReceivers()==null ? new ArrayList<>():mailDto.getBccReceivers()).
                 importance(mailDto.getImportance() ).
-                attachments(new ArrayList<>()).folders(new ArrayList<>()).
+                attachments(new ArrayList<>()).folder(null).
                 build();
 
          Optional<UserEntity> user = userRepository.findById(mailDto.getSenderId());
@@ -73,12 +73,16 @@ public class MailMapperImpl implements Mapper<MailEntity,MailDto> {
         for(AttachmentDto a : mailDto.getAttachments()){
             mailEntity.getAttachments().add(a.getAttachment());
         }
+        mailEntity.setSender(user.get());
+        for (AttachmentEntity a :mailEntity.getAttachments()){
+            a.setMail(mailEntity);
+        }
 //        if (!user.get().getEmailAddress().equals(mailDto.getSenderMailAddress())) {
 //            System.out.println("hellooooo");
 //            throw new IllegalArgumentException("The user id and the email address are not compatible.");
 //        } at the sent the sender mail is not setted for now uncomment it after full merge with ui
 
-        mailEntity.setSender(user.get());
+
 
          return mailEntity;
 
