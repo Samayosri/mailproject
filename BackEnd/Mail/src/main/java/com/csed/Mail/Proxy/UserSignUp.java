@@ -1,46 +1,26 @@
-package com.csed.Mail.Services;
+package com.csed.Mail.Proxy;
 
+import com.csed.Mail.Services.PasswordEncoder;
 import com.csed.Mail.model.Dtos.UserDto;
 import com.csed.Mail.model.FolderEntity;
 import com.csed.Mail.model.UserEntity;
 import com.csed.Mail.repositories.FolderRepository;
 import com.csed.Mail.repositories.UserRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
-@Service
-public class UserServices {
-
+@Component
+public class UserSignUp implements IUserSignUp{
     private final UserRepository userRepository;
+    private final FolderRepository folderRepository;
     private final PasswordEncoder passwordEncoder;
-private  final FolderRepository folderRepository;
-    public UserServices(UserRepository userRepository, PasswordEncoder passwordEncoder, FolderRepository folderRepository) {
+
+    public UserSignUp(UserRepository userRepository, FolderRepository folderRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.folderRepository = folderRepository;
         this.passwordEncoder = passwordEncoder;
-        this.folderRepository=folderRepository;
     }
 
-/*
-    public UserDto login(UserDto userDto) throws IllegalArgumentException {
-        Optional<UserEntity> userEntity = userRepository.findByEmailAddress(userDto.getEmailAddress());
-        if (userEntity.isEmpty()) {
-            throw new IllegalArgumentException("Account not found. Sign up to continue.");
-        } else if (!passwordEncoder.checkPassword(userDto.getPassword(), userEntity.get().getPassword())) {
-            throw new IllegalArgumentException("Wrong password");
-        } else {
-            userEntity.get().setPassword(null);
-            return userEntity.get().getuserdto();
-        }
-    }*/
-/*
-
-    public UserDto signup(UserDto userDto) throws IllegalArgumentException {
-        Optional<UserEntity> userEntity = userRepository.findByEmailAddress(userDto.getEmailAddress());
-        if (userEntity.isPresent()) {
-            throw new IllegalArgumentException("You already have an account.");
-        }
-
+    public UserDto makesignup(UserDto userDto){
         String encodedPassword = passwordEncoder.encodePassword(userDto.getPassword());
         userDto.setPassword(encodedPassword);
         userDto.setId(null);
@@ -61,4 +41,4 @@ private  final FolderRepository folderRepository;
         newfolder= FolderEntity.builder().userId(user.getId()).id(null).name("Trash").owner(user).build();
         folderRepository.save(newfolder);
     }
-*/}
+}
