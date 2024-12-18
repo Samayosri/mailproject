@@ -67,11 +67,25 @@ public class CommandService {
             mailEntity = mailRepository.save(mailEntity);
             addEmailToFolderByName(mailEntity, "Drafts", mailEntity.getSender());
         } else {
+            mailEntity.setFolder(getFolderByName("Drafts",mailEntity.getSender()));
             mailEntity = mailRepository.save(mailEntity);
         }
         return mailEntity;
     }
-
+    public FolderEntity getFolderByName( String folderName, UserEntity user) {
+        List<FolderEntity> folders = user.getFolders();
+        FolderEntity folder = null;
+        for (FolderEntity f : folders) {
+            if (f.getName().equals(folderName)) {
+                folder = f;
+                break;
+            }
+        }
+        if (folder == null) {
+            throw new IllegalArgumentException("folder not found");
+        }
+        return folder;
+    }
     public void removeEmailFromFolderByName(MailEntity mailEntity, String folderName, UserEntity user) {
         List<FolderEntity> folders = user.getFolders();
         FolderEntity folder = null;
