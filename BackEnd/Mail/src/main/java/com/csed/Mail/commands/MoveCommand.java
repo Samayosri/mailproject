@@ -34,9 +34,10 @@ public class MoveCommand implements Command {
                 if(mailEntity.getFolder().getName().equals("Drafts")){
                     continue;
                 }
-//                if(mailEntity.getFolder().equals("Trash")){
-//                   commandService.removeMailFromTrash(mailEntity.getId());
-//                }
+                System.out.println();
+                if(mailEntity.getFolder().getName().equals("Trash")){
+                   commandService.removeMailFromTrash(mailEntity.getId());
+                }
                 mailEntity.setFolder(folder);
                 commandService.saveMail(mailEntity);
             }

@@ -4,6 +4,7 @@ import com.csed.Mail.Search.Dtos.CriteriaDto;
 import com.csed.Mail.Search.Impl.OrCriteria;
 import com.csed.Mail.Services.MailService;
 import com.csed.Mail.Sorting.SortingStrategy;
+import com.csed.Mail.commands.CommandService;
 import com.csed.Mail.mappers.Mapper;
 import com.csed.Mail.model.Dtos.MailDto;
 import com.csed.Mail.model.FolderEntity;
@@ -26,7 +27,7 @@ public class CriteriaFacade {
     private final Pager pager;
 
     @Autowired
-    public CriteriaFacade(MailService mailService,UserRepository userRepository, SearchingFactory searchingFactory, Map<String, SortingStrategy> sortingStrategies, Mapper<MailEntity, MailDto> mailMapper, Pager pager) {
+    public CriteriaFacade(MailService mailService,UserRepository userRepository, SearchingFactory searchingFactory, Map<String, SortingStrategy> sortingStrategies, Mapper<MailEntity, MailDto> mailMapper, Pager pager, CommandService commandService) {
         this.mailService = mailService;
         this.userRepository = userRepository;
         this.searchingFactory = searchingFactory;

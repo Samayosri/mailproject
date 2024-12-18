@@ -1,10 +1,6 @@
 package com.csed.Mail.paintapp;
 
-import com.csed.paintapp.model.Circle;
-import com.csed.paintapp.model.DTO.ShapeDto;
-import com.csed.paintapp.model.Shape;
-import com.csed.paintapp.repository.ShapeRepository;
-import com.csed.paintapp.service.factory.ShapeFactory;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;

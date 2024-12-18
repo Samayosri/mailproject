@@ -47,7 +47,7 @@ public class TrashCommand implements Command{
         }
         for(MailEntity mailEntity : selectedMails){
             mailEntity.setFolder(trash);
-            //commandService.moveMailToTrash(mailEntity.getId());
+            commandService.moveMailToTrash(mailEntity.getId());
             commandService.saveMail(mailEntity);
         }
 

@@ -60,9 +60,9 @@ public class MailServiceImpl implements MailService {
     public List<MailDto> getListEmailsByFolderId(Long folderId) throws RuntimeException{
         Optional<FolderEntity> folder = folderRepository.findById(folderId);
         if(folder.isPresent()){
-//            if(folder.get().getName().equals("Trash")){
-//               commandService.filterDeletedMailsFromTrashFolder();
-//            }
+            if(folder.get().getName().equals("Trash")){
+               commandService.filterDeletedMailsFromTrashFolder();
+            }
             return mailMapper.mapListToDto(folder.get().getEmails());
         }
         else {
