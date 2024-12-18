@@ -34,6 +34,10 @@ public class ContactServices {
     public  ContactDto create(ContactDto contactDto){
         Optional<ContactEntity> existingContact = contactsRepository.findByName(contactDto.getName());
         if((existingContact.isEmpty())){
+                List<String> wrongemails=Checkvalidation(contactDto);
+                if(!wrongemails.isEmpty()){
+                    throw new IllegalArgumentException(wrongemails+" don't exist");
+                }
             contactDto.setId(null);
             ContactEntity contact=contactDto.getContact();
             contact.setOwner(userRepository.findById(contactDto.getOwnerId()).get());
@@ -48,6 +52,10 @@ public class ContactServices {
         if(id==contactDto.getId()){
             Optional<ContactEntity> existingContact = contactsRepository.findById(id);
             if((existingContact.isPresent())){
+                List<String> wrongemails=Checkvalidation(contactDto);
+                if(!wrongemails.isEmpty()){
+                    throw new IllegalArgumentException(wrongemails+" don't exist");
+                }
                 ContactEntity contact=contactDto.getContact();
                 contact.setOwner(userRepository.findById(contactDto.getOwnerId()).get());
                 contact.setEmailAddress(contactDto.getEmailAddress());
@@ -67,5 +75,14 @@ public class ContactServices {
             userRepository.save(user);
 
         }
+    }
+    public List<String> Checkvalidation(ContactDto contactDto){
+        List<String> wrongemailaddress= new ArrayList<>();
+        for (String e:contactDto.getEmailAddress()){
+            Optional<UserEntity> user = userRepository.findByEmailAddress(e);
+            if(user.isEmpty())
+                wrongemailaddress.add(e);
+        }
+        return  wrongemailaddress;
     }
 }
