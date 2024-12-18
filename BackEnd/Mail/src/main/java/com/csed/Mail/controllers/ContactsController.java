@@ -1,5 +1,8 @@
 package com.csed.Mail.controllers;
 
+import com.csed.Mail.ContactSearch.ContactFacade;
+import com.csed.Mail.ContactSearch.Dtos.ContactCriteriaDto;
+import com.csed.Mail.Search.Dtos.CriteriaDto;
 import com.csed.Mail.Services.ContactServices;
 import com.csed.Mail.Sorting.Impl.SortContact;
 import com.csed.Mail.model.Dtos.ContactDto;
@@ -18,11 +21,13 @@ public class ContactsController {
     private final ContactServices contactServices;
     private final ContactsRepository contactsRepository;
     private  final SortContact sortContact;
+    private final ContactFacade contactFacade;
 
-    public ContactsController(ContactServices contactServices, ContactsRepository contactsRepository, SortContact sortContact) {
+    public ContactsController(ContactServices contactServices, ContactsRepository contactsRepository, SortContact sortContact, ContactFacade contactFacade) {
         this.contactServices = contactServices;
         this.contactsRepository = contactsRepository;
         this.sortContact = sortContact;
+        this.contactFacade = contactFacade;
     }
 
     @GetMapping("/{id}")
@@ -66,5 +71,17 @@ public class ContactsController {
         List<ContactDto> sortedContacts = sortContact.SortingContact(contactDtos);
             return new ResponseEntity<>(sortedContacts, HttpStatus.OK);
 
+    }
+    @PostMapping("search/{userId}")
+    public ResponseEntity<?> searchMails(
+            @PathVariable Long userId,
+            @RequestBody ContactCriteriaDto contactDto
+    ) { // use search service
+        try {
+            return new ResponseEntity<>(contactFacade.getContacts(userId, contactDto), HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        }
     }
     }
