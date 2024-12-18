@@ -11,7 +11,7 @@ import {
   FormGroup,
 } from "@mui/material";
 
-const Filter = () => {
+const Filter = ({selectedFilters,setSelectedFilters,folderId,setFolderId}) => {
   const supportedFilters = [
     "attachments",
     "body",
@@ -24,8 +24,6 @@ const Filter = () => {
     "senderEmailAddress",
   ];
 
-  const [selectedFilters, setSelectedFilters] = useState([]);
-  const [folderId, setFolderId] = useState(false);
   const [open, setOpen] = useState(false);
 
   const handleToggleFilter = (filter) => {
@@ -40,15 +38,23 @@ const Filter = () => {
     setFolderId((prev) => !prev);
   };
 
+  const handleClearAll = () => {
+    setSelectedFilters([]);  // Clear all selected filters
+    setFolderId(false);      // Reset the folder checkbox
+  };
+
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () =>{
+    setSelectedFilters(supportedFilters);
+    setFolderId(false)
+     setOpen(false);
+    }
 
   const handleApply = () => {
     console.log("Selected Filters:", selectedFilters);
     console.log("Folder ID:", folderId);
     setOpen(false);
-    console.log(selectedFilters)
-    console.log(folderId)
+    
   };
 
   return (
@@ -82,8 +88,11 @@ const Filter = () => {
           </FormGroup>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleApply} variant="contained" color="primary">
+          <Button onClick={handleClose} variant="outlined" >Cancel</Button>
+          <Button onClick={handleClearAll} variant="outlined">
+            Clear All
+          </Button>
+          <Button onClick={handleApply} variant="contained"  color="primary">
             Apply
           </Button>
         </DialogActions>

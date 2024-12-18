@@ -1,13 +1,22 @@
-import { styled, alpha } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
-import SearchIcon from '@mui/icons-material/Search';
-import InputAdornment from '@mui/material/InputAdornment';
+
 import "./SearchBar.css"
-function SearchBar() {
+import React, { useState } from "react";
+
+function SearchBar({ query,setQuery }) {
+  // Function to handle input changes and trigger the search
+  const handleInputChange = (event) => {
+    const newQuery = event.target.value;
+    setQuery(newQuery);
+  };
+
   return (
-     <>
-     <input className="search" type="text" placeholder='Search' />
-     </>
+    <input
+      className="search"
+      type="text"
+      placeholder="Search"
+      value={query}  // Bind the input to the query state
+      onChange={handleInputChange}  // Trigger the function on every change
+    />
   );
 }
 
