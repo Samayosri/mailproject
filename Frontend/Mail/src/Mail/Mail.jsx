@@ -17,6 +17,11 @@ import ComposeEmail from "./ComposeEmail";
 function Mail({ folders, selectedFolder, userId, mails ,setTriggerFetch,checkedMails,setCheckedMails}) {
 
 
+  useEffect(() => {
+    setSelectedMail(false)
+    
+  }, [selectedFolder]);
+
   const handleCheckboxChange = (mailId) => {
     setCheckedMails((prev) =>
       prev.includes(mailId)
