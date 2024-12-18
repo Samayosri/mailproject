@@ -52,7 +52,7 @@ function Mail({folders, selectedFolder ,userId,mails}) {
  
   
   function handleDisplayMail(m) {
-    handleOpen()
+    handleOpen();
     setSelectedMail(m);
   }
 
@@ -62,30 +62,16 @@ function Mail({folders, selectedFolder ,userId,mails}) {
   }
 
   return (
+    
     <Box>
-      <Box style={{
-   
-        display:"flex",
-        flexDirection:"column",
-        position:"absolute",
-        right:"1%",
-        gap:"10px"
-
-      }}>
-      <Button variant="contained"
-      
-    >Move</Button>
-    <Button variant="outlined" color="error"
-
-    >
-     
-  Delete
-   </Button>
-      </Box>
-
-    <Stack spacing={2}>
+    
+    
+    <Stack spacing={2} >
+              
+  
         {mails.map((mail) => (
           <Box
+          
             key={mail.id}
             sx={{
               display: "flex",
@@ -161,7 +147,7 @@ function Mail({folders, selectedFolder ,userId,mails}) {
       {console.log(selectedFolder)}
       <Box dividers sx={{ padding: "16px" }}>
         {(selectedFolder === "Drafts"&&selectedMail)&&(
-               <ComposeEmail open={isOpen} onClose={handleClose} mail={selectedMail } userId={userId} ></ComposeEmail>
+               <ComposeEmail   key={selectedMail?.id} open={isOpen} onClose={handleClose} mail={selectedMail } userId={userId} ></ComposeEmail>
           ) 
          
           }

@@ -21,12 +21,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InputFileUpload from "./InputFileUpload";
 
 const ComposeEmail = ({ open, onClose, mail = {},userId}) => {
-  
+  console.log(mail)
   const mailDto = {
     id: mail.id|| null,
     senderId: userId,
     subject: mail.subject || "",
-    senderEmailAddress: mail.senderEmailAddress || "",
+    senderMailAddress: mail.senderMailAddress || "",
     toReceivers: mail.toReceivers || [],
     ccReceivers: mail.ccReceivers || [],
     bccReceivers: mail.bccReceivers || [],

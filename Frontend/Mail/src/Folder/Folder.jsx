@@ -5,6 +5,7 @@ import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 import MailIcon from '@mui/icons-material/Mail';
 import SendIcon from '@mui/icons-material/Send'; 
 import DraftsIcon from '@mui/icons-material/Drafts';
+
 import axios from 'axios';
 
 function Folder({ setContent,name,setSelectedFolder,selectedFolder,folders ,setMails}) {

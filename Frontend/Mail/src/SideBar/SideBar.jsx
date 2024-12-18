@@ -74,6 +74,7 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
         <SearchBar />
         <Contacts setContent={setContent} />
       </div>
+      
 
       {/* Drawer */}
       <Drawer
