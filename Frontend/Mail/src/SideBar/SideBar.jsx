@@ -137,6 +137,7 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
               folders={folders}
               setMails={setMails}
               setFolders={setFolders}
+              setTriggerFetch={setTriggerFetch}
             />
           ))
         ) : (

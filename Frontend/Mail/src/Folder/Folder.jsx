@@ -25,13 +25,16 @@ function Folder({
   folders,
   setMails,
   setFolders,
+  setTriggerFetch
 }) {
+
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [newFolderName, setNewFolderName] = useState(name);
 
   function handleFolderSelected() {
     setSelectedFolder(name);
     setContent('mails');
+    setTriggerFetch(true);
   }
 
   const folder = folders.find((folder) => folder.name === selectedFolder);
