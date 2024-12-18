@@ -41,6 +41,7 @@ public class AttachmentEntity implements Serializable,Cloneable {
         return AttachmentDto.builder().file(fileData != null ? new String(fileData, StandardCharsets.UTF_8) : null).
                 name(fileName).
                 type(fileType).
+                id(id).
                 build();
     }
 

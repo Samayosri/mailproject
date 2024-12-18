@@ -42,7 +42,7 @@ public class MailEntity implements Cloneable{
 
     private Integer importance;
 
-    @OneToMany(mappedBy = "mail",cascade = CascadeType.DETACH,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "mail",cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     private List<AttachmentEntity> attachments = new ArrayList<>();
 
     @ManyToOne
@@ -65,10 +65,12 @@ public class MailEntity implements Cloneable{
             clone.setId(null);
             clone.setToReceivers(new ArrayList<>(toReceivers));
             clone.setCcReceivers(new ArrayList<>(ccReceivers));
-//            clone.setAttachments(new ArrayList<>());
-//            for(AttachmentEntity a : attachments){
-//                clone.attachments.add(a.clone());
-//            }
+            clone.setAttachments(new ArrayList<>());
+            for(AttachmentEntity a : attachments){
+               AttachmentEntity atclone = a.clone();
+                atclone.setMail(clone);
+                clone.attachments.add(atclone);
+            }
 
             return clone;
         } catch (CloneNotSupportedException e) {

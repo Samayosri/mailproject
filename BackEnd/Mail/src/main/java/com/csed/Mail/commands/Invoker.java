@@ -36,6 +36,7 @@ public class Invoker {
             commandService.checkReceivers(Receivers);
             mailEntity.setBccReceivers(null);
             commandService.removeEmailFromFolderByName(mailEntity,"Drafts",mailEntity.getSender());
+            commandService.saveMail(mailEntity);
             commandService.addEmailToFolderByName(mailEntity,"Sent",mailEntity.getSender());
             for(String receiver : Receivers){
                 SendCommand send = new SendCommand(commandService);

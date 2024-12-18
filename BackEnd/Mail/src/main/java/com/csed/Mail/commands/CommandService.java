@@ -107,6 +107,7 @@ public class CommandService {
     }
     public void sendMailToReceivers(String emailAddress, MailEntity mailEntity) {
         Optional<UserEntity> receiver = userRepository.findByEmailAddress(emailAddress);
+        saveMail(mailEntity);
         addEmailToFolderByName(mailEntity, "Inbox", receiver.get());
     }
 

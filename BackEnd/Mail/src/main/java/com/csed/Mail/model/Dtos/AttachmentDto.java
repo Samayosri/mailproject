@@ -18,6 +18,8 @@ import java.util.Base64;
 
 public class AttachmentDto {
 
+
+    private Long id;
     private String name;
     private String type;
     private String file;
@@ -27,7 +29,7 @@ public class AttachmentDto {
         return AttachmentEntity.builder().
                 fileName(name).
                 fileType(type).
-                fileData(file != null ?file.getBytes(StandardCharsets.UTF_8): null).
+                fileData(file != null ?file.getBytes(StandardCharsets.UTF_8): null).id(id).
                 build();
     }
 }
