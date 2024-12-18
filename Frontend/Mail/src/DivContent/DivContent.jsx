@@ -262,9 +262,11 @@ function DivContent({
             </Button>:<Button variant="contained" onClick={() => setMoveDialogOpen(true)}>
               Move
             </Button>}
-            <Button variant="contained" color="error" onClick={handleDelete}>
+            {selectedFolder==="Trash" && !searching?<Button variant="contained"  disabled>
               Delete
-            </Button>
+            </Button>:<Button variant="contained" color="error" onClick={() => handleDelete()}>
+            Delete
+            </Button>}
             <IconButton onClick={()=>{searching?handleSearch():fetchMails(0)}}>
             <RefreshIcon></RefreshIcon>
           </IconButton>
@@ -329,7 +331,7 @@ function DivContent({
           <Button onClick={() => setMoveDialogOpen(false)} color="secondary">
             Cancel
           </Button>
-          <Button onClick={handleMove} color="primary" variant="contained">
+          <Button onClick={()=>handleMove()} color="primary" variant="contained">
             Move
           </Button>
         </DialogActions>

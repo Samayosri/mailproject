@@ -142,7 +142,7 @@ const handleSave = async () => {
   } catch (error) {
     console.error("Error saving contact:", error);
     setSnackbarSeverity("error");
-    setSnackbarMessage(`Error saving contact: ${error.message}`);
+    setSnackbarMessage(error.response.data);
     setOpenSnackbar(true);
   }
 };

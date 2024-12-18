@@ -73,20 +73,12 @@ const ComposeEmail = ({ open, onClose, mail = {}, userId ,setTriggerFetch  }) =>
   };
 
   const handleSend = async () => {
- 
-    /*
-
-    if method is draft send request to update mail
-    if new mail send to create new mail in folder Drafts
-    */
     let errorMessage = "";
     if (!email.toReceivers.length) {
       errorMessage = "Please fill out the 'To' field.";
     } else if (!email.subject.trim()) {
       errorMessage = "Please fill out the 'Subject' field.";
-    } else if (!email.body.trim()) {
-      errorMessage = "Please fill out the 'Body' field.";
-    }
+    } 
     if (errorMessage) {
       setSnackbarMessage(errorMessage);
       setSnackbarSeverity("error");
@@ -169,6 +161,7 @@ const ComposeEmail = ({ open, onClose, mail = {}, userId ,setTriggerFetch  }) =>
           name: file.name,
           type: file.type,
           file: reader.result, // Base64 string of the file content
+          id : null
         };
 
         // Add the new attachment to the email state
