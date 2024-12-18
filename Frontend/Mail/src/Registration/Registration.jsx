@@ -4,7 +4,7 @@ import { Container } from "@mui/material";
 import axios from 'axios';
 
 
-function Registration({ setUserId, window, setWindow, signed, setSigned }) {
+function Registration({ setUserId, window, setWindow, signed, setSigned,setUserName }) {
   const [noteMessage, setNoteMessage] = useState(""); // to handle error messages
   // Function to display a message and hide it after 2 seconds
   function showNoteMessage(message) {
@@ -54,6 +54,7 @@ function Registration({ setUserId, window, setWindow, signed, setSigned }) {
         const response = await axios.post(url, customerData);
         if (response.status === 201) {
           console.log("response is",response.data);
+          setUserName(response.data.name);
           setUserId(response.data.id);
           setWindow("mail");
           setSigned(true);
