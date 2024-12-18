@@ -12,6 +12,7 @@ import Mail from "../Mail/Mail";
 import MyContacts from "../Contacts/MyContacts";
 import SearchBar from "../SearchBar/SearchBar";
 import ContactsButton from "../Contacts/ContactsButton";
+import Filter from "../SearchBar/Filter";
 
 function DivContent({
   content,
@@ -34,7 +35,9 @@ function DivContent({
   const fetchMails = async (pageIndex) => {
     if (!selectedFolder) return;
 
-    const folderID = folders.find((folder) => folder.name === selectedFolder)?.id;
+    const folderID = folders.find(
+      (folder) => folder.name === selectedFolder
+    )?.id;
     if (!folderID) return;
 
     try {
@@ -153,19 +156,22 @@ function DivContent({
       >
         {/* Top Section: Search Bar and Contacts Button */}
         <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 2,
-          }}
-        >
-          <SearchBar />
-          <IconButton onClick={()=>{fetchMails(0)}}>
-            <RefreshIcon></RefreshIcon>
-          </IconButton>
-          <ContactsButton setContent={setContent} />
-        </Box>
+  sx={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 2,
+  }}
+>
+<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+    <Filter /> {/* Filter moved to the right of the SearchBar */}
+    <SearchBar /> {/* SearchBar remains in the center */}
+     <Button variant="contained">Search</Button> {/* Search button added to the left */}
+    
+  </Box>
+  <ContactsButton setContent={setContent} /> {/* Moved to the far left */}
+ 
+</Box>
 
         {/* Page Navigation and Sort */}
         <Box
@@ -183,7 +189,10 @@ function DivContent({
               <ArrowBackIosIcon />
             </IconButton>
             <label>{page + 1}</label>
-            <IconButton onClick={handleNextPage} disabled={currentMails.length < 5}>
+            <IconButton
+              onClick={handleNextPage}
+              disabled={currentMails.length < 5}
+            >
               <ArrowForwardIosIcon />
             </IconButton>
           </div>
@@ -201,6 +210,9 @@ function DivContent({
             <Button variant="outlined" color="error" onClick={handleDelete}>
               Delete
             </Button>
+            <IconButton onClick={()=>{fetchMails(0)}}>
+            <RefreshIcon></RefreshIcon>
+          </IconButton>
           </Box>
 
           {/* Sort dropdown */}
