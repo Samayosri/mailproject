@@ -30,14 +30,30 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
     fetchFolders();
   }, [userId, setFolders]);
 
-  const createNewFolder = () => {
+  const createNewFolder = async () => {
     if (folderName) {
-      const newFolderObject = { id: 4, name: folderName, userId: 8 };
-      setFolders((prevFolders) => [...prevFolders, newFolderObject]);
-      setFolderName("");
-      setNewFolder(false);
+      const newFolderObject = { id: null, name: folderName, userId: userId };
+      try {
+        const response = await axios.post(`http://localhost:8080/folder/create`, newFolderObject);
+        if (response.status === 201) {
+          setFolders((prevFolders) => {
+            const updatedFolders = [...prevFolders, response.data];
+            console.log("Updated folders:", updatedFolders); // Logging the updated list of folders
+            return updatedFolders;
+          });
+          setFolderName("");
+          setNewFolder(false);
+        }
+      } catch (error) {
+        console.error("Error creating folder:", error);
+      }
     }
   };
+  useEffect(() => {
+    console.log("Folders updated:", folders);
+  }, [folders]);
+  
+  
 
   return (
     <Box
@@ -106,6 +122,7 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
               selectedFolder={selectedFolder}
               folders={folders}
               setMails={setMails}
+              setFolders={setFolders}
             />
           ))
         ) : (
@@ -119,5 +136,4 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
 }
 
 export default SideBar;
-
 
