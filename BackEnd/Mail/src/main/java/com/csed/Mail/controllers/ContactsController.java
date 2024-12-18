@@ -72,7 +72,7 @@ public class ContactsController {
             return new ResponseEntity<>(sortedContacts, HttpStatus.OK);
 
     }
-    @PostMapping("search/{userId}")
+    @PostMapping("/search/{userId}")
     public ResponseEntity<?> searchMails(
             @PathVariable Long userId,
             @RequestBody ContactCriteriaDto contactDto

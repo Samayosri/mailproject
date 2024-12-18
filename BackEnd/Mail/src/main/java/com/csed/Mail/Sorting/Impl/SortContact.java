@@ -20,7 +20,7 @@ public class SortContact implements ISortContact {
 
         return contactDtos.stream()
                 .sorted(
-                        Comparator.comparing(ContactDto::getName)
+                        Comparator.comparing(ContactDto::getName,String.CASE_INSENSITIVE_ORDER)
                                 .thenComparing(ContactDto::getName, Comparator.reverseOrder())
                 )
                 .collect(Collectors.toList());
