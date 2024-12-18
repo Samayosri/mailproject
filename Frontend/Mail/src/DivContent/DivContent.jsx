@@ -5,6 +5,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import SideBar from "../SideBar/SideBar";
 import Mail from "../Mail/Mail";
+import MyContacts from "../Contacts/MyContacts";
 import { use } from "react";
 
 function DivContent({
@@ -146,9 +147,12 @@ useEffect(() => {
         )}
 
         {content === "contacts" && (
-          <Stack sx={{ p: 2 }}>
-            <h1 style={{ color: "black" }}>Contacts</h1>
-          </Stack>
+          <>
+          <MyContacts userId={userId}/>  
+          </>
+          
+        
+
         )}
       </Box>
     </>

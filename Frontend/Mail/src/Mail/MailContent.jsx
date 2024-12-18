@@ -13,7 +13,7 @@ function MailContent({ mail = {} }) {
     id: mail.id || null,
     senderId: mail.senderId || null,
     subject: mail.subject || "",
-    senderEmailAddress: mail.senderEmailAddress || "",
+    senderMailAddress: mail.senderMailAddress || "",
     toReceivers: mail.toReceivers || [],
     ccReceivers: mail.ccReceivers || [],
     bccReceivers: mail.bccReceivers || [],
@@ -54,7 +54,7 @@ function MailContent({ mail = {} }) {
         {/* Sender Field */}
         <TextField
           label="Sender"
-          value={mailDto.senderEmailAddress}
+          value={mailDto.senderMailAddress}
           disabled
           fullWidth
         />

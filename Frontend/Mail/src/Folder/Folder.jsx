@@ -23,7 +23,8 @@ function Folder({ setContent,name,setSelectedFolder,selectedFolder,folders ,setM
              try {
                const response = await axios.get(`http://localhost:8080/mail/${folderID}`,{
                   params: {
-                    pageNumber:0
+                    pageNumber:0,
+                    pageSize:100
                   }
                 });
           

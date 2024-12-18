@@ -1,6 +1,6 @@
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import { Button } from '@mui/material';
-function Contacts({setContent}){
+function ContactsButton({setContent}){
     
     function setIsDrawerOpen(){
               setContent("contacts");
@@ -9,7 +9,6 @@ function Contacts({setContent}){
         <>
         
          <Button
-        
           edge="end"
            style={{height:"30px"}}
           aria-label="open drawer"
@@ -23,4 +22,4 @@ function Contacts({setContent}){
     );
 
 }
-export default Contacts;
+export default ContactsButton;

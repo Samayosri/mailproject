@@ -104,6 +104,7 @@ const ComposeEmail = ({ open, onClose, mail = {},userId}) => {
             setSnackbarMessage("Email sent successfully!");
             setSnackbarSeverity("success");
             triggerSnackbarAndClose();
+            console.log("mail send");
         } 
       } catch (error) {
         if (error.response?.status === 400) {
@@ -129,13 +130,6 @@ const ComposeEmail = ({ open, onClose, mail = {},userId}) => {
 
   const handleClose = async () => {
     
-    // (method==="draft")?
-    // ///send request to backend to update this mail
-    // onClose(false)///set selected mail to false
-    // :
-    // ///send request to backend to create new mail in drafts folder
-    // null
-  
       const url ="http://localhost:8080/mail/draft" 
 
       try {
@@ -145,6 +139,7 @@ const ComposeEmail = ({ open, onClose, mail = {},userId}) => {
             setSnackbarMessage("Email saved to drafts.");
             setSnackbarSeverity("info");
             triggerSnackbarAndClose(); 
+            console.log("drafted")
         } 
       } catch (error) {
         if (error.response?.status === 400) {
@@ -237,7 +232,7 @@ const ComposeEmail = ({ open, onClose, mail = {},userId}) => {
         <TextField
           fullWidth
           margin="normal"
-          label="To"
+          label="To space separeated"
           name="toInput"
           value={toInput}
           onChange={handleChange}

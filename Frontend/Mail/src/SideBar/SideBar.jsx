@@ -3,10 +3,10 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Folder from "../Folder/Folder";
 import { useState, useEffect } from "react";
 import SearchBar from "../SearchBar/SearchBar";
-import Contacts from "../Contacts/Contacts";
 import ComposeEmail from "../Mail/ComposeEmail";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import axios from "axios";
+import ContactsButton from "../Contacts/ContactsButton";
 
 function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setContent, userId ,setMails}) {
 
@@ -72,7 +72,7 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
           </IconButton>
         </Box>
         <SearchBar />
-        <Contacts setContent={setContent} />
+        <ContactsButton setContent={setContent} />
       </div>
       
 
