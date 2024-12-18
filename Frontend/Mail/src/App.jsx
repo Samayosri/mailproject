@@ -15,6 +15,10 @@ const App = () => {
     return savedSigned ? JSON.parse(savedSigned) : false;
   });
 
+  const [userName, setUserName] = useState(() => {
+    const savedUserName = sessionStorage.getItem("userName");
+    return savedUserName ? JSON.parse(savedUserName) :"";
+  });
   const [window, setWindow] = useState(() => {
     const savedWindow = sessionStorage.getItem("window");
     return savedWindow ? JSON.parse(savedWindow) : "sign up";
@@ -29,13 +33,19 @@ const App = () => {
     sessionStorage.setItem("signed", JSON.stringify(signed));
     sessionStorage.setItem("window", JSON.stringify(window));
     sessionStorage.setItem("userId", JSON.stringify(userId));
-  }, [signed, window, userId]);
+    sessionStorage.setItem("userName", JSON.stringify(userName));
+  }, [signed, window, userId,userName]);
 
 
   const [content, setContent] = useState("mails");
   const [folders, setFolders] = useState([]);
 
- 
+  function handleLogoutApp(){
+    setWindow("sign up");
+    setUserName("");
+    setUserId(null);
+    setSigned(false);
+  }
   return (
     <> 
       {(window === "sign up" || window === "sign in") && (
@@ -45,6 +55,7 @@ const App = () => {
         setWindow={setWindow}
         signed={signed}
         setSigned={setSigned}
+        setUserName={setUserName}
          
         />
       )}
@@ -59,6 +70,8 @@ const App = () => {
             setSelectedFolder={setSelectedFolder}
             setFolders={setFolders}
             userId={userId}
+            userName={userName}
+            handleLogoutApp={handleLogoutApp}
           />
         </Box>
       )}

@@ -7,8 +7,9 @@ import ComposeEmail from "../Mail/ComposeEmail";
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import axios from "axios";
 import ContactsButton from "../Contacts/ContactsButton";
-
-function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setContent, userId ,setMails,setTriggerFetch}) {
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import LogoutIcon from '@mui/icons-material/Logout';
+function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setContent, userId ,setMails,setTriggerFetch,handleLogout,userName}) {
   const [isOpen, setIsOpen] = useState(false);
   const [newFolder, setNewFolder] = useState(false);
   const [folderName, setFolderName] = useState("");
@@ -72,13 +73,26 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
     >
       {/* Folder creation and search bar */}
       <Stack spacing={2} sx={{ alignItems: "center", marginBottom: 4 }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
+  <Box display="flex" alignItems="center">
+    <AccountCircleIcon style={{ background: "white", padding: "5px", borderRadius: "50%", marginRight: "10px" }} />
+    <span style={{ fontWeight: "bold", fontSize: "18px", color: "#333" }}>{userName}</span>
+  </Box>
+  <IconButton onClick={handleLogout} title="Logout">
+    <LogoutIcon style={{ color: "black" }} />
+  </IconButton>
+</Box>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+      <label htmlFor="">Create new folder</label>
         <IconButton
           size="large"
           aria-label="create new folder"
           onClick={() => setNewFolder(true)}
         >
-          <CreateNewFolderIcon />
+          <CreateNewFolderIcon style={{background:""}} />
         </IconButton>
+      </div>
+
            <Button
             variant="contained"
             onClick={handleOpen}

@@ -9,8 +9,10 @@ import {
   DialogTitle,
   FormControlLabel,
   FormGroup,
-} from "@mui/material";
+  IconButton,
 
+} from "@mui/material";
+import PhotoFilterIcon from '@mui/icons-material/PhotoFilter';
 const Filter = ({selectedFilters,setSelectedFilters,folderId,setFolderId}) => {
   const supportedFilters = [
     "attachments",
@@ -59,10 +61,8 @@ const Filter = ({selectedFilters,setSelectedFilters,folderId,setFolderId}) => {
 
   return (
     <Box>
-      <Button variant="contained" onClick={handleOpen}>
-       Filter
-      </Button>
-
+      <IconButton variant="contained" onClick={handleOpen}>
+      <PhotoFilterIcon></PhotoFilterIcon>     </IconButton>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Filter Options</DialogTitle>
         <DialogContent>

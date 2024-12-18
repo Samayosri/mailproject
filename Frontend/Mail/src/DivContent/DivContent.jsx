@@ -13,6 +13,7 @@ import MyContacts from "../Contacts/MyContacts";
 import SearchBar from "../SearchBar/SearchBar";
 import ContactsButton from "../Contacts/ContactsButton";
 import Filter from "../SearchBar/Filter";
+import SearchIcon from '@mui/icons-material/Search';
 
 function DivContent({
   content,
@@ -22,6 +23,8 @@ function DivContent({
   setFolders,
   setSelectedFolder,
   userId,
+  userName,
+  handleLogoutApp
 }) {
   const supportedFilters = [
     "attachments",
@@ -184,8 +187,7 @@ function DivContent({
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
-      {/* Left Sidebar */}
+    <Box sx={{ display: "flex" ,justifyContent:"space-between",alignItems:"center"}}>
       <SideBar
         setTriggerFetch={setTriggerFetch}
         folders={folders}
@@ -194,6 +196,8 @@ function DivContent({
         setFolders={setFolders}
         setContent={setContent}
         userId={userId}
+        handleLogout={handleLogoutApp}
+        userName={userName}
       />
 
       {/* Main Content Area */}
@@ -214,13 +218,14 @@ function DivContent({
     alignItems: "center",
     marginBottom: 2,
   }}
->
-<Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+> 
+    <div style={{ marginLeft:"20%",display:"flex"}}>
+   
     <Filter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} folderId={searchFolder} setFolderId={setSearchFolder}  /> {/* Filter moved to the right of the SearchBar */}
     <SearchBar query={searchWord} setQuery={setSearchWord} /> {/* SearchBar remains in the center */}
-     <Button variant="contained" onClick={()=>handleSearch(0)} >Search</Button> {/* Search button added to the left */}
+     <IconButton variant="contained" onClick={()=>handleSearch(0)} ><SearchIcon></SearchIcon></IconButton> {/* Search button added to the left */} </div>
     
-  </Box>
+ 
   <ContactsButton setContent={setContent} /> {/* Moved to the far left */}
  
 </Box>
@@ -256,7 +261,7 @@ function DivContent({
               gap: "10px",
             }}
           >
-            <Button variant="contained" >{searching?"Search":selectedFolder}</Button>
+            <Button color="secondary" disabled >{searching?"Search":selectedFolder}</Button>
            {selectedFolder==="Drafts" && !searching?<Button variant="contained" disabled>
               Move
             </Button>:<Button variant="contained" onClick={() => setMoveDialogOpen(true)}>
