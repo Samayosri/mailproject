@@ -1,11 +1,14 @@
 package com.csed.Mail.controllers;
 
 import com.csed.Mail.Services.ContactServices;
+import com.csed.Mail.Sorting.Impl.SortContact;
 import com.csed.Mail.model.Dtos.ContactDto;
 import com.csed.Mail.repositories.ContactsRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -14,10 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public class ContactsController {
     private final ContactServices contactServices;
     private final ContactsRepository contactsRepository;
+    private  final SortContact sortContact;
 
-    public ContactsController(ContactServices contactServices, ContactsRepository contactsRepository) {
+    public ContactsController(ContactServices contactServices, ContactsRepository contactsRepository, SortContact sortContact) {
         this.contactServices = contactServices;
         this.contactsRepository = contactsRepository;
+        this.sortContact = sortContact;
     }
 
     @GetMapping("/{id}")
@@ -53,6 +58,13 @@ public class ContactsController {
     public ResponseEntity<?> delete(@PathVariable Long id) {
         contactServices.delete(id);
         return new ResponseEntity<>( HttpStatus.OK);
+
+    }
+    @PostMapping("/sort")
+
+    public ResponseEntity<?> sort(@RequestBody List<ContactDto> contactDtos) throws IllegalArgumentException {
+        List<ContactDto> sortedContacts = sortContact.SortingContact(contactDtos);
+            return new ResponseEntity<>(sortedContacts, HttpStatus.OK);
 
     }
     }
