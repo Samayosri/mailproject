@@ -14,8 +14,8 @@ import { useEffect, useState } from "react";
 import MailContent from "./MailContent";
 import axios from "axios";
 import ComposeEmail from "./ComposeEmail";
-function Mail({ folders, selectedFolder, userId, mails }) {
-  const [checkedMails, setCheckedMails] = useState([]);
+function Mail({ folders, selectedFolder, userId, mails ,setTriggerFetch,checkedMails,setCheckedMails}) {
+
 
   const handleCheckboxChange = (mailId) => {
     setCheckedMails((prev) =>
@@ -39,10 +39,8 @@ function Mail({ folders, selectedFolder, userId, mails }) {
     setIsOpen(false);
   };
 
-  function handleMove() {
-    //send request to move to another folder
-  }
-  function handleDelete() {}
+ 
+  
   const folderID = folders.find(
     (folder) => folder.folderName === selectedFolder
   )?.folderID;
@@ -58,7 +56,7 @@ function Mail({ folders, selectedFolder, userId, mails }) {
 
   return (
 
-    <Box>
+    <Box style={{ backgroundColor: "#f4f4f4"}}>
       <Stack spacing={2}>
         {mails.map((mail) => (
           <Box
@@ -139,6 +137,7 @@ function Mail({ folders, selectedFolder, userId, mails }) {
             onClose={handleClose}
             mail={selectedMail}
             userId={userId}
+            setTriggerFetch={setTriggerFetch}
           ></ComposeEmail>
         )}
       </Box>

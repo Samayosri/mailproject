@@ -14,16 +14,16 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import axios from "axios"; 
+import axios from "axios";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InputFileUpload from "./InputFileUpload";
 
-const ComposeEmail = ({ open, onClose, mail = {},userId}) => {
+const ComposeEmail = ({ open, onClose, mail = {}, userId ,setTriggerFetch  }) => {
   console.log(mail)
   const mailDto = {
-    id: mail.id|| null,
+    id: mail.id || null,
     senderId: userId,
     subject: mail.subject || "",
     senderMailAddress: mail.senderMailAddress || "",
@@ -72,8 +72,8 @@ const ComposeEmail = ({ open, onClose, mail = {},userId}) => {
     }
   };
 
-  const handleSend = async() => {
-
+  const handleSend = async () => {
+ 
     /*
 
     if method is draft send request to update mail
@@ -94,31 +94,34 @@ const ComposeEmail = ({ open, onClose, mail = {},userId}) => {
       return;
     }
 
-      const url ="http://localhost:8080/mail/send" 
+    const url = "http://localhost:8080/mail/send"
 
-      try {
-        console.log(email)
-        const response = await axios.post(url, email);
+    try {
+      console.log(email)
+      const response = await axios.post(url, email);
 
-        if (response.status === 201) {
-            setSnackbarMessage("Email sent successfully!");
-            setSnackbarSeverity("success");
-            triggerSnackbarAndClose();
-            console.log("mail send");
-        } 
-      } catch (error) {
-        if (error.response?.status === 400) {
-          // to or bcc errors
-          setSnackbarMessage(error.response.data);
-          setSnackbarSeverity("error");
-          setOpenSnackbar(true);
-          return;
-        } else {
-          console.error("Unexpected Error:", error);
-        }
+      if (response.status === 201) {
+        setSnackbarMessage("Email sent successfully!");
+        setSnackbarSeverity("success");
+        triggerSnackbarAndClose();
+        console.log("mail send");
+          
       }
-  
-   };
+    } catch (error) {
+      if (error.response?.status === 400) {
+        // to or bcc errors
+        setSnackbarMessage(error.response.data);
+        setSnackbarSeverity("error");
+        setOpenSnackbar(true);
+        return;
+      } else {
+        console.error("Unexpected Error:", error);
+      }
+    }
+
+    setTriggerFetch(true);
+   
+  };
 
   const triggerSnackbarAndClose = () => {
     setOpenSnackbar(true);
@@ -129,35 +132,36 @@ const ComposeEmail = ({ open, onClose, mail = {},userId}) => {
   };
 
   const handleClose = async () => {
-    
-      const url ="http://localhost:8080/mail/draft" 
-
-      try {
-        const response = await axios.post(url, email);
-
-        if (response.status === 201) {
-            setSnackbarMessage("Email saved to drafts.");
-            setSnackbarSeverity("info");
-            triggerSnackbarAndClose(); 
-            console.log("drafted")
-        } 
-      } catch (error) {
-        if (error.response?.status === 400) {
-          setSnackbarMessage(error.response.data);
-          setSnackbarSeverity("error");
-          setOpenSnackbar(true);
-          return;
-        } else {
-          console.error("Unexpected Error:", error);
-        }
-      }
    
- 
+    const url = "http://localhost:8080/mail/draft"
+
+    try {
+      const response = await axios.post(url, email);
+
+      if (response.status === 201) {
+        setSnackbarMessage("Email saved to drafts.");
+        setSnackbarSeverity("info");
+        triggerSnackbarAndClose();
+        console.log("drafted")
+      }
+    } catch (error) {
+      if (error.response?.status === 400) {
+        setSnackbarMessage(error.response.data);
+        setSnackbarSeverity("error");
+        setOpenSnackbar(true);
+        return;
+      } else {
+        console.error("Unexpected Error:", error);
+      }
+    }
+
+    setTriggerFetch(true);
+
   };
 
   const handleFileChange = (event) => {
     const files = event.target.files;
-  
+
     Array.from(files).forEach((file) => {
       const reader = new FileReader();
       reader.onload = () => {
@@ -166,7 +170,7 @@ const ComposeEmail = ({ open, onClose, mail = {},userId}) => {
           type: file.type,
           file: reader.result, // Base64 string of the file content
         };
-  
+
         // Add the new attachment to the email state
         setEmail((prevEmail) => ({
           ...prevEmail,

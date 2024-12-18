@@ -8,7 +8,7 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder";
 import axios from "axios";
 import ContactsButton from "../Contacts/ContactsButton";
 
-function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setContent, userId ,setMails}) {
+function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setContent, userId ,setMails,setTriggerFetch}) {
   const [isOpen, setIsOpen] = useState(false);
   const [newFolder, setNewFolder] = useState(false);
   const [folderName, setFolderName] = useState("");
@@ -74,7 +74,7 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
           >
             New mail
           </Button>
-          {isOpen && <ComposeEmail open={isOpen} onClose={handleClose} userId={userId}  />}
+          {isOpen && <ComposeEmail open={isOpen} onClose={handleClose} userId={userId} setTriggerFetch={setTriggerFetch} />}
 
         {newFolder && (
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
