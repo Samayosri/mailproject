@@ -257,7 +257,7 @@ function DivContent({
             }}
           >
             <Button variant="contained" >{searching?"Search":selectedFolder}</Button>
-           {selectedFolder==="Drafts"?<Button variant="contained" disabled>
+           {selectedFolder==="Drafts" && !searching?<Button variant="contained" disabled>
               Move
             </Button>:<Button variant="contained" onClick={() => setMoveDialogOpen(true)}>
               Move
