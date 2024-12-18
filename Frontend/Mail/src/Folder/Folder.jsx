@@ -19,39 +19,37 @@ import axios from 'axios';
 
 function Folder({
   setContent,
-  name,
+  folder,
   setSelectedFolder,
   selectedFolder,
   folders,
   setMails,
   setFolders,
-  setTriggerFetch
+  setTriggerFetch,
 }) {
-
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [newFolderName, setNewFolderName] = useState(name);
+  const [newFolderName, setNewFolderName] = useState('');
 
   function handleFolderSelected() {
-    setSelectedFolder(name);
+    setSelectedFolder(folder.name);
     setContent('mails');
     setTriggerFetch(true);
   }
 
-  const folder = folders.find((folder) => folder.name === selectedFolder);
-  
-  async function handleDeleteFolder(folderId) {
+  async function handleDeleteFolder(folderID) {
+   console.log(folderID)
     try {
-      const response = await axios.delete(`http://localhost:8080/folder/${folderId}`);
+      const response = await axios.delete(`http://localhost:8080/folder/${folderID}`);
       if (response.status === 200) {
-        setFolders((prevFolders) => prevFolders.filter((f) => f.id !== folderId));
+        setFolders((prevFolders) => prevFolders.filter((f) => f.id !== folderID));
       }
     } catch (error) {
       console.error('Error deleting folder:', error);
     }
   }
 
-  async function handleEditFolder(e) {
-    if ( !newFolderName.trim()) return;
+  async function handleEditFolder() {
+    if (!newFolderName.trim()) return;
 
     const updatedFolder = { ...folder, name: newFolderName };
 
@@ -74,13 +72,13 @@ function Folder({
         style={{ flexGrow: 1, backgroundColor: '#aee7fe', color: 'black' }}
         variant="contained"
         endIcon={
-          name === 'Sent' ? (
+          folder.name === 'Sent' ? (
             <SendIcon />
-          ) : name === 'Trash' ? (
+          ) : folder.name === 'Trash' ? (
             <AutoDeleteIcon />
-          ) : name === 'Inbox' ? (
+          ) : folder.name === 'Inbox' ? (
             <MailIcon />
-          ) : name === 'Drafts' ? (
+          ) : folder.name === 'Drafts' ? (
             <DraftsIcon />
           ) : (
             <ArrowForwardIosIcon />
@@ -88,18 +86,20 @@ function Folder({
         }
         onClick={handleFolderSelected}
       >
-        {name}
+        {folder.name}
       </Button>
-      {!(['Sent', 'Trash', 'Inbox', 'Drafts'].includes(name)) && folder && (
+
+      {!['Sent', 'Trash', 'Inbox', 'Drafts'].includes(folder.name) && (
         <>
-          <IconButton value={folder.id} onClick={() => handleDeleteFolder(folder.id)} aria-label="delete">
+          <IconButton onClick={() => handleDeleteFolder(folder.id)} aria-label="delete">
             <DeleteIcon />
           </IconButton>
-          <IconButton value={folder.id} onClick={() => setDialogOpen(true)} aria-label="edit">
+          <IconButton onClick={() => setDialogOpen(true)} aria-label="edit">
             <EditIcon />
           </IconButton>
         </>
       )}
+
       <Dialog open={isDialogOpen} onClose={() => setDialogOpen(false)}>
         <DialogTitle>Edit Folder</DialogTitle>
         <DialogContent>

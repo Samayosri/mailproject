@@ -132,7 +132,7 @@ function SideBar({contacts,selectedFolder, setSelectedFolder, folders, setFolder
           folders.map((folder) => (
             <Folder
               key={folder.id}
-              name={folder.name}
+              folder={folder}
               setContent={setContent}
               setSelectedFolder={setSelectedFolder}
               selectedFolder={selectedFolder}
@@ -140,6 +140,7 @@ function SideBar({contacts,selectedFolder, setSelectedFolder, folders, setFolder
               setMails={setMails}
               setFolders={setFolders}
               setTriggerFetch={setTriggerFetch}
+             
             />
           ))
         ) : (
