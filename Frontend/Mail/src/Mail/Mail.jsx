@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import MailContent from "./MailContent";
 import axios from "axios";
 import ComposeEmail from "./ComposeEmail";
-function Mail({ folders, selectedFolder, userId, mails ,setTriggerFetch,checkedMails,setCheckedMails}) {
+function Mail({ contacts,folders, selectedFolder, userId, mails ,setTriggerFetch,checkedMails,setCheckedMails}) {
 
 
   useEffect(() => {
@@ -137,6 +137,8 @@ function Mail({ folders, selectedFolder, userId, mails ,setTriggerFetch,checkedM
       <Box dividers sx={{ padding: "16px" }}>
         {selectedFolder === "Drafts" && selectedMail && (
           <ComposeEmail
+          contacts={contacts}
+        
             key={selectedMail?.id}
             open={isOpen}
             onClose={handleClose}

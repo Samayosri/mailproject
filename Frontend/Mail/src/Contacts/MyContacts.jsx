@@ -20,8 +20,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 
-function MyContacts({ userId }) {
-  const [contacts, setContacts] = useState([]); // List of contacts
+function MyContacts({ userId ,contacts,setContacts}) {
+ // List of contacts
   const [open, setOpen] = useState(false); // Dialog visibility
   const [currentContact, setCurrentContact] = useState({
     ownerId: userId,
@@ -44,6 +44,7 @@ function MyContacts({ userId }) {
   const fetchContacts = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/contact/${userId}`);
+      
       setContacts(response.data);
       console.log(response.data)
     } catch (error) {

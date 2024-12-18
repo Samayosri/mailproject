@@ -9,7 +9,7 @@ import axios from "axios";
 import ContactsButton from "../Contacts/ContactsButton";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import LogoutIcon from '@mui/icons-material/Logout';
-function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setContent, userId ,setMails,setTriggerFetch,handleLogout,userName}) {
+function SideBar({contacts,selectedFolder, setSelectedFolder, folders, setFolders, setContent, userId ,setMails,setTriggerFetch,handleLogout,userName}) {
   const [isOpen, setIsOpen] = useState(false);
   const [newFolder, setNewFolder] = useState(false);
   const [folderName, setFolderName] = useState("");
@@ -28,7 +28,9 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
         console.error("Error fetching folders:", error);
       }
     };
+    setSelectedFolder("Inbox");
     fetchFolders();
+   
   }, [userId, setFolders]);
 
   const createNewFolder = async () => {
@@ -104,7 +106,7 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
           >
             New mail
           </Button>
-          {isOpen && <ComposeEmail open={isOpen} onClose={handleClose} userId={userId} setTriggerFetch={setTriggerFetch} />}
+          {isOpen && <ComposeEmail contacts={contacts} open={isOpen} onClose={handleClose} userId={userId} setTriggerFetch={setTriggerFetch} />}
 
         {newFolder && (
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>

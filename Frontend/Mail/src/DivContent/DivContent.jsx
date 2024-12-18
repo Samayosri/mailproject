@@ -37,6 +37,7 @@ function DivContent({
     "senderName",
     "senderEmailAddress",
   ];
+  const [contacts, setContacts] = useState([]);
   const [currentMails, setCurrentMails] = useState([]);
   const [page, setPage] = useState(0);
   const [sortBy, setSortBy] = useState("");
@@ -163,13 +164,14 @@ function DivContent({
 
       if (response.status === 200) {
         setTriggerFetch(true);
+        setCheckedMails([]);
         console.log("Mails moved successfully");
       }
     } catch (error) {
       console.error("Error moving mails:", error);
     }
     setMoveDialogOpen(false); // Close the dialog after moving mails
-    setCheckedMails([]);
+ 
   };
 
   const handleDelete = () => {
@@ -180,6 +182,7 @@ function DivContent({
       .then((response) => {
         console.log("Mails deleted:", response.data);
         setTriggerFetch(true);
+        setCheckedMails([]);
       })
       .catch((error) => {
         console.error("Error deleting mails:", error);
@@ -189,6 +192,7 @@ function DivContent({
   return (
     <Box sx={{ display: "flex" ,justifyContent:"space-between",alignItems:"center"}}>
       <SideBar
+        contacts={contacts}
         setTriggerFetch={setTriggerFetch}
         folders={folders}
         selectedFolder={selectedFolder}
@@ -297,6 +301,7 @@ function DivContent({
         <Box sx={{  backgroundColor: "#f4f4f4", padding: 2 }}>
           {content === "mails" && (
             <Mail
+            contacts={contacts}
               folders={folders}
               selectedFolder={selectedFolder}
               userId={userId}
@@ -307,7 +312,7 @@ function DivContent({
             />
           )}
 
-          {content === "contacts" && <MyContacts userId={userId} />}
+          {content === "contacts" && <MyContacts userId={userId} contacts={contacts} setContacts={setContacts}/>}
         </Box>
       </Box>
 

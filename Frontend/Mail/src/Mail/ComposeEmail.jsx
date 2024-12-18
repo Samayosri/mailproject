@@ -19,8 +19,9 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
 import InputFileUpload from "./InputFileUpload";
+import SelectContacts from "./SelectContacts";
 
-const ComposeEmail = ({ open, onClose, mail = {}, userId ,setTriggerFetch  }) => {
+const ComposeEmail = ({ contacts,open, onClose, mail = {}, userId ,setTriggerFetch  }) => {
   console.log(mail)
   const mailDto = {
     id: mail.id || null,
@@ -173,6 +174,21 @@ const ComposeEmail = ({ open, onClose, mail = {}, userId ,setTriggerFetch  }) =>
       reader.readAsDataURL(file); // Convert file to Base64 string
     });
   };
+const onAddContactTo=(contact) => {
+  const updatedToReceivers = [...email.toReceivers, contact];
+  setEmail({ ...email, toReceivers: updatedToReceivers });
+  setToInput(updatedToReceivers.join(" "));
+};
+const onAddContactBcc = (contact) => {
+  const updatedBccReceivers = [...email.bccReceivers, contact];
+  setEmail({ ...email, bccReceivers: updatedBccReceivers });
+  setBccInput(updatedBccReceivers.join(" "));
+};
+const onAddContactCc = (contact) => {
+  const updatedCcReceivers = [...email.ccReceivers, contact];
+  setEmail({ ...email, ccReceivers: updatedCcReceivers });
+  setCcInput(updatedCcReceivers.join(" "));
+};
 
   const handleViewAttachment = (attachment) => {
     const { file: base64File, name, type } = attachment;
@@ -201,7 +217,7 @@ const ComposeEmail = ({ open, onClose, mail = {}, userId ,setTriggerFetch  }) =>
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>Compose Email</DialogTitle>
       <DialogContent>
         <Snackbar
@@ -226,6 +242,7 @@ const ComposeEmail = ({ open, onClose, mail = {}, userId ,setTriggerFetch  }) =>
           value={email.subject}
           onChange={handleChange}
         />
+        <div style={{display:"flex",alignItems:"center"}}>
         <TextField
           fullWidth
           margin="normal"
@@ -234,6 +251,12 @@ const ComposeEmail = ({ open, onClose, mail = {}, userId ,setTriggerFetch  }) =>
           value={toInput}
           onChange={handleChange}
         />
+  <SelectContacts
+  contacts={contacts}
+    onAddContact={onAddContactTo}
+  />
+        </div>
+        <div style={{display:"flex",alignItems:"center"}}>
         <TextField
           fullWidth
           margin="normal"
@@ -242,6 +265,13 @@ const ComposeEmail = ({ open, onClose, mail = {}, userId ,setTriggerFetch  }) =>
           value={ccInput}
           onChange={handleChange}
         />
+  <SelectContacts
+  contacts={contacts}
+    onAddContact={onAddContactCc}
+  />
+        </div>
+      
+        <div style={{display:"flex",alignItems:"center"}}>
         <TextField
           fullWidth
           margin="normal"
@@ -250,6 +280,12 @@ const ComposeEmail = ({ open, onClose, mail = {}, userId ,setTriggerFetch  }) =>
           value={bccInput}
           onChange={handleChange}
         />
+  <SelectContacts
+  contacts={contacts}
+    onAddContact={onAddContactBcc}
+  />
+        </div>
+       
         <TextField
           fullWidth
           margin="normal"

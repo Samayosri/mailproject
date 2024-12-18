@@ -38,21 +38,20 @@ function Folder({
   }
 
   const folder = folders.find((folder) => folder.name === selectedFolder);
-
-  async function handleDeleteFolder() {
-    if (!folder?.id) return;
+  
+  async function handleDeleteFolder(folderId) {
     try {
-      const response = await axios.delete(`http://localhost:8080/folder/${folder.id}`);
+      const response = await axios.delete(`http://localhost:8080/folder/${folderId}`);
       if (response.status === 200) {
-        setFolders((prevFolders) => prevFolders.filter((f) => f.id !== folder.id));
+        setFolders((prevFolders) => prevFolders.filter((f) => f.id !== folderId));
       }
     } catch (error) {
       console.error('Error deleting folder:', error);
     }
   }
 
-  async function handleEditFolder() {
-    if (!folder || !newFolderName.trim()) return;
+  async function handleEditFolder(e) {
+    if ( !newFolderName.trim()) return;
 
     const updatedFolder = { ...folder, name: newFolderName };
 
@@ -91,12 +90,12 @@ function Folder({
       >
         {name}
       </Button>
-      {!(['Sent', 'Trash', 'Inbox', 'Drafts'].includes(name)) && (
+      {!(['Sent', 'Trash', 'Inbox', 'Drafts'].includes(name)) && folder && (
         <>
-          <IconButton onClick={handleDeleteFolder} aria-label="delete">
+          <IconButton value={folder.id} onClick={() => handleDeleteFolder(folder.id)} aria-label="delete">
             <DeleteIcon />
           </IconButton>
-          <IconButton onClick={() => setDialogOpen(true)} aria-label="edit">
+          <IconButton value={folder.id} onClick={() => setDialogOpen(true)} aria-label="edit">
             <EditIcon />
           </IconButton>
         </>
