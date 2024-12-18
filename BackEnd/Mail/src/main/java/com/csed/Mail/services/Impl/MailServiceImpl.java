@@ -3,6 +3,7 @@ package com.csed.Mail.Services.Impl;
 import com.csed.Mail.Services.MailService;
 import com.csed.Mail.commands.*;
 import com.csed.Mail.mappers.Mapper;
+import com.csed.Mail.model.Dtos.DeleteDto;
 import com.csed.Mail.model.Dtos.MailDto;
 import com.csed.Mail.model.Dtos.MoveDto;
 import com.csed.Mail.model.FolderEntity;
@@ -45,10 +46,10 @@ public class MailServiceImpl implements MailService {
 
     }
     @Override
-    public void trash(MoveDto moveDto){
+    public void trash(DeleteDto deleteDto){
         Invoker invoker = new Invoker(commandService);
         TrashCommand trashCommand = (TrashCommand) commandFactory.getCommand("trash");
-        trashCommand .setMoveDto(moveDto);
+        trashCommand .setDeleteDto(deleteDto);
         invoker.setCommand(trashCommand);
         invoker.executeCommand();
 
@@ -59,6 +60,9 @@ public class MailServiceImpl implements MailService {
     public List<MailDto> getListEmailsByFolderId(Long folderId) throws RuntimeException{
         Optional<FolderEntity> folder = folderRepository.findById(folderId);
         if(folder.isPresent()){
+//            if(folder.get().getName().equals("Trash")){
+//               commandService.filterDeletedMailsFromTrashFolder();
+//            }
             return mailMapper.mapListToDto(folder.get().getEmails());
         }
         else {
@@ -93,6 +97,7 @@ public class MailServiceImpl implements MailService {
                 ).
                 collect(Collectors.toList());
     }
+
 
     @Override
     public List<MailDto> getPage(List<MailDto> mailDtos, int pageNumber, int pageSize) {

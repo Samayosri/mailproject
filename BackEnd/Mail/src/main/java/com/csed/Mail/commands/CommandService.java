@@ -1,7 +1,6 @@
 package com.csed.Mail.commands;
 
 import com.csed.Mail.model.DeletedMailEntity;
-import com.csed.Mail.model.Dtos.MailDto;
 import com.csed.Mail.model.FolderEntity;
 import com.csed.Mail.model.MailEntity;
 import com.csed.Mail.model.UserEntity;
@@ -111,48 +110,40 @@ public class CommandService {
         addEmailToFolderByName(mailEntity, "Inbox", receiver.get());
     }
 
-    public MailEntity sendMail(MailEntity mailEntity,String Reciever) throws IllegalArgumentException {
 
-        sendMailToReceivers(Reciever, mailEntity);
-
-        return mailEntity;
-    }
-
-    public void moveMailToTrash(Long folderId, Long mailId) {
+    public void moveMailToTrash(Long mailId) {
         DeletedMailEntity deletedMailEntity = DeletedMailEntity.builder()
-                .folderId(folderId)
-                .mailId(mailId)
+                .mail(mailId)
                 .build();
         this.deletedMailsRepository.save(deletedMailEntity);
     }
 
     public void removeMailFromTrash(Long mailId) {
-        this.deletedMailsRepository.deleteByMailId(mailId);
+        Optional<DeletedMailEntity> m = deletedMailsRepository.findByMail(mailId);
+        if(m.isEmpty()){
+            throw new RuntimeException();
+        }
+        deletedMailsRepository.delete(m.get());
+       // deletedMailsRepository.deleteByMail(mailId); not working why
     }
 
-    public void filterDeletedMailsFromTrashFolder(Long folderId) {
-        List<DeletedMailEntity> deletedMailEntities = this.deletedMailsRepository.findAllByFolderId(folderId);
-
-        FolderEntity folderEntity = getFolder(folderId);
-        List<MailEntity> mailEntities = folderEntity.getEmails();
-
-        LocalDateTime thresholdDate = LocalDateTime.now().minusDays(30);
-
+    public void filterDeletedMailsFromTrashFolder() {
+        List<DeletedMailEntity> deletedMailEntities = this.deletedMailsRepository.findAll();
+        LocalDateTime thresholdDate = LocalDateTime.now().minusMinutes(1);
         List<Long> mailIdsToDelete = new ArrayList<>();
         for (DeletedMailEntity deletedMail : deletedMailEntities) {
             if (deletedMail.getDeletionTime().isBefore(thresholdDate)) {
-                mailIdsToDelete.add(deletedMail.getMailId());
+                mailIdsToDelete.add(deletedMail.getMail());
+                deletedMailsRepository.delete(deletedMail);
             }
         }
+        for(Long id : mailIdsToDelete){
+            MailEntity mail = getMailById(id);
+            FolderEntity folder = mail.getFolder();
+            folder.getEmails().remove(mail);
+            folderRepository.save(folder);
+            mailRepository.delete(mail);
+        }
 
-        mailEntities.removeIf(mail -> mailIdsToDelete.contains(mail.getId()));
-
-        this.mailRepository.deleteAllById(mailIdsToDelete);
-
-        this.deletedMailsRepository.deleteAllByMailIdIn(mailIdsToDelete);
-
-        folderEntity.setEmails(mailEntities);
-
-        this.folderRepository.save(folderEntity);
     }
 }

@@ -7,6 +7,7 @@ import com.csed.Mail.Search.Impl.DateCriteria;
 import com.csed.Mail.Search.Impl.ImportanceCriteria;
 import com.csed.Mail.Services.FolderService;
 import com.csed.Mail.mappers.Mapper;
+import com.csed.Mail.model.Dtos.DeleteDto;
 import com.csed.Mail.model.Dtos.MailDto;
 import com.csed.Mail.model.Dtos.MoveDto;
 import com.csed.Mail.model.MailEntity;
@@ -53,7 +54,7 @@ public class MailController {
         }
     }
 
-    @GetMapping("/{folderId}")
+    @GetMapping("get/{folderId}")
     public ResponseEntity<?> getMails(
             @PathVariable Long folderId,
             @RequestParam(required = false,defaultValue = "date") String sort,
@@ -83,16 +84,19 @@ public class MailController {
         }
     }
 
-    @GetMapping("get/{userId}")
+    @PostMapping("search/{userId}")
     public ResponseEntity<?> searchMails(
             @PathVariable Long userId,
             @RequestParam(required = false) Long folderId,
             @RequestBody CriteriaDto criteriaDto
             ) { // use search service
-        System.out.println(
-                folderId
-        );
-        return new ResponseEntity<>(criteriaFacade.getMails(userId, folderId, criteriaDto), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(criteriaFacade.getMails(userId, folderId, criteriaDto), HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        }
+
     }
     @PutMapping("/move")
     public ResponseEntity<?> move(@RequestBody MoveDto moveDto){
@@ -101,14 +105,14 @@ public class MailController {
             return ResponseEntity.status(HttpStatus.OK).body("");
 
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 
         }
     }
     @DeleteMapping("/delete")
-    public ResponseEntity<?> delete(@RequestBody MoveDto moveDto){
+    public ResponseEntity<?> delete(@RequestBody DeleteDto deleteDto){
         try {
-            mailService.trash(moveDto);
+            mailService.trash(deleteDto);
             return ResponseEntity.status(HttpStatus.OK).body("");
 
         }catch (Exception e){

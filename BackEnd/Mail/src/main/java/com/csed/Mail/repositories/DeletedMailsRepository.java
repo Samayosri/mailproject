@@ -5,10 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DeletedMailsRepository extends JpaRepository<DeletedMailEntity, Long> {
-    void deleteByMailId(Long mailId);
-    List<DeletedMailEntity> findAllByFolderId(Long folderId);
-    void deleteAllByMailIdIn(List<Long> mailIdsToDelete);
+    void deleteByMail(Long mailId);
+    Optional<DeletedMailEntity> findByMail(Long mailId);
+
 }

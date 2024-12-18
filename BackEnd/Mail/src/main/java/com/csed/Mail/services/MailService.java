@@ -1,5 +1,6 @@
 package com.csed.Mail.Services;
 
+import com.csed.Mail.model.Dtos.DeleteDto;
 import com.csed.Mail.model.Dtos.MailDto;
 import com.csed.Mail.model.Dtos.MoveDto;
 import com.csed.Mail.model.MailEntity;
@@ -18,5 +19,6 @@ public interface MailService {
 
     List<MailDto> getPage(List<MailDto> mailDtos, int pageNumber, int pageSize);
     void move(MoveDto moveDto);
-    void trash(MoveDto moveDto);
+    void trash(DeleteDto deleteDto);
+
 }

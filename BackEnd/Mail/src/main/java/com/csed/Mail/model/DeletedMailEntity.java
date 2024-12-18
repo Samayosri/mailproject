@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 
@@ -16,15 +15,15 @@ import java.time.LocalDateTime;
 @Entity
 public class DeletedMailEntity {
 
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long folderId;
 
     @Column(nullable = false)
-    private Long mailId;
+    private Long mail;
 
     @Column(nullable = false)
     private LocalDateTime deletionTime;

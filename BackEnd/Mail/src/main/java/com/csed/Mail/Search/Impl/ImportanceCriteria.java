@@ -19,7 +19,7 @@ public class ImportanceCriteria extends Criteria {
         try {
             importanceKeyword = Integer.parseInt(getKeyword());
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Keyword must be integer ");
+            return new ArrayList<>();
         }
         List<MailDto> result = new ArrayList<>();
         for(MailDto mailDto : mailDtos){

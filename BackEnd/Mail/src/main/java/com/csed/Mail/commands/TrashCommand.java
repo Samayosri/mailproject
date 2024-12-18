@@ -1,5 +1,6 @@
 package com.csed.Mail.commands;
 
+import com.csed.Mail.model.Dtos.DeleteDto;
 import com.csed.Mail.model.Dtos.MoveDto;
 import com.csed.Mail.model.FolderEntity;
 import com.csed.Mail.model.MailEntity;
@@ -17,7 +18,7 @@ import java.util.Set;
 public class TrashCommand implements Command{
 
     private final CommandService commandService;
-    MoveDto moveDto;
+    DeleteDto deleteDto;
 
 
 
@@ -30,12 +31,23 @@ public class TrashCommand implements Command{
     public void execute() {
         //set delete date
         Set<MailEntity> selectedMails = new HashSet<>();
-        for (Long id : moveDto.getMailIds()) {
+        for (Long id : deleteDto.getMailIds()) {
             selectedMails.add(commandService.getMailById(id));
         }
-        FolderEntity folder = commandService.getFolder(moveDto.getDestinationFolderId());
+        UserEntity user = commandService.getUserById(deleteDto.getUserId());
+        FolderEntity trash = null;
+        for(FolderEntity folder : user.getFolders()){
+            if(folder.getName().equals("Trash")){
+                trash = folder;
+                break;
+            }
+        }
+        if(trash == null){
+            throw new IllegalArgumentException("This nice user don't have trash");
+        }
         for(MailEntity mailEntity : selectedMails){
-            mailEntity.setFolder(folder);
+            mailEntity.setFolder(trash);
+            //commandService.moveMailToTrash(mailEntity.getId());
             commandService.saveMail(mailEntity);
         }
 
