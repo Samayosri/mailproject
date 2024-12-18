@@ -1,8 +1,10 @@
 package com.csed.Mail.Services;
 import com.csed.Mail.model.Dtos.FolderDto;
 import com.csed.Mail.model.FolderEntity;
+import com.csed.Mail.model.MailEntity;
 import com.csed.Mail.model.UserEntity;
 import com.csed.Mail.repositories.FolderRepository;
+import com.csed.Mail.repositories.MailRepository;
 import com.csed.Mail.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,14 @@ import java.util.Optional;
 public class FolderServices {
     private final FolderRepository folderRepository;
     private final UserRepository userRepository;
-    public FolderServices(FolderRepository folderRepository,UserRepository userRepository) {
+    private  final MailRepository mailRepository;
+
+    public FolderServices(FolderRepository folderRepository, UserRepository userRepository, MailRepository mailRepository) {
         this.folderRepository = folderRepository;
-        this.userRepository=userRepository;
+        this.userRepository = userRepository;
+        this.mailRepository = mailRepository;
     }
+
     public List<FolderDto> getFolders(Long userId) {
         List<FolderEntity> allFolders = folderRepository.findByOwnerId(userId);
         List<FolderDto> allFolderDto = new ArrayList<>();
@@ -68,6 +74,10 @@ public void delete(Long id ) {
         if (existedFolder.isPresent()) {
             if (defaultFolder.contains(existedFolder.get().getName())) {
                 throw new IllegalArgumentException("This folder can't be deleted");
+            }
+            List<MailEntity> allmailsinfolder= mailRepository.findAllByFolderId(id);
+            for (MailEntity m:allmailsinfolder){
+                mailRepository.delete(m);
             }
             folderRepository.deleteById(id);
             UserEntity user = existedFolder.get().getOwner();
