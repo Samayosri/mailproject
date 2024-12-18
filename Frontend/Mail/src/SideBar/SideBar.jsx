@@ -1,4 +1,4 @@
-import { Drawer, Box, Stack, Button, IconButton, TextField } from "@mui/material";
+import { Box, Stack, Button, IconButton, TextField } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import Folder from "../Folder/Folder";
 import { useState, useEffect } from "react";
@@ -9,36 +9,26 @@ import axios from "axios";
 import ContactsButton from "../Contacts/ContactsButton";
 
 function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setContent, userId ,setMails}) {
-
-  useEffect(() => {
-    const fetchFolders = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/folder/${userId}`);
-        if (response.status === 200) {
-       
-          setFolders(response.data);
-          console.log(folders);
-        }
-      } catch (error) {
-        if (error.response?.status === 400) {
-          console.error("Error 400:", error.response.data);
-        } else {
-          console.error("Unexpected Error:", error);
-
-        }
-      }
-    };
-    fetchFolders();
-  }, [userId, setFolders]);
-
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [newFolder, setNewFolder] = useState(false);
   const [folderName, setFolderName] = useState("");
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
-  const handleNewFolder = () => setNewFolder(true);
+
+  useEffect(() => {
+    const fetchFolders = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/folder/${userId}`);
+        if (response.status === 200) {
+          setFolders(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching folders:", error);
+      }
+    };
+    fetchFolders();
+  }, [userId, setFolders]);
 
   const createNewFolder = () => {
     if (folderName) {
@@ -46,66 +36,34 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
       setFolders((prevFolders) => [...prevFolders, newFolderObject]);
       setFolderName("");
       setNewFolder(false);
-      console.log("New folder created:", folderName);
     }
   };
 
   return (
-    <Box sx={{ position: "relative", width: "100%", display: "flex" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          width: "100%",
-        }}
-      >
-        <Box sx={{ textAlign: "left", mb: 4, mt: 2 }}>
-          <IconButton
-            size="large"
-            edge="start"
-            aria-label="open drawer"
-            sx={{ mr: 4, color: "black" }}
-            onClick={() => setIsDrawerOpen(true)}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Box>
-        <SearchBar />
-        <ContactsButton setContent={setContent} />
-      </div>
-      
-
-      {/* Drawer */}
-      <Drawer
-        variant="temporary"
-        open={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
-        PaperProps={{
-          sx: {
-            width: { xs: "200px", sm: "250px" },
-            marginTop: { xs: "48px", sm: "56px" },
-          },
-        }}
-      >
-        <Stack
-          spacing={2}
-          sx={{
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 2,
-          }}
+    <Box
+      sx={{
+        width: 250,
+        position: "fixed",
+        top: 0,
+        left: 0,
+        bottom: 0,
+        backgroundColor: "#f4f4f4",
+        padding: 2,
+        overflowY: "auto",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Folder creation and search bar */}
+      <Stack spacing={2} sx={{ alignItems: "center", marginBottom: 4 }}>
+        <IconButton
+          size="large"
+          aria-label="create new folder"
+          onClick={() => setNewFolder(true)}
         >
-          <IconButton
-            size="large"
-            aria-label="create new folder"
-            sx={{ color: "black" }}
-            onClick={handleNewFolder}
-          >
-            <CreateNewFolderIcon />
-          </IconButton>
-
-          <Button
+          <CreateNewFolderIcon />
+        </IconButton>
+           <Button
             variant="contained"
             onClick={handleOpen}
             sx={{
@@ -116,50 +74,50 @@ function SideBar({selectedFolder, setSelectedFolder, folders, setFolders, setCon
           >
             New mail
           </Button>
+          {isOpen && <ComposeEmail open={isOpen} onClose={handleClose} userId={userId}  />}
 
-  {folders && folders.length > 0 ? (
-  folders.map((folder) => (
-    <Folder
-      key={folder.id} 
-      name={folder.name}
-      setContent={setContent}
-      setSelectedFolder={setSelectedFolder}
-      selectedFolder={selectedFolder}
-      folders={folders}
-      setMails={setMails}
+        {newFolder && (
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <TextField
+              label="Folder Name"
+              variant="outlined"
+              value={folderName}
+              onChange={(e) => setFolderName(e.target.value)}
+            />
+            <Stack direction="row" spacing={1} sx={{ marginTop: 1 }}>
+              <Button variant="contained" color="success" onClick={createNewFolder}>
+                Create
+              </Button>
+              <Button variant="outlined" color="error" onClick={() => setNewFolder(false)}>
+                Cancel
+              </Button>
+            </Stack>
+          </Box>
+        )}
 
-    />
-  ))
-) : (
-  <p>No folders available</p>
-)}
+        {/* Folders list */}
+        {folders && folders.length > 0 ? (
+          folders.map((folder) => (
+            <Folder
+              key={folder.id}
+              name={folder.name}
+              setContent={setContent}
+              setSelectedFolder={setSelectedFolder}
+              selectedFolder={selectedFolder}
+              folders={folders}
+              setMails={setMails}
+            />
+          ))
+        ) : (
+          <p>No folders available</p>
+        )}
+      </Stack>
 
-
-          {newFolder && (
-            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <TextField
-                label="Folder Name"
-                variant="outlined"
-                value={folderName}
-                onChange={(e) => setFolderName(e.target.value)}
-              />
-
-              <Stack direction="row" spacing={1} sx={{ marginTop: 1 }}>
-                <Button variant="contained" color="success" onClick={createNewFolder}>
-                  Create
-                </Button>
-                <Button variant="outlined" color="error" onClick={() => setNewFolder(false)}>
-                  Cancel
-                </Button>
-              </Stack>
-            </Box>
-          )}
-        </Stack>
-      </Drawer>
-
-      {isOpen && <ComposeEmail open={isOpen} onClose={handleClose} userId={userId}  />}
+      {/* Search bar and contacts button */}
     </Box>
   );
 }
 
 export default SideBar;
+
+

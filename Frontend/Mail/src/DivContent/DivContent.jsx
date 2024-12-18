@@ -6,7 +6,8 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import SideBar from "../SideBar/SideBar";
 import Mail from "../Mail/Mail";
 import MyContacts from "../Contacts/MyContacts";
-import { use } from "react";
+import SearchBar from "../SearchBar/SearchBar";
+import ContactsButton from "../Contacts/ContactsButton";
 
 function DivContent({
   content,
@@ -17,7 +18,7 @@ function DivContent({
   setSelectedFolder,
   userId,
 }) {
-  const [allMails, setAllMails] = useState([]); // Store mails for all pages
+  const [allMails, setAllMails] = useState([]); 
   const [page, setPage] = useState(0);
   const [sortBy, setSortBy] = useState(""); 
   const [currentMails, setCurrentMails] = useState([]);
@@ -34,15 +35,14 @@ function DivContent({
         params: {
           pageNumber: pageIndex,
           pageSize: 5,
-          sort:sortBy
-
+          sort: sortBy
         },
       });
 
       if (response.status === 200 && response.data) {
-          const newMails = response.data;
-          setCurrentMails(newMails);
-          setAllMails((prevMails) => {
+        const newMails = response.data;
+        setCurrentMails(newMails);
+        setAllMails((prevMails) => {
           const updatedMails = [...prevMails];
           updatedMails[pageIndex] = newMails;
           return updatedMails;
@@ -53,7 +53,7 @@ function DivContent({
     }
   };
 
-useEffect(() => {
+  useEffect(() => {
     setPage(0);
     setAllMails([]);
     if (selectedFolder) {
@@ -83,7 +83,8 @@ useEffect(() => {
   };
 
   return (
-    <>
+    <Box sx={{ display: "flex" }}>
+      {/* Left Sidebar */}
       <SideBar
         folders={folders}
         selectedFolder={selectedFolder}
@@ -93,69 +94,85 @@ useEffect(() => {
         userId={userId}
       />
 
+      {/* Main Content Area */}
       <Box
         sx={{
-          marginBottom: "10px",
-          margin: "auto",
-          width: "80%",
+          marginLeft: "270px", // Offset content to the right of the sidebar
+          width: "calc(100% - 250px)",
+          padding: "20px",
           display: "flex",
-          alignItems: "center",
-          gap: 2,
-          justifyContent: "space-between",
-          height: "30px",
+          flexDirection: "column",
         }}
       >
-        <div>
-          <label>Page </label>
-          <IconButton onClick={handlePreviousPage} disabled={page === 0}>
-            <ArrowBackIosIcon />
-          </IconButton>
-          <label>{page + 1}</label>
-          <IconButton onClick={handleNextPage} disabled={currentMails.length < 5}>
-            <ArrowForwardIosIcon />
-          </IconButton>
-        </div>
+        {/* Top Section: Search Bar and Contacts Button */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 2,
+          }}
+        >
+          <SearchBar />
+          <ContactsButton setContent={setContent} />
+        </Box>
 
-    
-        <FormControl variant="standard" sx={{ minWidth: 150 }}>
-          <InputLabel id="sort-label">Sort by:</InputLabel>
-          <Select
-            labelId="sort-label"
-            id="sort-select"
-            value={sortBy}
-            onChange={handleSortChange}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem value="date">Date</MenuItem>
-            <MenuItem value="priority">Importance</MenuItem>
-          </Select>
-        </FormControl>
+        {/* Page Navigation and Sort */}
+        <Box
+          sx={{
+            marginBottom: "10px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 2,
+          }}
+        >
+          <div>
+            <label>Page </label>
+            <IconButton onClick={handlePreviousPage} disabled={page === 0}>
+              <ArrowBackIosIcon />
+            </IconButton>
+            <label>{page + 1}</label>
+            <IconButton onClick={handleNextPage} disabled={currentMails.length < 5}>
+              <ArrowForwardIosIcon />
+            </IconButton>
+          </div>
+
+          {/* Sort dropdown */}
+          <FormControl variant="standard" sx={{ minWidth: 150 }}>
+            <InputLabel id="sort-label">Sort by:</InputLabel>
+            <Select
+              labelId="sort-label"
+              id="sort-select"
+              value={sortBy}
+              onChange={handleSortChange}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value="date">Date</MenuItem>
+              <MenuItem value="priority">Importance</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+
+        {/* Content */}
+        <Box sx={{ background: "white", padding: 2 }}>
+          {content === "mails" && (
+            <Mail
+              folders={folders}
+              selectedFolder={selectedFolder}
+              userId={userId}
+              mails={currentMails}
+            />
+          )}
+
+          {content === "contacts" && (
+            <MyContacts userId={userId} />
+          )}
+        </Box>
       </Box>
-
- 
-      <Box sx={{ width: "80%", margin: "auto", background: "white" }}>
-        
-        {content === "mails" && (
-          <Mail
-            folders={folders}
-            selectedFolder={selectedFolder}
-            userId={userId}
-            mails={currentMails} 
-          />
-        )}
-
-        {content === "contacts" && (
-          <>
-          <MyContacts userId={userId}/>  
-          </>
-          
-        
-
-        )}
-      </Box>
-    </>
+    </Box>
   );
 }
 
