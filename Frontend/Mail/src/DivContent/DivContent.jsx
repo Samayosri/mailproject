@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Box, IconButton, FormControl, InputLabel, Select, MenuItem, Stack } from "@mui/material";
+import { Box, IconButton, FormControl, InputLabel, Select, MenuItem, Stack,Button } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import SideBar from "../SideBar/SideBar";
@@ -22,7 +22,8 @@ function DivContent({
   const [page, setPage] = useState(0);
   const [sortBy, setSortBy] = useState(""); 
   const [currentMails, setCurrentMails] = useState([]);
-
+  
+  
   // Fetch mails for the current page
   const fetchMails = async (pageIndex) => {
     if (!selectedFolder) return;
@@ -137,6 +138,20 @@ function DivContent({
               <ArrowForwardIosIcon />
             </IconButton>
           </div>
+
+      <Box
+        style={{
+          display: "flex",
+        
+          
+          gap: "10px",
+        }}
+      >
+        <Button variant="contained">Move</Button>
+        <Button variant="outlined" color="error">
+          Delete
+        </Button>
+      </Box>
 
           {/* Sort dropdown */}
           <FormControl variant="standard" sx={{ minWidth: 150 }}>

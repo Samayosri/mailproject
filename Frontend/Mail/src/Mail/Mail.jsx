@@ -12,11 +12,11 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
 import MailContent from "./MailContent";
-import axios from "axios"; 
+import axios from "axios";
 import ComposeEmail from "./ComposeEmail";
-function Mail({folders, selectedFolder ,userId,mails}) {
+function Mail({ folders, selectedFolder, userId, mails }) {
   const [checkedMails, setCheckedMails] = useState([]);
-  
+
   const handleCheckboxChange = (mailId) => {
     setCheckedMails((prev) =>
       prev.includes(mailId)
@@ -24,54 +24,44 @@ function Mail({folders, selectedFolder ,userId,mails}) {
         : [...prev, mailId]
     );
   };
- 
+
   const [selectedMail, setSelectedMail] = useState(null);
 
   const [isOpen, setIsOpen] = useState(false); // compose
 
-  const handleOpen = () => { // compose
+  const handleOpen = () => {
+    // compose
     setIsOpen(true);
   };
 
-  const handleClose = () => { // compose
+  const handleClose = () => {
+    // compose
     setIsOpen(false);
   };
 
-  function handleMove(){
+  function handleMove() {
     //send request to move to another folder
   }
-  function handleDelete(){
-    
-  }
+  function handleDelete() {}
   const folderID = folders.find(
     (folder) => folder.folderName === selectedFolder
-    
   )?.folderID;
-  
-  
- 
-  
+
   function handleDisplayMail(m) {
     handleOpen();
     setSelectedMail(m);
   }
 
-  
   function handleCloseDialog() {
     setSelectedMail(null);
   }
 
   return (
-    
+
     <Box>
-    
-    
-    <Stack spacing={2} >
-              
-  
+      <Stack spacing={2}>
         {mails.map((mail) => (
           <Box
-          
             key={mail.id}
             sx={{
               display: "flex",
@@ -88,10 +78,8 @@ function Mail({folders, selectedFolder ,userId,mails}) {
               onChange={() => handleCheckboxChange(mail.id)}
             />
             <Button
-
               variant="contained"
               sx={{
-              
                 flex: 1,
                 justifyContent: "flex-start",
                 backgroundColor: "#aee7fe",
@@ -101,13 +89,14 @@ function Mail({folders, selectedFolder ,userId,mails}) {
               onClick={() => handleDisplayMail(mail)}
             >
               <Typography variant="body1" noWrap>
-                <strong>{mail.senderMailAddress || "Unknown Sender"}:</strong> {mail.subject || "No Subject"}
+                <strong>{mail.senderMailAddress || "Unknown Sender"}:</strong>{" "}
+                {mail.subject || "No Subject"}
               </Typography>
             </Button>
           </Box>
         ))}
       </Stack>
-      {(selectedMail && selectedFolder !== "Drafts")&&(
+      {selectedMail && selectedFolder !== "Drafts" && (
         <Dialog
           open={Boolean(selectedMail)}
           onClose={handleCloseDialog}
@@ -123,7 +112,6 @@ function Mail({folders, selectedFolder ,userId,mails}) {
               padding: "16px 24px",
             }}
           >
-     
             <IconButton
               aria-label="close"
               onClick={handleCloseDialog}
@@ -135,25 +123,25 @@ function Mail({folders, selectedFolder ,userId,mails}) {
             >
               <CloseIcon />
             </IconButton>
-          </DialogTitle> 
+          </DialogTitle>
           <DialogContent dividers sx={{ padding: "16px" }}>
-          <MailContent
-              mail={selectedMail}
-            />
-        </DialogContent>
-        </Dialog>  )}
-      
-       
+            <MailContent mail={selectedMail} />
+          </DialogContent>
+        </Dialog>
+      )}
+
       {console.log(selectedFolder)}
       <Box dividers sx={{ padding: "16px" }}>
-        {(selectedFolder === "Drafts"&&selectedMail)&&(
-               <ComposeEmail   key={selectedMail?.id} open={isOpen} onClose={handleClose} mail={selectedMail } userId={userId} ></ComposeEmail>
-          ) 
-         
-          }
-        </Box>
-          
-  
+        {selectedFolder === "Drafts" && selectedMail && (
+          <ComposeEmail
+            key={selectedMail?.id}
+            open={isOpen}
+            onClose={handleClose}
+            mail={selectedMail}
+            userId={userId}
+          ></ComposeEmail>
+        )}
+      </Box>
     </Box>
   );
 }
