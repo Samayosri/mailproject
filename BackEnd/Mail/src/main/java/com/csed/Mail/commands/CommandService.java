@@ -120,12 +120,7 @@ public class CommandService {
     }
 
     public void removeMailFromTrash(Long mailId) {
-        Optional<DeletedMailEntity> m = deletedMailsRepository.findByMail(mailId);
-        if(m.isEmpty()){
-            throw new RuntimeException();
-        }
-        deletedMailsRepository.delete(m.get());
-       // deletedMailsRepository.deleteByMail(mailId); not working why
+        deletedMailsRepository.deleteByMail(mailId);
     }
 
     public void filterDeletedMailsFromTrashFolder() {
