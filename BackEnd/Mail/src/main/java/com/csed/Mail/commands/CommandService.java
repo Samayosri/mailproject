@@ -1,13 +1,7 @@
 package com.csed.Mail.commands;
 
-import com.csed.Mail.model.DeletedMailEntity;
-import com.csed.Mail.model.FolderEntity;
-import com.csed.Mail.model.MailEntity;
-import com.csed.Mail.model.UserEntity;
-import com.csed.Mail.repositories.DeletedMailsRepository;
-import com.csed.Mail.repositories.FolderRepository;
-import com.csed.Mail.repositories.MailRepository;
-import com.csed.Mail.repositories.UserRepository;
+import com.csed.Mail.model.*;
+import com.csed.Mail.repositories.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,12 +16,14 @@ public class CommandService {
     private final UserRepository userRepository;
     private final MailRepository mailRepository;
     private final DeletedMailsRepository deletedMailsRepository;
+    private final AttachmentRepository attachmentRepository;
 
-    public CommandService(FolderRepository folderRepository, UserRepository userRepository, MailRepository mailRepository, DeletedMailsRepository deletedMailsRepository) {
+    public CommandService(FolderRepository folderRepository, UserRepository userRepository, MailRepository mailRepository, DeletedMailsRepository deletedMailsRepository, AttachmentRepository attachmentRepository) {
         this.folderRepository = folderRepository;
         this.userRepository = userRepository;
         this.mailRepository = mailRepository;
         this.deletedMailsRepository = deletedMailsRepository;
+        this.attachmentRepository = attachmentRepository;
     }
 
     public UserEntity getUserById(Long id){
@@ -157,4 +153,19 @@ public class CommandService {
         }
 
     }
+    public AttachmentEntity getAttch(Long id){
+        return attachmentRepository.findById(id).orElseThrow(()->new IllegalArgumentException("att not found"));
+    }
+     public List<Long> attachmentsIds (List<Long> ids){
+        List<Long> copied = new ArrayList<>();
+        for(long id : ids) {
+            AttachmentEntity old = getAttch(id);
+            AttachmentEntity copy = old.clone();
+             copy = attachmentRepository.save(copy);
+            copied.add(copy.getId());
+
+        }
+        return copied;
+     }
+
 }

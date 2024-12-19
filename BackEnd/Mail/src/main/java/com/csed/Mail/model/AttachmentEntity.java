@@ -22,10 +22,6 @@ public class AttachmentEntity implements Serializable,Cloneable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "mail_id", nullable = false)
-    private MailEntity mail;
-
     @Column(nullable = false)
     private String fileName;
 
@@ -49,7 +45,6 @@ public class AttachmentEntity implements Serializable,Cloneable {
     public AttachmentEntity clone() {
         try {
             AttachmentEntity clone = (AttachmentEntity) super.clone();
-            clone.setMail(null);
             clone.setId(null);
             return clone;
         } catch (CloneNotSupportedException e) {

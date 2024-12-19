@@ -37,36 +37,39 @@ public class ContactServices {
     }
     public  ContactDto create(ContactDto contactDto){
         Optional<ContactEntity> existingContact = contactsRepository.findByName(contactDto.getName());
-        if((existingContact.isEmpty())){
-                List<String> wrongemails=Checkvalidation(contactDto);
-                if(!wrongemails.isEmpty()){
-                    throw new IllegalArgumentException(wrongemails+" don't exist");
-                }
-            contactDto.setId(null);
-            ContactEntity contact=contactDto.getContact();
-            contact.setOwner(userRepository.findById(contactDto.getOwnerId()).get());
-            contact.setEmailAddress(contactDto.getEmailAddress());
-            contactsRepository.save(contact);
-            return contact.getcontactdto();
-
+        if(existingContact.isPresent() && existingContact.get().getOwner().getId().equals(contactDto.getOwnerId())){
+            throw new IllegalArgumentException("this contact already exists");
         }
-        throw new IllegalArgumentException("this contact already exists");
+        List<String> wrongemails=Checkvalidation(contactDto);
+        if(!wrongemails.isEmpty()){
+            throw new IllegalArgumentException(wrongemails+" don't exist");
+        }
+        contactDto.setId(null);
+        ContactEntity contact=contactDto.getContact();
+        contact.setOwner(userRepository.findById(contactDto.getOwnerId()).get());
+        contact.setEmailAddress(contactDto.getEmailAddress());
+        contactsRepository.save(contact);
+        return contact.getcontactdto();
     }
-    public  ContactDto edit(Long id,ContactDto contactDto){
-        if(id==contactDto.getId()){
+
+    public ContactDto edit(Long id, ContactDto contactDto) {
+        if (id == contactDto.getId()) {
             Optional<ContactEntity> existingContact = contactsRepository.findById(id);
-            if((existingContact.isPresent())){
-                List<String> wrongemails=Checkvalidation(contactDto);
-                if(!wrongemails.isEmpty()){
-                    throw new IllegalArgumentException(wrongemails+" don't exist");
+            if (existingContact.isPresent() && existingContact.get().getOwner().getId().equals(contactDto.getOwnerId()))
+            {
+                throw new IllegalArgumentException("this contact doesn't exist");
+            }
+            else{
+
+                List<String> wrongemails = Checkvalidation(contactDto);
+                if (!wrongemails.isEmpty()) {
+                    throw new IllegalArgumentException(wrongemails + " don't exist");
                 }
-                ContactEntity contact=contactDto.getContact();
+                ContactEntity contact = contactDto.getContact();
                 contact.setOwner(userRepository.findById(contactDto.getOwnerId()).get());
                 contact.setEmailAddress(contactDto.getEmailAddress());
                 return contactsRepository.save(contact).getcontactdto();
             }
-            else
-                throw new IllegalArgumentException("this contact doesn't exist");
         }
         throw new IllegalArgumentException("Wrong Id");
     }

@@ -41,7 +41,10 @@ public class Invoker {
             commandService.addEmailToFolderByName(mailEntity,"Sent",mailEntity.getSender());
             for(String receiver : Receivers){
                 SendCommand send = new SendCommand(commandService);
-                send.setMailEntity(mailEntity.clone());
+                List<Long> clonedAttchment = commandService.attachmentsIds(mailEntity.getAttachments());
+                MailEntity cloned = mailEntity.clone();
+                cloned.setAttachments(clonedAttchment);
+                send.setMailEntity(cloned);
                 send.setRecevier(receiver);
                 commandList.add(send);
             }
