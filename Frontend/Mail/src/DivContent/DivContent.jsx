@@ -16,6 +16,13 @@ import Filter from "../SearchBar/Filter";
 import SearchIcon from '@mui/icons-material/Search';
 import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
+import {
+
+
+ 
+  Snackbar,
+  Alert,
+} from "@mui/material";
 
 function DivContent({
   content,
@@ -40,6 +47,9 @@ function DivContent({
   const [searchFolder,setSearchFolder] = useState(false);
   const [searchWord,setSearchWord] = useState("");
   const [searching,setSearching]  = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
   useEffect(()=>{
     fetchMails(0);
     fetchContacts();
@@ -186,7 +196,16 @@ useEffect(()=>{
 
   const handleMove = async () => {
     if (!selectedMoveFolder || checkedMails.length === 0) {
-      console.error("No folder selected or no mails checked.");
+
+      if(selectedMoveFolder==="Drafts"){
+        setSnackbarSeverity("info");
+      setSnackbarMessage("only draft mails can be added to draft !");
+      setOpenSnackbar(true);
+      }
+
+      setSnackbarSeverity("error");
+      setSnackbarMessage("no selected folder or mails");
+      setOpenSnackbar(true);
       return;
     }
 
@@ -201,17 +220,20 @@ useEffect(()=>{
       destinationFolderId: folderID,
       mailIds: checkedMails,
     };
-
     try {
       const response = await axios.put("http://localhost:8080/mail/move", moveMails);
 
       if (response.status === 200) {
         setTriggerFetch(true);
         setCheckedMails([]);
-        console.log("Mails moved successfully");
+        setSnackbarSeverity("Sucsss");
+        setSnackbarMessage("Move done")
+        setOpenSnackbar(true);
       }
     } catch (error) {
-      console.error("Error moving mails:", error);
+      setSnackbarSeverity("error");
+      setSnackbarMessage(error.response.data);
+      setOpenSnackbar(true);
     }
     setMoveDialogOpen(false); // Close the dialog after moving mails
  
@@ -226,6 +248,9 @@ useEffect(()=>{
         console.log("Mails deleted:", response.data);
         setTriggerFetch(true);
         setCheckedMails([])
+        setSnackbarSeverity("Sucsss");
+        setSnackbarMessage("Delete Done");
+        setOpenSnackbar(true);
       })
       .catch((error) => {
         console.error("Error deleting mails:", error);
@@ -233,6 +258,7 @@ useEffect(()=>{
   };
 
   return (
+    
     <Box sx={{ display: "flex" ,justifyContent:"space-between",alignItems:"center"}}>
       <SideBar
       setCheckedMails={setCheckedMails}
@@ -278,7 +304,7 @@ useEffect(()=>{
   <ContactsButton setContent={setContent} /> {/* Moved to the far left */}
  
 </Box>
-  {content==="mails" &&
+  {content==="mails" && 
        
        <Box
        sx={{
@@ -299,19 +325,19 @@ useEffect(()=>{
          }}
        >
          <Button color="secondary" disabled >{searching?"Search":selectedFolder}</Button>
-         {!(selectedFolder==="Drafts") && !searching&&(
+         {!(selectedFolder==="Drafts")&&(
            <IconButton color="primary" onClick={() => setMoveDialogOpen(true)}>
              <DriveFileMoveIcon />
            </IconButton>
 
 )}
-         {!(selectedFolder==="Trash") && !searching&&(
+         {!(selectedFolder==="Trash") &&(
            <IconButton color="error" onClick={handleDelete}>
                  <AutoDeleteIcon />
            </IconButton>
          )}
          
-         <IconButton onClick={() => searching ? handleSearch(0) : fetchMails(0)}>
+         <IconButton onClick={() => searching ? handleMailSearch(0) : fetchMails(0)}>
            <RefreshIcon />
          </IconButton>
          <div>
@@ -379,7 +405,7 @@ useEffect(()=>{
             >
               {folders.map((folder) => (
 
-              folder.name!="Trash"&&folder.name!="Drafts"&&<MenuItem key={folder.id} value={folder.name}>
+              folder.name!="Trash"&&<MenuItem key={folder.id} value={folder.name}>
 
                   {folder.name}
                 </MenuItem>
@@ -396,6 +422,20 @@ useEffect(()=>{
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+              open={openSnackbar}
+              autoHideDuration={2000}
+              onClose={() => setOpenSnackbar(false)}
+              anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            >
+              <Alert
+                onClose={() => setOpenSnackbar(false)}
+                severity={snackbarSeverity}
+                variant="filled"
+              >
+                {snackbarMessage}
+              </Alert>
+            </Snackbar>
     </Box>
   );
 }

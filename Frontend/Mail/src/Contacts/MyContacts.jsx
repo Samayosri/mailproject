@@ -23,6 +23,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 function MyContacts({ userId ,contacts,setContacts}) {
  // List of contacts
+
   const [open, setOpen] = useState(false); // Dialog visibility
   const [currentContact, setCurrentContact] = useState({
     ownerId: userId,
@@ -40,6 +41,7 @@ function MyContacts({ userId ,contacts,setContacts}) {
   useEffect(() => {
     fetchContacts();
   }, []);
+
 
   // Fetch contacts from backend
   const fetchContacts = async () => {
@@ -121,7 +123,6 @@ const handleSave = async () => {
       const updatedContacts = [...contacts];
       updatedContacts[editIndex] = updatedContact;
       setContacts(updatedContacts);
-
       setSnackbarSeverity("success");
       setSnackbarMessage("Contact updated successfully!");
     } else {
@@ -131,7 +132,6 @@ const handleSave = async () => {
         updatedContact
       );
       setContacts([...contacts, response.data]);
-
       setSnackbarSeverity("success");
       setSnackbarMessage("Contact added successfully!");
     }
