@@ -14,6 +14,8 @@ import SearchBar from "../SearchBar/SearchBar";
 import ContactsButton from "../Contacts/ContactsButton";
 import Filter from "../SearchBar/Filter";
 import SearchIcon from '@mui/icons-material/Search';
+import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
+import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 
 function DivContent({
   content,
@@ -266,21 +268,21 @@ function DivContent({
             }}
           >
             <Button color="secondary" disabled >{searching?"Search":selectedFolder}</Button>
-           {selectedFolder==="Drafts" && !searching?<Button variant="contained" disabled>
-              Move
-            </Button>:<Button variant="contained" onClick={() => setMoveDialogOpen(true)}>
-              Move
-            </Button>}
-            {selectedFolder==="Trash" && !searching?<Button variant="contained"  disabled>
-              Delete
-            </Button>:<Button variant="contained" color="error" onClick={() => handleDelete()}>
-            Delete
-            </Button>}
-            <IconButton onClick={()=>{searching?handleSearch():fetchMails(0)}}>
-            <RefreshIcon></RefreshIcon>
-          </IconButton>
-          </Box>
+            {selectedFolder!=="Drafts" && !searching? (
+              <IconButton color="primary" onClick={() => setMoveDialogOpen(true)}>
+                <DriveFileMoveIcon />
+              </IconButton>
+            ) : null}
 
+            {!(selectedFolder==="Trash") && !searching&&(
+              <IconButton color="error" onClick={handleDelete}>
+                    <AutoDeleteIcon />
+              </IconButton>
+            )}
+            <IconButton onClick={() => searching ? handleSearch(0) : fetchMails(0)}>
+              <RefreshIcon />
+            </IconButton>
+          </Box>
           {/* Sort dropdown */}
           <FormControl variant="standard" sx={{ minWidth: 150 }}>
             <InputLabel id="sort-label">Sort by:</InputLabel>
