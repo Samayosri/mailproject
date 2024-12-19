@@ -10,25 +10,30 @@ import {
   Checkbox,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useCallback} from "react";
 import MailContent from "./MailContent";
 import axios from "axios";
 import ComposeEmail from "./ComposeEmail";
-function Mail({ contacts,folders, selectedFolder, userId, mails ,setTriggerFetch,checkedMails,setCheckedMails}) {
+import { use } from "react";
 
+function Mail({ contacts, folders, selectedFolder, userId, mails, setTriggerFetch, checkedMails, setCheckedMails }) {
 
   useEffect(() => {
-    setSelectedMail(false)
-    
+    console.log(mails);
+    setSelectedMail(false);
   }, [selectedFolder]);
 
-  const handleCheckboxChange = (mailId) => {
-    setCheckedMails((prev) =>
-      prev.includes(mailId)
-        ? prev.filter((id) => id !== mailId)
-        : [...prev, mailId]
-    );
-  };
+  const handleCheckboxChange = useCallback(
+    (mailId) => {
+      setCheckedMails((prev) =>
+        prev.includes(mailId)
+          ? prev.filter((id) => id !== mailId)
+          : [...prev, mailId]
+      );
+    },
+    [setCheckedMails]
+  );
+  
 
   const [selectedMail, setSelectedMail] = useState(null);
 
@@ -44,13 +49,12 @@ function Mail({ contacts,folders, selectedFolder, userId, mails ,setTriggerFetch
     setIsOpen(false);
   };
 
- 
-  
   const folderID = folders.find(
     (folder) => folder.folderName === selectedFolder
   )?.folderID;
 
   function handleDisplayMail(m) {
+    console.log(m);
     handleOpen();
     setSelectedMail(m);
   }
@@ -60,8 +64,7 @@ function Mail({ contacts,folders, selectedFolder, userId, mails ,setTriggerFetch
   }
 
   return (
-
-    <Box style={{ backgroundColor: "#f4f4f4"}}>
+    <Box style={{ backgroundColor: "#f4f4f4" }}>
       <Stack spacing={2}>
         {mails.map((mail) => (
           <Box
@@ -70,7 +73,6 @@ function Mail({ contacts,folders, selectedFolder, userId, mails ,setTriggerFetch
               display: "flex",
               alignItems: "center",
               backgroundColor: "#e0f7fa",
-
               padding: 1,
               borderRadius: 1,
               boxShadow: 1,
@@ -92,14 +94,14 @@ function Mail({ contacts,folders, selectedFolder, userId, mails ,setTriggerFetch
               onClick={() => handleDisplayMail(mail)}
             >
               <Typography variant="body1" noWrap>
-                <strong>{mail.folder==="Draft" ? "Draft" : mail.subject}:</strong>{" "}
-                {mail.body|| "body"}
+                <strong>{mail.folder === "Draft" ? "Draft" : mail.subject}:</strong>{" "}
+                {mail.body || "body"}
               </Typography>
             </Button>
           </Box>
         ))}
       </Stack>
-      {selectedMail && selectedFolder !== "Drafts" && (
+      {selectedMail && selectedMail.folder &&(selectedMail.folder !== "Draft"|| selectedFolder=== "Trash") && (
         <Dialog
           open={Boolean(selectedMail)}
           onClose={handleCloseDialog}
@@ -135,10 +137,9 @@ function Mail({ contacts,folders, selectedFolder, userId, mails ,setTriggerFetch
 
       {console.log(selectedFolder)}
       <Box dividers sx={{ padding: "16px" }}>
-        {selectedFolder === "Drafts" && selectedMail && (
+        {selectedMail?.folder === "Draft" && selectedMail && selectedFolder !== "Trash" && (
           <ComposeEmail
-          contacts={contacts}
-        
+            contacts={contacts}
             key={selectedMail?.id}
             open={isOpen}
             onClose={handleClose}
@@ -148,6 +149,7 @@ function Mail({ contacts,folders, selectedFolder, userId, mails ,setTriggerFetch
           ></ComposeEmail>
         )}
       </Box>
+      
     </Box>
   );
 }
