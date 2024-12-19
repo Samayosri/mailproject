@@ -93,7 +93,7 @@ function Mail({ contacts,folders, selectedFolder, userId, mails ,setTriggerFetch
             >
               <Typography variant="body1" noWrap>
                 <strong>{mail.folder==="Draft" ? "Draft" : mail.subject}:</strong>{" "}
-                {mail.body|| ""}
+                {mail.body|| "body"}
               </Typography>
             </Button>
           </Box>

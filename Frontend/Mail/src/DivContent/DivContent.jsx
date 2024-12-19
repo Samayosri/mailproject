@@ -298,11 +298,11 @@ useEffect(()=>{
          }}
        >
          <Button color="secondary" disabled >{searching?"Search":selectedFolder}</Button>
-         {selectedFolder!=="Drafts" && !searching? (
+       
            <IconButton color="primary" onClick={() => setMoveDialogOpen(true)}>
              <DriveFileMoveIcon />
            </IconButton>
-         ) : null}
+
 
          {!(selectedFolder==="Trash") && !searching&&(
            <IconButton color="error" onClick={handleDelete}>
