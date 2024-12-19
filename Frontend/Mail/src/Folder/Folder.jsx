@@ -37,7 +37,7 @@ function Folder({
   }
 
   async function handleDeleteFolder(folderID) {
-   console.log(folderID)
+    setSelectedFolder("Inbox");
     try {
       const response = await axios.delete(`http://localhost:8080/folder/${folderID}`);
       if (response.status === 200) {

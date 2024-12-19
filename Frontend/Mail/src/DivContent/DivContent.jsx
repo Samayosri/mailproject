@@ -52,9 +52,8 @@ function DivContent({
       setContacts(response.data);
       console.log(response.data)
     } catch (error) {
-      setSnackbarSeverity("error");
-      setSnackbarMessage(error.response.data);
-      setOpenSnackbar(true);
+     console.log(error);
+   
     }
   };
   useEffect(()=>{
@@ -106,7 +105,7 @@ function DivContent({
       fetchMails(0);
       setTriggerFetch(false);
     }
-  }, [selectedFolder, triggerFetch]);
+  }, [selectedFolder, sortBy,triggerFetch]);
 
   useEffect(() => {
     setPage(0);
@@ -236,6 +235,8 @@ useEffect(()=>{
   return (
     <Box sx={{ display: "flex" ,justifyContent:"space-between",alignItems:"center"}}>
       <SideBar
+      setCheckedMails={setCheckedMails}
+      handleMove={handleMove}
         contacts={contacts}
         setTriggerFetch={setTriggerFetch}
         folders={folders}
@@ -298,12 +299,12 @@ useEffect(()=>{
          }}
        >
          <Button color="secondary" disabled >{searching?"Search":selectedFolder}</Button>
-       
+         {!(selectedFolder==="Drafts") && !searching&&(
            <IconButton color="primary" onClick={() => setMoveDialogOpen(true)}>
              <DriveFileMoveIcon />
            </IconButton>
 
-
+)}
          {!(selectedFolder==="Trash") && !searching&&(
            <IconButton color="error" onClick={handleDelete}>
                  <AutoDeleteIcon />
@@ -349,6 +350,7 @@ useEffect(()=>{
         <Box sx={{  backgroundColor: "#f4f4f4", padding: 2 }}>
           {content === "mails" && (
             <Mail
+            handleMove={handleMove}
             contacts={contacts}
               folders={folders}
               selectedFolder={selectedFolder}

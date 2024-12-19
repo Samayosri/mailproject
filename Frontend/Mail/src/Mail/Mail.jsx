@@ -16,7 +16,7 @@ import axios from "axios";
 import ComposeEmail from "./ComposeEmail";
 import { use } from "react";
 
-function Mail({ contacts, folders, selectedFolder, userId, mails, setTriggerFetch, checkedMails, setCheckedMails }) {
+function Mail({handleMove, contacts, folders, selectedFolder, userId, mails, setTriggerFetch, checkedMails, setCheckedMails }) {
 
   useEffect(() => {
     console.log(mails);
@@ -94,14 +94,13 @@ function Mail({ contacts, folders, selectedFolder, userId, mails, setTriggerFetc
               onClick={() => handleDisplayMail(mail)}
             >
               <Typography variant="body1" noWrap>
-                <strong>{mail.folder === "Draft" ? "Draft" : mail.subject}:</strong>{" "}
-                {mail.body || "body"}
+              <strong>{mail.folder === "Draft" ? "Draft : " : ""}{mail.subject}</strong>
               </Typography>
             </Button>
           </Box>
         ))}
       </Stack>
-      {selectedMail && selectedMail.folder &&(selectedMail.folder !== "Draft"|| selectedFolder=== "Trash") && (
+      {selectedMail &&selectedFolder!== "Drafts" && (
         <Dialog
           open={Boolean(selectedMail)}
           onClose={handleCloseDialog}
@@ -137,8 +136,9 @@ function Mail({ contacts, folders, selectedFolder, userId, mails, setTriggerFetc
 
       {console.log(selectedFolder)}
       <Box dividers sx={{ padding: "16px" }}>
-        {selectedMail?.folder === "Draft" && selectedMail && selectedFolder !== "Trash" && (
+        {selectedMail && selectedFolder === "Drafts" && (
           <ComposeEmail
+          handleMove={handleMove}
             contacts={contacts}
             key={selectedMail?.id}
             open={isOpen}
@@ -146,6 +146,7 @@ function Mail({ contacts, folders, selectedFolder, userId, mails, setTriggerFetc
             mail={selectedMail}
             userId={userId}
             setTriggerFetch={setTriggerFetch}
+            setCheckedMails={setCheckedMails}
           ></ComposeEmail>
         )}
       </Box>

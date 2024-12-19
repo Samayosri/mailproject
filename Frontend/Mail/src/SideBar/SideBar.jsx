@@ -9,7 +9,7 @@ import axios from "axios";
 import ContactsButton from "../Contacts/ContactsButton";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import LogoutIcon from '@mui/icons-material/Logout';
-function SideBar({contacts,selectedFolder, setSelectedFolder, folders, setFolders, setContent, userId ,setMails,setTriggerFetch,handleLogout,userName}) {
+function SideBar({setCheckedMails,handleMove,contacts,selectedFolder, setSelectedFolder, folders, setFolders, setContent, userId ,setMails,setTriggerFetch,handleLogout,userName}) {
   const [isOpen, setIsOpen] = useState(false);
   const [newFolder, setNewFolder] = useState(false);
   const [folderName, setFolderName] = useState("");
@@ -106,7 +106,7 @@ function SideBar({contacts,selectedFolder, setSelectedFolder, folders, setFolder
           >
             New mail
           </Button>
-          {isOpen && <ComposeEmail contacts={contacts} open={isOpen} onClose={handleClose} userId={userId} setTriggerFetch={setTriggerFetch} />}
+          {isOpen && <ComposeEmail setCheckedMails={setCheckedMails} handleMove={handleMove} contacts={contacts} open={isOpen} onClose={handleClose} userId={userId} setTriggerFetch={setTriggerFetch} />}
 
         {newFolder && (
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>

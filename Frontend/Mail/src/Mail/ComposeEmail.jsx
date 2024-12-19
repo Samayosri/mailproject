@@ -21,7 +21,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import InputFileUpload from "./InputFileUpload";
 import SelectContacts from "./SelectContacts";
 
-const ComposeEmail = ({ contacts,open, onClose, mail = {}, userId ,setTriggerFetch  }) => {
+const ComposeEmail = ({handleMove,setCheckedMails, contacts,open, onClose, mail = {}, userId ,setTriggerFetch  }) => {
   console.log(mail)
   const mailDto = {
     id: mail.id || null,
@@ -46,9 +46,36 @@ const ComposeEmail = ({ contacts,open, onClose, mail = {}, userId ,setTriggerFet
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const handleMove1= async () => {
+    const folderID = mail.folderId;
+    if (!folderID) {
+      console.error("Invalid folder selected.");
+      return;
+    }
+    const moveMails = {
+      userId,
+      destinationFolderId: folderID,
+      mailIds: mail,
+    };
+    console.log(moveMails);
+
+    try {
+      const response = await axios.put("http://localhost:8080/mail/move", moveMails);
+
+      if (response.status === 200) {
+        setCheckedMails([]);
+        console.log("Mails moved successfully");
+      }
+    } catch (error) {
+      console.error("Error moving mails:", error);
+    }
+
+ 
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-
+   
     if (name === "toInput") {
       setToInput(value);
       setEmail({
@@ -127,13 +154,14 @@ const ComposeEmail = ({ contacts,open, onClose, mail = {}, userId ,setTriggerFet
   };
 
   const handleClose = async () => {
-   
+
     const url = "http://localhost:8080/mail/draft"
 
     try {
       const response = await axios.post(url, email);
 
       if (response.status === 201) {
+        handleMove1();
         setSnackbarMessage("Email saved to drafts.");
         setSnackbarSeverity("info");
         triggerSnackbarAndClose();
