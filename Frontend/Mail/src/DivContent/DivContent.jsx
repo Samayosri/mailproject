@@ -28,17 +28,6 @@ function DivContent({
   userName,
   handleLogoutApp
 }) {
-  const supportedFilters = [
-    "attachments",
-    "body",
-    "date",
-    "importance",
-    "receiversEmailAddress",
-    "receiversName",
-    "subject",
-    "senderName",
-    "senderEmailAddress",
-  ];
   const [contacts, setContacts] = useState([]);
   const [currentMails, setCurrentMails] = useState([]);
   const [page, setPage] = useState(0);
@@ -47,10 +36,27 @@ function DivContent({
   const [triggerFetch, setTriggerFetch] = useState(false);
   const [moveDialogOpen, setMoveDialogOpen] = useState(false);
   const [selectedMoveFolder, setSelectedMoveFolder] = useState("");
-  const [selectedFilters,setSelectedFilters] = useState(supportedFilters);
+  const [selectedFilters,setSelectedFilters] = useState([]);
   const [searchFolder,setSearchFolder] = useState(false);
   const [searchWord,setSearchWord] = useState("");
   const [searching,setSearching]  = useState(false);
+
+  useEffect(()=>{
+    let supportedFilters = content==="contacts"?["name","emaiAddress"] :  [
+      "attachments",
+      "body",
+      "date",
+      "importance",
+      "receiversEmailAddress",
+      "receiversName",
+      "subject",
+      "senderName",
+      "senderEmailAddress",
+    ];
+    setSelectedFilters(supportedFilters);
+  }, [selectedFolder,content,triggerFetch,contacts]);
+
+ 
 
   // Fetch mails for the current page
   const fetchMails = async (pageIndex) => {
@@ -95,7 +101,7 @@ function DivContent({
   const handleSortChange = (event) => {
     setSortBy(event.target.value);
     setPage(0);
-    searching?handleSearch(0):fetchMails(0);
+    searching?handleMailSearch(0):fetchMails(0);
   };
 
   const handleNextPage = () => {
@@ -103,18 +109,18 @@ function DivContent({
     setPage(nextPage);
     console.log(searching)
     console.log(page)
-    searching?handleSearch(nextPage):fetchMails(nextPage);
+    searching?handleMailSearch(nextPage):fetchMails(nextPage);
   };
 
   const handlePreviousPage = () => {
     if (page > 0) {
       const prevPage = page - 1;
       setPage(prevPage);
-      searching?handleSearch(prevPage):fetchMails(prevPage);
+      searching?handleMailSearch(prevPage):fetchMails(prevPage);
     }
   };
 
-  const handleSearch = async (page)=> {
+  const handleMailSearch = async (page)=> {
     setSearching(true)
     const criteriaDto = {searchWord : searchWord,criterias:selectedFilters,sortedBy:sortBy||"date",pageNumber:page}
     let folderId = null;
@@ -140,6 +146,23 @@ function DivContent({
         console.error("Error searching mails:", error.response.data);
       }
 
+
+  }
+
+  const handleContactSearch = async ()=> {
+    const criteriaDto = {searchWord : searchWord,criterias:selectedFilters}
+    console.log(criteriaDto);
+   
+      try {
+        const response = await axios.post(`http://localhost:8080/contact/search/${userId}`,criteriaDto);
+  
+        if (response.status === 200 && response.data) {
+          console.log(response.data)
+          setContacts(response.data);
+        }
+      } catch (error) {
+        console.error("Error searching cntacts:", error.response.data);
+      }
 
   }
 
@@ -184,7 +207,7 @@ function DivContent({
       .then((response) => {
         console.log("Mails deleted:", response.data);
         setTriggerFetch(true);
-        setCheckedMails([]);
+        setCheckedMails([])
       })
       .catch((error) => {
         console.error("Error deleting mails:", error);
@@ -227,9 +250,9 @@ function DivContent({
 > 
     <div style={{ marginLeft:"20%",display:"flex"}}>
    
-    <Filter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} folderId={searchFolder} setFolderId={setSearchFolder}  /> {/* Filter moved to the right of the SearchBar */}
+    <Filter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} folderId={searchFolder} setFolderId={setSearchFolder} content={content}  /> {/* Filter moved to the right of the SearchBar */}
     <SearchBar query={searchWord} setQuery={setSearchWord} /> {/* SearchBar remains in the center */}
-     <IconButton variant="contained" onClick={()=>handleSearch(0)} ><SearchIcon></SearchIcon></IconButton> {/* Search button added to the left */} </div>
+     <IconButton variant="contained" onClick={()=>{content==="contacts"?handleContactSearch():handleMailSearch(0)}} ><SearchIcon></SearchIcon></IconButton> {/* Search button added to the left */} </div>
     
  
   <ContactsButton setContent={setContent} /> {/* Moved to the far left */}
@@ -331,7 +354,7 @@ function DivContent({
             >
               {folders.map((folder) => (
 
-              folder.name!="Trash"&&  <MenuItem key={folder.id} value={folder.name}>
+              folder.name!="Trash"&&folder.name!="Drafts"&&<MenuItem key={folder.id} value={folder.name}>
 
                   {folder.name}
                 </MenuItem>

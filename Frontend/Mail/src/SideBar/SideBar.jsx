@@ -28,9 +28,9 @@ function SideBar({contacts,selectedFolder, setSelectedFolder, folders, setFolder
         console.error("Error fetching folders:", error);
       }
     };
-    setSelectedFolder("Inbox");
+    setSelectedFolder("Inbox")
     fetchFolders();
-   
+    
   }, [userId, setFolders]);
 
   const createNewFolder = async () => {

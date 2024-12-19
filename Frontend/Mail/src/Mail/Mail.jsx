@@ -92,8 +92,8 @@ function Mail({ contacts,folders, selectedFolder, userId, mails ,setTriggerFetch
               onClick={() => handleDisplayMail(mail)}
             >
               <Typography variant="body1" noWrap>
-                <strong>{mail.senderMailAddress || "Unknown Sender"}:</strong>{" "}
-                {mail.subject || "No Subject"}
+                <strong>{mail.folder==="Draft" ? "Draft" : mail.subject}:</strong>{" "}
+                {mail.body|| ""}
               </Typography>
             </Button>
           </Box>

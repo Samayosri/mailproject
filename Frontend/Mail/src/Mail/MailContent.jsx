@@ -21,6 +21,8 @@ function MailContent({ mail = {} }) {
     importance: mail.importance || 3,
     attachments: mail.attachments || [],
     creationDate: mail.creationDate || null,
+    folder : mail.folder || "ghost",
+    name : mail.name || "ghost"
   };
 
   const handleViewAttachment = (attachment) => {

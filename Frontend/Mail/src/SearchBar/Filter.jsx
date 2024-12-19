@@ -13,8 +13,9 @@ import {
 
 } from "@mui/material";
 import PhotoFilterIcon from '@mui/icons-material/PhotoFilter';
-const Filter = ({selectedFilters,setSelectedFilters,folderId,setFolderId}) => {
-  const supportedFilters = [
+const Filter = ({selectedFilters,setSelectedFilters,folderId,setFolderId,content}) => {
+
+  const supportedFilters = content==="contacts"?["name","emaiAddress"] :  [
     "attachments",
     "body",
     "date",
@@ -79,12 +80,12 @@ const Filter = ({selectedFilters,setSelectedFilters,folderId,setFolderId}) => {
                 label={filter}
               />
             ))}
-            <FormControlLabel
+            {content!=="contacts" &&<FormControlLabel
               control={
                 <Checkbox checked={folderId} onChange={handleToggleFolder} />
               }
               label="Only Selected Folder"
-            />
+            />}
           </FormGroup>
         </DialogContent>
         <DialogActions>
