@@ -42,7 +42,7 @@ function DivContent({
   const [searching,setSearching]  = useState(false);
 
   useEffect(()=>{
-    let supportedFilters = content==="contacts"?["name","emaiAddress"] :  [
+    let supportedFilters = content==="contacts"?["name","emailAddress"] :  [
       "attachments",
       "body",
       "date",
