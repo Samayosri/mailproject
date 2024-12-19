@@ -1,5 +1,6 @@
 package com.csed.Mail.Services;
 
+import com.csed.Mail.Sorting.ISortContact;
 import com.csed.Mail.model.ContactEntity;
 import com.csed.Mail.model.Dtos.ContactDto;
 import com.csed.Mail.model.UserEntity;
@@ -16,9 +17,12 @@ public class ContactServices {
     private final ContactsRepository contactsRepository;
     private  final UserRepository userRepository;
 
-    public ContactServices(ContactsRepository contactsRepository, UserRepository userRepository) {
+    private final ISortContact iSortContact;
+
+    public ContactServices(ContactsRepository contactsRepository, UserRepository userRepository, ISortContact iSortContact) {
         this.contactsRepository = contactsRepository;
         this.userRepository = userRepository;
+        this.iSortContact = iSortContact;
     }
 
     public List<ContactDto> getAllContacts(Long ownerId){
@@ -29,7 +33,7 @@ public class ContactServices {
         }
         if (userContacts.isEmpty())
             throw new IllegalArgumentException("THIS USER HAS NO CONTACTS");
-        return userContacts;
+        return iSortContact.SortingContact(userContacts);
     }
     public  ContactDto create(ContactDto contactDto){
         Optional<ContactEntity> existingContact = contactsRepository.findByName(contactDto.getName());

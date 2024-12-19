@@ -63,6 +63,7 @@ public class CommandService {
         }
     }
     public MailEntity draftMail(MailEntity mailEntity) {
+        mailEntity.setState("Draft");
         if (mailEntity.getId() == null) {
             mailEntity = mailRepository.save(mailEntity);
             addEmailToFolderByName(mailEntity, "Drafts", mailEntity.getSender());

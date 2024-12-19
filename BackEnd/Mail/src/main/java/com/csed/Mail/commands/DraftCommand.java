@@ -8,6 +8,7 @@ import lombok.Setter;
 @Getter
 public class DraftCommand implements Command{
 
+
     private final CommandService commandService;
     MailEntity mailEntity;
 

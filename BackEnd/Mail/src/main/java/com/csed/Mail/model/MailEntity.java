@@ -30,6 +30,7 @@ public class MailEntity implements Cloneable{
     private String subject;
 
     private String body;
+    private String state;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> toReceivers = new ArrayList<>();

@@ -20,9 +20,13 @@ public class FolderController {
    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<FolderDto>> getFolders(@PathVariable Long id) {
-        List<FolderDto> folders = folderServices.getFolders(id);
-        return new ResponseEntity<>(folders, HttpStatus.OK);
+    public ResponseEntity<?> getFolders(@PathVariable Long id) {
+        try {
+            List<FolderDto> folders = folderServices.getFolders(id);
+            return new ResponseEntity<>(folders, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
  @PostMapping("/create")

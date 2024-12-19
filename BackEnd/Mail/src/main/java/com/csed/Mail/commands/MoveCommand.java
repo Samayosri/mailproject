@@ -31,7 +31,7 @@ public class MoveCommand implements Command {
             }
             FolderEntity folder = commandService.getFolder(moveDto.getDestinationFolderId());
             for(MailEntity mailEntity : selectedMails){
-                if(mailEntity.getFolder().getName().equals("Drafts")){
+                if(!mailEntity.getState().equals("Draft") && folder.getName().equals("Drafts") ){
                     continue;
                 }
                 System.out.println();

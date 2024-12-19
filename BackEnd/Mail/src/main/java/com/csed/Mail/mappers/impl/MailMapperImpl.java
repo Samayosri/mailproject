@@ -31,6 +31,8 @@ public class MailMapperImpl implements Mapper<MailEntity,MailDto> {
                 creationDate(mailEntity.getCreationDate()).subject(mailEntity.
                 getSubject()).
                 body(mailEntity.getBody()).
+                name(mailEntity.getSender().getName()).
+                folder(mailEntity.getState()).
                 toReceivers(mailEntity.getToReceivers()).
                 ccReceivers(mailEntity.getCcReceivers()).
                 bccReceivers(mailEntity.getBccReceivers()).
