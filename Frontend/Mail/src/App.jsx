@@ -45,6 +45,7 @@ const App = () => {
     setUserName("");
     setUserId(null);
     setSigned(false);
+    setContent("mails");
   }
   return (
     <> 

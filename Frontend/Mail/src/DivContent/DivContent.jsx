@@ -40,7 +40,23 @@ function DivContent({
   const [searchFolder,setSearchFolder] = useState(false);
   const [searchWord,setSearchWord] = useState("");
   const [searching,setSearching]  = useState(false);
-
+  useEffect(()=>{
+    fetchMails(0);
+    fetchContacts();
+  },[]
+  )
+  const fetchContacts = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/contact/${userId}`);
+      
+      setContacts(response.data);
+      console.log(response.data)
+    } catch (error) {
+      setSnackbarSeverity("error");
+      setSnackbarMessage(error.response.data);
+      setOpenSnackbar(true);
+    }
+  };
   useEffect(()=>{
     let supportedFilters = content==="contacts"?["name","emailAddress"] :  [
       "attachments",
@@ -251,7 +267,7 @@ useEffect(()=>{
     marginBottom: 2,
   }}
 > 
-    <div style={{ marginLeft:"20%",display:"flex"}}>
+    <div style={{ marginLeft:"25%",display:"flex"}}>
    
     <Filter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} folderId={searchFolder} setFolderId={setSearchFolder} content={content}  /> {/* Filter moved to the right of the SearchBar */}
     <SearchBar query={searchWord} setQuery={setSearchWord} /> {/* SearchBar remains in the center */}
