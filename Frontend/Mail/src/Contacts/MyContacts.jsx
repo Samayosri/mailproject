@@ -16,6 +16,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
+import RefreshIcon from '@mui/icons-material/Refresh';
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
@@ -167,6 +168,9 @@ const handleSave = async () => {
       </Snackbar>
 
       {/* Add Contact Button */}
+      <IconButton onClick={fetchContacts}>
+           <RefreshIcon />
+         </IconButton>
       <Button
         variant="contained"
         color="primary"

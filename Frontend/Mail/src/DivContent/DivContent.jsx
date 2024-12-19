@@ -103,7 +103,10 @@ function DivContent({
     setPage(0);
     searching?handleMailSearch(0):fetchMails(0);
   };
-
+useEffect(()=>{
+  setSearchWord("")
+},[content]
+)
   const handleNextPage = () => {
     const nextPage = page + 1;
     setPage(nextPage);
@@ -258,69 +261,73 @@ function DivContent({
   <ContactsButton setContent={setContent} /> {/* Moved to the far left */}
  
 </Box>
+  {content==="mails" &&
+       
+       <Box
+       sx={{
+         marginBottom: "10px",
+         display: "flex",
+         alignItems: "center",
+         justifyContent: "space-between",
+         marginBottom: 2,
+       }}
+     >
+      
 
-        {/* Page Navigation and Sort */}
-        <Box
-          sx={{
-            marginBottom: "10px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: 2,
-          }}
-        >
-          <div>
-            <label>Page </label>
-            <IconButton onClick={handlePreviousPage} disabled={page === 0}>
-              <ArrowBackIosIcon />
-            </IconButton>
-            <label>{page + 1}</label>
-            <IconButton
-              onClick={handleNextPage}
-              disabled={currentMails.length < 5}
-            >
-              <ArrowForwardIosIcon />
-            </IconButton>
-          </div>
+       {/* Actions */}
+       <Box
+         style={{
+           display: "flex",
+           gap: "10px",
+         }}
+       >
+         <Button color="secondary" disabled >{searching?"Search":selectedFolder}</Button>
+         {selectedFolder!=="Drafts" && !searching? (
+           <IconButton color="primary" onClick={() => setMoveDialogOpen(true)}>
+             <DriveFileMoveIcon />
+           </IconButton>
+         ) : null}
 
-          {/* Actions */}
-          <Box
-            style={{
-              display: "flex",
-              gap: "10px",
-            }}
-          >
-            <Button color="secondary" disabled >{searching?"Search":selectedFolder}</Button>
-            {selectedFolder!=="Drafts" && !searching? (
-              <IconButton color="primary" onClick={() => setMoveDialogOpen(true)}>
-                <DriveFileMoveIcon />
-              </IconButton>
-            ) : null}
-
-            {!(selectedFolder==="Trash") && !searching&&(
-              <IconButton color="error" onClick={handleDelete}>
-                    <AutoDeleteIcon />
-              </IconButton>
-            )}
-            <IconButton onClick={() => searching ? handleSearch(0) : fetchMails(0)}>
-              <RefreshIcon />
-            </IconButton>
-          </Box>
-          {/* Sort dropdown */}
-          <FormControl variant="standard" sx={{ minWidth: 150 }}>
-            <InputLabel id="sort-label">Sort by:</InputLabel>
-            <Select
-              labelId="sort-label"
-              id="sort-select"
-              value={sortBy}
-              onChange={handleSortChange}
-            >
-            
-              <MenuItem value="date">Date</MenuItem>
-              <MenuItem value="priority">Importance</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
+         {!(selectedFolder==="Trash") && !searching&&(
+           <IconButton color="error" onClick={handleDelete}>
+                 <AutoDeleteIcon />
+           </IconButton>
+         )}
+         
+         <IconButton onClick={() => searching ? handleSearch(0) : fetchMails(0)}>
+           <RefreshIcon />
+         </IconButton>
+         <div>
+         <label>Page </label>
+         <IconButton onClick={handlePreviousPage} disabled={page === 0}>
+           <ArrowBackIosIcon />
+         </IconButton>
+         <label>{page + 1}</label>
+         <IconButton
+           onClick={handleNextPage}
+           disabled={currentMails.length < 5}
+         >
+           <ArrowForwardIosIcon />
+         </IconButton>
+       </div>
+       </Box>
+       {/* Sort dropdown */}
+       <FormControl variant="standard" sx={{ minWidth: 150 }}>
+         <InputLabel id="sort-label">Sort by:</InputLabel>
+         <Select
+           labelId="sort-label"
+           id="sort-select"
+           value={sortBy}
+           onChange={handleSortChange}
+         >
+         
+           <MenuItem value="date">Date</MenuItem>
+           <MenuItem value="priority">Importance</MenuItem>
+         </Select>
+       </FormControl>
+     </Box>
+  }
+      
 
         {/* Content */}
         <Box sx={{  backgroundColor: "#f4f4f4", padding: 2 }}>
