@@ -88,7 +88,7 @@ public class MailMapperImpl implements Mapper<MailEntity,MailDto> {
                 ccReceivers(mailDto.getCcReceivers()==null ? new ArrayList<>():mailDto.getCcReceivers()).
                 bccReceivers(mailDto.getBccReceivers()==null ? new ArrayList<>():mailDto.getBccReceivers()).
                 importance(mailDto.getImportance() ).
-                attachments(new ArrayList<>()).folder(null).
+                attachments(new ArrayList<>()).folder(null).state(mailDto.getFolder()).
                 build();
 
          Optional<UserEntity> user = userRepository.findById(mailDto.getSenderId());

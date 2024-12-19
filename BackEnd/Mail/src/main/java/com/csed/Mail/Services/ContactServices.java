@@ -36,8 +36,8 @@ public class ContactServices {
         return iSortContact.SortingContact(userContacts);
     }
     public  ContactDto create(ContactDto contactDto){
-        Optional<ContactEntity> existingContact = contactsRepository.findByName(contactDto.getName());
-        if(existingContact.isPresent() && existingContact.get().getOwner().getId().equals(contactDto.getOwnerId())){
+        Optional<ContactEntity> existingContact = contactsRepository.findByNameAndOwnerId(contactDto.getName(),contactDto.getOwnerId());
+        if(existingContact.isPresent() && existingContact.get().getOwner().getId().equals(contactDto.getOwnerId()) ){
             throw new IllegalArgumentException("this contact already exists");
         }
         List<String> wrongemails=Checkvalidation(contactDto);
@@ -55,12 +55,8 @@ public class ContactServices {
     public ContactDto edit(Long id, ContactDto contactDto) {
         if (id == contactDto.getId()) {
             Optional<ContactEntity> existingContact = contactsRepository.findById(id);
-            if (existingContact.isPresent() && existingContact.get().getOwner().getId().equals(contactDto.getOwnerId()))
+            if (existingContact.isPresent())
             {
-                throw new IllegalArgumentException("this contact doesn't exist");
-            }
-            else{
-
                 List<String> wrongemails = Checkvalidation(contactDto);
                 if (!wrongemails.isEmpty()) {
                     throw new IllegalArgumentException(wrongemails + " don't exist");
@@ -69,6 +65,9 @@ public class ContactServices {
                 contact.setOwner(userRepository.findById(contactDto.getOwnerId()).get());
                 contact.setEmailAddress(contactDto.getEmailAddress());
                 return contactsRepository.save(contact).getcontactdto();
+            }
+            else{
+                throw new IllegalArgumentException("this contact doesn't exist");
             }
         }
         throw new IllegalArgumentException("Wrong Id");

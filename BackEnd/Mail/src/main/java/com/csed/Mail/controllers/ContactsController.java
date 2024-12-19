@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/contact")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {"http://localhost:5173","http://localhost:3000","http://localhost:3002"} ,allowCredentials = "true")
 public class ContactsController {
     private final ContactServices contactServices;
     private final ContactsRepository contactsRepository;

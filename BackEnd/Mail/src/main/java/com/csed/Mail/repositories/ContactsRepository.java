@@ -13,5 +13,6 @@ import java.util.Optional;
 public interface ContactsRepository extends JpaRepository<ContactEntity,Long>{
      Optional<ContactEntity> findByName(String name);
     List<ContactEntity> findByOwnerId(Long ownerid);
+    Optional<ContactEntity> findByNameAndOwnerId(String name, Long userId);
 
 }
