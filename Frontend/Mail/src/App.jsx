@@ -1,35 +1,84 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
 
+import React, { useEffect, useState } from "react";
+import { Box } from "@mui/material";
+import Registration from "./Registration/Registration";
+import DivContent from "./DivContent/DivContent";
+import "./App.css";
+
+const App = () => {
+  const [selectedFolder, setSelectedFolder] = useState("inbox");
+  
+  const [signed, setSigned] = useState(() => {
+    const savedSigned = sessionStorage.getItem("signed");
+    console.log(savedSigned);
+    return savedSigned ? JSON.parse(savedSigned) : false;
+  });
+
+  const [userName, setUserName] = useState(() => {
+    const savedUserName = sessionStorage.getItem("userName");
+    return savedUserName ? JSON.parse(savedUserName) :"";
+  });
+  const [window, setWindow] = useState(() => {
+    const savedWindow = sessionStorage.getItem("window");
+    return savedWindow ? JSON.parse(savedWindow) : "sign up";
+  });
+
+  const [userId, setUserId] = useState(() => {
+    const savedUserId = sessionStorage.getItem("userId");
+    return savedUserId ? JSON.parse(savedUserId) : null;
+  });
+
+  useEffect(() => {
+    sessionStorage.setItem("signed", JSON.stringify(signed));
+    sessionStorage.setItem("window", JSON.stringify(window));
+    sessionStorage.setItem("userId", JSON.stringify(userId));
+    sessionStorage.setItem("userName", JSON.stringify(userName));
+  }, [signed, window, userId,userName]);
+
+
+  const [content, setContent] = useState("mails");
+  const [folders, setFolders] = useState([]);
+
+  function handleLogoutApp(){
+    setWindow("sign up");
+    setUserName("");
+    setUserId(null);
+    setSigned(false);
+    setContent("mails");
+  }
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <> 
+      {(window === "sign up" || window === "sign in") && (
+        <Registration
+        setUserId={setUserId}
+        window={window}
+        setWindow={setWindow}
+        signed={signed}
+        setSigned={setSigned}
+        setUserName={setUserName}
+         
+        />
+      )}
 
-export default App
+      {window === "mail" && signed && (
+        <Box sx={{ flexGrow: 1, height: "100%" }}>
+          <DivContent
+            content={content}
+            setContent={setContent}
+            selectedFolder={selectedFolder}
+            folders={folders}
+            setSelectedFolder={setSelectedFolder}
+            setFolders={setFolders}
+            userId={userId}
+            userName={userName}
+            handleLogoutApp={handleLogoutApp}
+          />
+        </Box>
+      )}
+    </>
+  );
+};
+
+export default App;
+

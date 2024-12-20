@@ -1,0 +1,5 @@
+{selectedFolder==="Trash" && !searching?<Button variant="contained"  disabled>
+              Move
+            </Button>:<Button variant="contained" color="error" onClick={() => setMoveDialogOpen(true)}>
+            Delete
+            </Button>}
