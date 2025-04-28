@@ -28,7 +28,7 @@ function SideBar({setCheckedMails,handleMove,contacts,selectedFolder, setSelecte
         console.error("Error fetching folders:", error);
       }
     };
-    setSelectedFolder("Inbox")
+    setSelectedFolder("")
     fetchFolders();
     
   }, [userId, setFolders]);

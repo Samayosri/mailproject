@@ -1,7 +1,9 @@
 package com.csed.Mail.commands;
 
+import com.csed.Mail.mappers.impl.MailMapperImpl;
 import com.csed.Mail.model.*;
 import com.csed.Mail.repositories.*;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,13 +19,17 @@ public class CommandService {
     private final MailRepository mailRepository;
     private final DeletedMailsRepository deletedMailsRepository;
     private final AttachmentRepository attachmentRepository;
+    private final SimpMessagingTemplate messagingTemplate;
+    private final MailMapperImpl mailMapper ;
 
-    public CommandService(FolderRepository folderRepository, UserRepository userRepository, MailRepository mailRepository, DeletedMailsRepository deletedMailsRepository, AttachmentRepository attachmentRepository) {
+    public CommandService(FolderRepository folderRepository, UserRepository userRepository, MailRepository mailRepository, DeletedMailsRepository deletedMailsRepository, AttachmentRepository attachmentRepository, SimpMessagingTemplate messagingTemplate, MailMapperImpl mailMapper) {
         this.folderRepository = folderRepository;
         this.userRepository = userRepository;
         this.mailRepository = mailRepository;
         this.deletedMailsRepository = deletedMailsRepository;
         this.attachmentRepository = attachmentRepository;
+        this.messagingTemplate = messagingTemplate;
+        this.mailMapper = mailMapper;
     }
 
     public UserEntity getUserById(Long id){
@@ -120,6 +126,9 @@ public class CommandService {
         Optional<UserEntity> receiver = userRepository.findByEmailAddress(emailAddress);
         saveMail(mailEntity);
         addEmailToFolderByName(mailEntity, "Inbox", receiver.get());
+        messagingTemplate.convertAndSend("/send/inbox/"+receiver.get().getId(),mailMapper.mapToDto(mailEntity));
+
+
     }
 
 
@@ -136,7 +145,7 @@ public class CommandService {
 
     public void filterDeletedMailsFromTrashFolder() {
         List<DeletedMailEntity> deletedMailEntities = this.deletedMailsRepository.findAll();
-        LocalDateTime thresholdDate = LocalDateTime.now().minusMinutes(1);
+        LocalDateTime thresholdDate = LocalDateTime.now().minusDays(30);
         List<Long> mailIdsToDelete = new ArrayList<>();
         for (DeletedMailEntity deletedMail : deletedMailEntities) {
             if (deletedMail.getDeletionTime().isBefore(thresholdDate)) {

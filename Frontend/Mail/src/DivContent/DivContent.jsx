@@ -23,8 +23,10 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-
+import { Client } from "@stomp/stompjs";
 function DivContent({
+  setCurrentMails,
+  currentMails,
   content,
   setContent,
   selectedFolder,
@@ -36,7 +38,6 @@ function DivContent({
   handleLogoutApp
 }) {
   const [contacts, setContacts] = useState([]);
-  const [currentMails, setCurrentMails] = useState([]);
   const [page, setPage] = useState(0);
   const [sortBy, setSortBy] = useState("");
   const [checkedMails, setCheckedMails] = useState([]);
@@ -83,8 +84,11 @@ function DivContent({
 
  
 
+  
+
   // Fetch mails for the current page
   const fetchMails = async (pageIndex) => {
+    
     if (!selectedFolder) return;
 
     const folderID = folders.find(
@@ -119,8 +123,8 @@ function DivContent({
 
   useEffect(() => {
     setPage(0);
-    setSearching(false)
-    setCurrentMails([])
+    setSearching(false);
+    setCurrentMails([]);
   }, [selectedFolder]);
 
   const handleSortChange = (event) => {
@@ -257,6 +261,34 @@ useEffect(()=>{
       });
   };
 
+  useEffect(() => {
+    const client = new Client({
+      brokerURL: "ws://localhost:8080/ws",
+      reconnectDelay: 1000,
+      onConnect: () => {
+        console.log("Connected to WebSocket");
+        client.subscribe(`/send/inbox/`+userId, (message) => {
+          const data = JSON.parse(message.body);
+          if (selectedFolder === "Inbox") {
+            setCurrentMails((prevMails) => [data, ...prevMails]);
+          }
+        });
+      },
+      onDisconnect: () => {
+        console.log("Disconnected from WebSocket");
+      },
+      onStompError: (error) => {
+        console.error("STOMP error:", error);
+      },
+    });
+
+    client.activate();
+
+    return () => {
+      client.deactivate();
+    };
+  }, []);
+
   return (
     
     <Box sx={{ display: "flex" ,justifyContent:"space-between",alignItems:"center"}}>
@@ -273,6 +305,8 @@ useEffect(()=>{
         userId={userId}
         handleLogout={handleLogoutApp}
         userName={userName}
+        setMails={setCurrentMails}
+        currentMails={currentMails}
       />
 
       {/* Main Content Area */}
@@ -312,7 +346,6 @@ useEffect(()=>{
          display: "flex",
          alignItems: "center",
          justifyContent: "space-between",
-         marginBottom: 2,
        }}
      >
       
@@ -382,9 +415,11 @@ useEffect(()=>{
               selectedFolder={selectedFolder}
               userId={userId}
               mails={currentMails}
+              setMails={setCurrentMails}
               setTriggerFetch={setTriggerFetch}
               checkedMails={checkedMails}
               setCheckedMails={setCheckedMails}
+
             />
           )}
 

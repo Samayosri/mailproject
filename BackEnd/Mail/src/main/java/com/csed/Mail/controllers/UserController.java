@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = {"http://localhost:5173","http://localhost:3000","http://localhost:3002"} ,allowCredentials = "true")
+@CrossOrigin("*")
 public class UserController {
 
     private final UserServices userservices;

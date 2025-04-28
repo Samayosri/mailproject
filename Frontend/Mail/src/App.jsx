@@ -5,9 +5,8 @@ import { Box } from "@mui/material";
 import Registration from "./Registration/Registration";
 import DivContent from "./DivContent/DivContent";
 import "./App.css";
-
 const App = () => {
-  const [selectedFolder, setSelectedFolder] = useState("inbox");
+  const [selectedFolder, setSelectedFolder] = useState("");
   
   const [signed, setSigned] = useState(() => {
     const savedSigned = sessionStorage.getItem("signed");
@@ -28,6 +27,7 @@ const App = () => {
     const savedUserId = sessionStorage.getItem("userId");
     return savedUserId ? JSON.parse(savedUserId) : null;
   });
+  const [currentMails, setCurrentMails] = useState([]);
 
   useEffect(() => {
     sessionStorage.setItem("signed", JSON.stringify(signed));
@@ -57,6 +57,8 @@ const App = () => {
         signed={signed}
         setSigned={setSigned}
         setUserName={setUserName}
+        setCurrentMails={setCurrentMails}
+        currentMails={currentMails}
          
         />
       )}
@@ -64,6 +66,8 @@ const App = () => {
       {window === "mail" && signed && (
         <Box sx={{ flexGrow: 1, height: "100%" }}>
           <DivContent
+            setCurrentMails={setCurrentMails}
+            currentMails={currentMails}
             content={content}
             setContent={setContent}
             selectedFolder={selectedFolder}

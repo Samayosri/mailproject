@@ -16,11 +16,10 @@ import axios from "axios";
 import ComposeEmail from "./ComposeEmail";
 import { use } from "react";
 
-function Mail({handleMove, contacts, folders, selectedFolder, userId, mails, setTriggerFetch, checkedMails, setCheckedMails }) {
-
+function Mail({handleMove, contacts, folders, selectedFolder, userId, mails, setTriggerFetch, checkedMails, setCheckedMails ,setMails}) {
   useEffect(() => {
     console.log(mails);
-    setSelectedMail(false);
+     setSelectedMail(false);
   }, [selectedFolder]);
 
   const handleCheckboxChange = useCallback(
@@ -134,7 +133,7 @@ function Mail({handleMove, contacts, folders, selectedFolder, userId, mails, set
         </Dialog>
       )}
 
-      {console.log(selectedFolder)}
+    
       <Box dividers sx={{ padding: "16px" }}>
         {selectedMail && selectedFolder === "Drafts" && (
           <ComposeEmail
