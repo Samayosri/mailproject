@@ -1,6 +1,6 @@
 # Mail Project
 
-![Demo Video](INSERT_VIDEO_LINK)
+[![Watch the video](https://img.youtube.com/vi/kyRmncMoP9I/maxresdefault.jpg)](https://youtu.be/kyRmncMoP9I)
 
 A web-based email program built using Java Spring Boot for the backend and React for the frontend. This project demonstrates a functional email server application with essential features like email manipulation, attachments, and contact management.
 
